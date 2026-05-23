@@ -1,0 +1,18 @@
+
+{
+    "ingenieria": {
+        "UNAM": ["Ingenieria en Computacion", "Ingenieria Civil", "Ingenieria Mecanica"],
+        "IPN": ["Ingenieria en Sistemas", "Ingenieria Industrial", "Ingenieria Aeronautica"],
+        "TEC": ["Ingenieria Mecatronica", "Ingenieria Industrial", "Ingenieria en Software"]
+    },
+    "salud": {
+        "UNAM": ["Medicina", "Enfermeria", "Nutricion"],
+        "IPN": ["Medicina", "Odontologia", "Terapia Fisica"],
+        "TEC": ["Medicina", "Nutricion y Bienestar", "Gerontologia"]
+    },
+    "administracion": {
+        "UNAM": ["Administracion", "Contaduria", "Negocios Internacionales"],
+        "IPN": ["Administracion Industrial", "Contaduria Publica", "Comercio Internacional"],
+        "TEC": ["Administracion Financiera", "Mercadotecnia", "Gestion Empresarial"]
+    }
+}

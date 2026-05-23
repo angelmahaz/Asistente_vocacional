@@ -1,0 +1,21 @@
+
+{
+    "ingenieria": [
+        "Te gusta resolver problemas matematicos y construir cosas? (si/no)"
+    ],
+    "salud": [
+        "Te interesa ayudar a otros con su bienestar fisico y emocional? (si/no)"
+    ],
+    "administracion": [
+        "Disfrutas organizar recursos y liderar equipos de trabajo? (si/no)"
+    ],
+    "humanidades": [
+        "Te apasiona leer, escribir y analizar ideas abstractas? (si/no)"
+    ],
+    "arte": [
+        "Tienes talento para el dibujo, la musica o el diseño? (si/no)"
+    ],
+    "ciencias_sociales": [
+        "Te interesa entender como funciona la sociedad y las relaciones humanas? (si/no)"
+    ]
+}

@@ -1,0 +1,27 @@
+
+{
+    "ingenieria": {
+        "matematicas": 2, "construir": 2, "tecnologia": 2, "fisica": 2,
+        "programar": 2, "calcular": 1, "maquinas": 2
+    },
+    "salud": {
+        "cuerpo": 2, "enfermedad": 2, "curar": 2, "bienestar": 2,
+        "hospital": 1, "paciente": 2, "biologia": 2
+    },
+    "administracion": {
+        "empresa": 2, "administrar": 2, "negocios": 2, "finanzas": 2,
+        "lider": 1, "organizar": 2, "mercado": 2
+    },
+    "humanidades": {
+        "filosofia": 2, "literatura": 2, "historia": 2, "lengua": 2,
+        "escribir": 2, "leer": 2, "cultura": 2
+    },
+    "arte": {
+        "dibujar": 2, "disenar": 2, "crear": 2, "musica": 2,
+        "pintura": 2, "escultura": 2, "color": 1
+    },
+    "ciencias_sociales": {
+        "sociedad": 2, "psicologia": 2, "educacion": 2, "politica": 2,
+        "investigar": 2, "comportamiento": 2, "comunidad": 2
+    }
+}
