@@ -1,18 +1,155 @@
 
 {
-    "ingenieria": {
-        "UNAM": ["Ingenieria en Computacion", "Ingenieria Civil", "Ingenieria Mecanica"],
-        "IPN": ["Ingenieria en Sistemas", "Ingenieria Industrial", "Ingenieria Aeronautica"],
-        "TEC": ["Ingenieria Mecatronica", "Ingenieria Industrial", "Ingenieria en Software"]
-    },
-    "salud": {
-        "UNAM": ["Medicina", "Enfermeria", "Nutricion"],
-        "IPN": ["Medicina", "Odontologia", "Terapia Fisica"],
-        "TEC": ["Medicina", "Nutricion y Bienestar", "Gerontologia"]
-    },
-    "administracion": {
-        "UNAM": ["Administracion", "Contaduria", "Negocios Internacionales"],
-        "IPN": ["Administracion Industrial", "Contaduria Publica", "Comercio Internacional"],
-        "TEC": ["Administracion Financiera", "Mercadotecnia", "Gestion Empresarial"]
-    }
+  "Ciencias Fisico-Matematicas y de las Ingenierias": {
+    "UNAM": [
+      "Ingenieria en Computacion",
+      "Ingenieria Civil",
+      "Ingenieria Electrica y Electronica",
+      "Ingenieria Mecanica",
+      "Ingenieria Quimica",
+      "Ingenieria en Telecomunicaciones",
+      "Matematicas",
+      "Fisica",
+      "Actuaria",
+      "Ciencias de la Computacion"
+    ],
+    "IPN": [
+      "Ingenieria en Sistemas Computacionales",
+      "Ingenieria Industrial",
+      "Ingenieria en Aeronautica",
+      "Ingenieria Mecanica",
+      "Ingenieria en Comunicaciones y Electronica",
+      "Ingenieria Robotica",
+      "Ingenieria en Inteligencia Artificial",
+      "Ingenieria Bioquimica",
+      "Fisica y Matematicas",
+      "Ingenieria en Ciberseguridad"
+    ],
+    "UAM": [
+      "Ingenieria en Computacion",
+      "Ingenieria Electronica",
+      "Ingenieria en Energia",
+      "Ingenieria Industrial",
+      "Ingenieria Quimica",
+      "Matematicas Aplicadas",
+      "Fisica Aplicada",
+      "Ingenieria Ambiental",
+      "Ingenieria Biomedica",
+      "Ingenieria en Control y Automatizacion"
+    ]
+  },
+  "Ciencias Biologicas Quimicas y de la Salud": {
+    "UNAM": [
+      "Medicina",
+      "Quimica Farmaceutica Biologica",
+      "Biologia",
+      "Quimica",
+      "Odontologia",
+      "Enfermeria y Obstetricia",
+      "Nutricion",
+      "Medicina Veterinaria y Zootecnia",
+      "Psicologia",
+      "Ingenieria en Alimentos"
+    ],
+    "IPN": [
+      "Medico Cirujano y Partero",
+      "Quimica Industrial",
+      "Biologia",
+      "Bioquimica Diagnostica",
+      "Nutriologia",
+      "Optometria",
+      "Medicina",
+      "Terapia Fisica",
+      "Ingenieria en Biotecnologia",
+      "Quimica Farmaceutica Industrial"
+    ],
+    "UAM": [
+      "Medicina",
+      "Biologia",
+      "Quimica",
+      "Nutricion Humana",
+      "Ingenieria Bioquimica",
+      "Biotecnologia",
+      "Psicobiologia",
+      "Quimica Farmaceutica",
+      "Hidrobiologia",
+      "Medicina Veterinaria"
+    ]
+  },
+  "Ciencias Sociales": {
+    "UNAM": [
+      "Derecho",
+      "Economia",
+      "Administracion",
+      "Contaduria",
+      "Ciencias de la Comunicacion",
+      "Ciencias Politicas y Administracion Publica",
+      "Sociologia",
+      "Psicologia",
+      "Relaciones Internacionales",
+      "Trabajo Social"
+    ],
+    "IPN": [
+      "Administracion Industrial",
+      "Contaduria Publica",
+      "Comercio Internacional y Aduanas",
+      "Relaciones Comerciales",
+      "Turismo",
+      "Ciencia Politica",
+      "Negocios Internacionales",
+      "Administracion y Gestion de Pequenas y Medianas Empresas",
+      "Comunicacion Corporativa",
+      "Gestion Empresarial"
+    ],
+    "UAM": [
+      "Administracion",
+      "Economia",
+      "Derecho",
+      "Sociologia",
+      "Psicologia Social",
+      "Comunicacion Social",
+      "Gestion y Administracion de Pequenas y Medianas Empresas",
+      "Negocios Internacionales e Integracion Economica",
+      "Estudios Socioambientales",
+      "Gestion de Recursos Hidricos"
+    ]
+  },
+  "Humanidades y de las Artes": {
+    "UNAM": [
+      "Filosofia",
+      "Historia",
+      "Letras Hispanicas",
+      "Letras Clasicas",
+      "Linguistica",
+      "Literatura Dramatica y Teatro",
+      "Musica",
+      "Artes Visuales",
+      "Diseno Grafico",
+      "Arquitectura"
+    ],
+    "IPN": [
+      "Diseno Industrial",
+      "Comunicacion Visual",
+      "Animacion Digital y Efectos Visuales",
+      "Diseno Grafico y Comunicacion",
+      "Diseno de Imagen Empresarial",
+      "Multimedia e Interactividad",
+      "Fotografia",
+      "Produccion Musical",
+      "Diseno Textil y Moda",
+      "Ilustracion Cientifica y Artistica"
+    ],
+    "UAM": [
+      "Diseno de la Comunicacion Grafica",
+      "Arquitectura",
+      "Arte y Patrimonio Cultural",
+      "Filosofia",
+      "Historia",
+      "Humanidades",
+      "Literatura Latinoamericana",
+      "Produccion y Distribucion Musical",
+      "Linguistica",
+      "Educacion y Humanidades"
+    ]
+  }
 }

@@ -1,21 +1,62 @@
 
 {
-    "ingenieria": [
-        "Te gusta resolver problemas matematicos y construir cosas? (si/no)"
-    ],
-    "salud": [
-        "Te interesa ayudar a otros con su bienestar fisico y emocional? (si/no)"
-    ],
-    "administracion": [
-        "Disfrutas organizar recursos y liderar equipos de trabajo? (si/no)"
-    ],
-    "humanidades": [
-        "Te apasiona leer, escribir y analizar ideas abstractas? (si/no)"
-    ],
-    "arte": [
-        "Tienes talento para el dibujo, la musica o el diseño? (si/no)"
-    ],
-    "ciencias_sociales": [
-        "Te interesa entender como funciona la sociedad y las relaciones humanas? (si/no)"
-    ]
+  "saludo": [
+    "hola", "buenas", "hey", "buen dia", "buenos dias", "buenas tardes",
+    "buenas noches", "que tal", "que onda", "saludos", "hi", "hello",
+    "alo", "que hay", "quiubo", "buen dia vocabot", "hola vocabot"
+  ],
+  "despedida": [
+    "adios", "hasta luego", "nos vemos", "bye", "chao", "hasta pronto",
+    "me voy", "salir", "terminar", "finalizar", "cerrar", "hasta la vista",
+    "eso es todo", "listo gracias", "ya no necesito nada"
+  ],
+  "agradecimiento": [
+    "gracias", "muchas gracias", "te lo agradezco", "genial", "excelente",
+    "perfecto", "muy bien", "muy amable", "que bueno", "ok gracias",
+    "chevere", "de lujo", "muy util", "me ayudo mucho"
+  ],
+  "afirmacion": [
+    "si", "sip", "claro", "por supuesto", "definitivamente", "correcto",
+    "exacto", "asi es", "efectivamente", "por favor", "adelante",
+    "dale", "va", "ok", "okay", "de acuerdo", "esta bien", "sale"
+  ],
+  "negacion": [
+    "no", "nope", "para nada", "de ninguna manera", "en absoluto",
+    "nel", "nah", "tampoco", "ni de chiste", "no gracias",
+    "no me interesa", "no quiero", "paso"
+  ],
+  "indecision": [
+    "no se", "talvez", "tal vez", "quizas", "quizas si", "no estoy seguro",
+    "no estoy segura", "puede ser", "mas o menos", "depende",
+    "no lo tengo claro", "tengo dudas", "no estoy decidido",
+    "no me he decidido", "me da igual", "cualquiera", "lo que sea",
+    "no tengo idea", "no sabria decir", "quisiera saber mas"
+  ],
+  "intensidad_alta": [
+    "mucho", "demasiado", "bastante", "muchisimo", "super", "muy",
+    "en verdad", "de verdad", "totalmente", "completamente",
+    "me encanta", "me apasiona", "me fascina", "me gusta mucho",
+    "siempre", "todo el tiempo", "constantemente"
+  ],
+  "intensidad_baja": [
+    "poco", "algo", "un poco", "mas o menos", "regular", "apenas",
+    "no mucho", "no tanto", "a veces", "de vez en cuando",
+    "no siempre", "en ocasiones"
+  ],
+  "nombre": [
+    "me llamo", "mi nombre es", "soy", "puedes llamarme",
+    "llamame", "yo soy", "mi apodo es"
+  ],
+  "recomendacion": [
+    "que me recomiendas", "que carrera me sugieres", "cuál es mi perfil",
+    "dame resultado", "que deberia estudiar", "que debo estudiar",
+    "ya puedes recomendarme", "cual es mi area", "dime mi resultado",
+    "muéstrame el resultado", "ya analiza", "dame mi recomendacion",
+    "quiero saber que estudiar", "necesito orientacion"
+  ],
+  "reinicio": [
+    "empezar de nuevo", "reiniciar", "otra vez", "de nuevo",
+    "volver a empezar", "reset", "quiero intentarlo otra vez",
+    "hagamos otra prueba"
+  ]
 }
