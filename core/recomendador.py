@@ -36,7 +36,7 @@ def _normalizar_texto(texto: str) -> str:
     texto = re.sub(r"\s+", " ", texto).strip()
     return texto
 
-def recomendar(area: str, data: dict, max_por_uni: int = 4) -> dict:
+def recomendar(area: str, data: dict, max_por_uni: int = 12) -> dict:
     """
     Devuelve un diccionario con carreras sugeridas por universidad.
     Limita la cantidad de carreras por universidad para no saturar la interfaz.

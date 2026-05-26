@@ -87,11 +87,30 @@ class ChatGUI:
         self.preguntas = cargar_preguntas("data/preguntas.json")
 
         self.mapa_preguntas = {
-            "matematicas": {"matematicas": 1.15},
-            "lectura": {"humanidades": 0.45},
-            "manual": {"arte": 0.25, "matematicas": 0.20},
-            "social": {"salud": 0.35, "humanidades": 0.15},
-            "tecnologia": {"matematicas": 1.25},
+            "matematicas": {"matematicas": 1.25},
+            "fisica_ingenieria": {"matematicas": 1.10},
+            "programacion": {"matematicas": 1.15, "arte": 0.10},
+            "salud": {"salud": 1.25},
+            "biologia_quimica": {"salud": 1.15, "matematicas": 0.10},
+            "animales_ambiente": {"salud": 0.95, "matematicas": 0.20},
+            "social": {"humanidades": 1.10, "salud": 0.15},
+            "comunicacion": {"humanidades": 0.95, "arte": 0.25},
+            "ayuda_personas": {"salud": 0.65, "humanidades": 0.55},
+            "lectura": {"humanidades": 1.05},
+            "arte_diseno": {"arte": 1.25},
+            "creatividad": {"arte": 0.95, "humanidades": 0.30},
+            "calculo_logica": {"matematicas": 1.20},
+            "construccion_planos": {"matematicas": 0.95, "arte": 0.25},
+            "electronica_robotica": {"matematicas": 1.15},
+            "laboratorio": {"salud": 0.95, "matematicas": 0.25},
+            "cuerpo_humano": {"salud": 1.20},
+            "nutricion_alimentos": {"salud": 1.00, "matematicas": 0.15},
+            "empresa_negocios": {"humanidades": 0.85, "matematicas": 0.25},
+            "derechos_justicia": {"humanidades": 1.10},
+            "psicologia_comunidad": {"humanidades": 0.70, "salud": 0.55},
+            "idiomas_traduccion": {"humanidades": 0.95, "arte": 0.20},
+            "musica_escena": {"arte": 1.15, "humanidades": 0.20},
+            "diseno_visual": {"arte": 1.20},
         }
 
         self.nombre = None

@@ -190,12 +190,19 @@ _RESPUESTAS_BINARIAS_INDEFINIDAS = {
 
 _RESPUESTAS_ESCALA_5 = {
     "me encanta", "me fascina", "me gusta mucho", "mucho", "bastante",
-    "totalmente", "si", "sí", "claro", "por supuesto", "sin duda", "me parece excelente"
+    "totalmente", "si", "sí", "claro", "por supuesto", "sin duda", "me parece excelente",
+    "me interesa mucho", "me agrada mucho", "me llama mucho la atencion",
+    "me llama mucho la atención", "lo disfruto mucho", "me apasiona", "me apasiona mucho",
+    "me late mucho", "me gusta bastante", "me interesa bastante"
 }
 
 _RESPUESTAS_ESCALA_4 = {
     "me gusta", "algo", "un poco", "poquito", "regularmente", "regular",
-    "medio", "mas o menos", "más o menos", "a medias"
+    "medio", "mas o menos", "más o menos", "a medias", "me agrada",
+    "me interesa", "me llama la atencion", "me llama la atención", "me atrae",
+    "lo disfruto", "esta bien", "está bien", "suena bien", "me parece bien",
+    "me gusta algo", "si me gusta", "sí me gusta", "si me interesa",
+    "sí me interesa", "me da curiosidad", "me causa curiosidad", "me late"
 }
 
 _RESPUESTAS_ESCALA_2 = {
@@ -668,4 +675,3 @@ def detectar_intereses(texto: str, intenciones: dict) -> List[str]:
     if not puntajes:
         return []
     return [categoria for categoria, _ in sorted(puntajes.items(), key=lambda item: (-item[1], item[0]))]
-

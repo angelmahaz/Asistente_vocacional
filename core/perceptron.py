@@ -1,38 +1,9 @@
 import json
 import math
-import unicodedata
 from typing import Dict, List, Tuple
 
 
 INPUT_ORDER = ("matematicas", "salud", "humanidades", "arte")
-
-AREAS_CANONICAS = {
-    "Área 1: Ciencias Físico-Matemáticas y de las Ingenierías": {
-        "matematicas": 2.4,
-        "salud": 0.15,
-        "humanidades": 0.05,
-        "arte": 0.05,
-    },
-    "Área 2: Ciencias Biológicas, Químicas y de la Salud": {
-        "matematicas": 0.35,
-        "salud": 2.35,
-        "humanidades": 0.45,
-        "arte": 0.05,
-    },
-    "Área 3: Ciencias Sociales": {
-        "matematicas": 0.15,
-        "salud": 0.45,
-        "humanidades": 2.25,
-        "arte": 0.35,
-    },
-    "Área 4: Humanidades y de las Artes": {
-        "matematicas": 0.05,
-        "salud": 0.10,
-        "humanidades": 1.05,
-        "arte": 2.45,
-    },
-}
-
 
 def _abrir_json(ruta: str):
     with open(ruta, "r", encoding="utf-8") as f:
@@ -47,29 +18,21 @@ def _desenvolver_si_viene_envuelto(datos, clave: str):
     return datos
 
 
-def _normalizar_texto(texto: str) -> str:
-    texto = unicodedata.normalize("NFD", texto or "")
-    texto = "".join(ch for ch in texto if unicodedata.category(ch) != "Mn")
-    return " ".join(texto.lower().split())
-
-
 def _normalizar_areas(areas: Dict[str, Dict[str, float]]) -> Dict[str, Dict[str, float]]:
     """
-    Fuerza las cuatro áreas vocacionales solicitadas y conserva pesos del JSON
-    cuando sus nombres coinciden, incluso si vienen sin acentos.
+    Limpia los pesos del JSON sin duplicar la definición de áreas en código.
     """
     if not isinstance(areas, dict):
-        return dict(AREAS_CANONICAS)
+        return {}
 
-    por_nombre = {_normalizar_texto(nombre): pesos for nombre, pesos in areas.items()}
     normalizadas = {}
-
-    for nombre_canonico, pesos_default in AREAS_CANONICAS.items():
-        pesos_json = por_nombre.get(_normalizar_texto(nombre_canonico), {})
-        pesos = {}
-        for clave in INPUT_ORDER:
-            pesos[clave] = float(pesos_json.get(clave, pesos_default[clave]))
-        normalizadas[nombre_canonico] = pesos
+    for area, pesos_json in areas.items():
+        if not isinstance(pesos_json, dict):
+            continue
+        normalizadas[area] = {
+            clave: float(pesos_json.get(clave, 0.0))
+            for clave in INPUT_ORDER
+        }
 
     return normalizadas
 

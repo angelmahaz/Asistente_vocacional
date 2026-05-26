@@ -1,26 +1,26 @@
 {
   "Área 1: Ciencias Físico-Matemáticas y de las Ingenierías": {
-    "matematicas": 2,
-    "salud": 0,
-    "humanidades": 0,
-    "arte": 0
+    "matematicas": 2.4,
+    "salud": 0.15,
+    "humanidades": 0.05,
+    "arte": 0.05
   },
   "Área 2: Ciencias Biológicas, Químicas y de la Salud": {
-    "matematicas": 0,
-    "salud": 2,
-    "humanidades": 1,
-    "arte": 0
+    "matematicas": 0.35,
+    "salud": 2.35,
+    "humanidades": 0.45,
+    "arte": 0.05
   },
   "Área 3: Ciencias Sociales": {
-    "matematicas": 0,
-    "salud": 0,
-    "humanidades": 2,
-    "arte": 1
+    "matematicas": 0.15,
+    "salud": 0.45,
+    "humanidades": 2.25,
+    "arte": 0.35
   },
   "Área 4: Humanidades y de las Artes": {
-    "matematicas": 0,
-    "salud": 0,
-    "humanidades": 1,
-    "arte": 2
+        "matematicas": 0.05,
+        "salud": 0.10,
+        "humanidades": 1.05,
+        "arte": 2.45
   }
 }

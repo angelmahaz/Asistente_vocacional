@@ -1,9 +1,100 @@
 {
   "preguntas": [
-    {"id": "matematicas", "texto": "¿Qué tanto te gustan las matemáticas?"},
-    {"id": "lectura", "texto": "¿Qué tanto te gusta leer o investigar?"},
-    {"id": "manual", "texto": "¿Te gusta trabajar con las manos?"},
-    {"id": "social", "texto": "¿Te gusta ayudar a las personas?"},
-    {"id": "tecnologia", "texto": "¿Qué tanto te interesa la tecnología?"}
+    {
+      "id": "matematicas",
+      "texto": "¿Qué tanto te gustan las matemáticas, resolver problemas o trabajar con números?"
+    },
+    {
+      "id": "fisica_ingenieria",
+      "texto": "¿Qué tanto te interesa entender cómo funcionan las máquinas, la tecnología o los sistemas?"
+    },
+    {
+      "id": "programacion",
+      "texto": "¿Qué tanto te llama la atención programar, analizar datos o crear soluciones digitales?"
+    },
+    {
+      "id": "salud",
+      "texto": "¿Qué tanto te interesa cuidar la salud de las personas o aprender sobre medicina?"
+    },
+    {
+      "id": "biologia_quimica",
+      "texto": "¿Qué tanto te gustan la biología, la química, los laboratorios o la investigación científica?"
+    },
+    {
+      "id": "animales_ambiente",
+      "texto": "¿Qué tanto te interesa trabajar con animales, plantas, alimentos o el medio ambiente?"
+    },
+    {
+      "id": "social",
+      "texto": "¿Qué tanto te interesa comprender a la sociedad, la política, la economía o las leyes?"
+    },
+    {
+      "id": "comunicacion",
+      "texto": "¿Qué tanto te gusta comunicar ideas, debatir, escribir noticias o analizar medios?"
+    },
+    {
+      "id": "ayuda_personas",
+      "texto": "¿Qué tanto te gusta orientar, escuchar o ayudar a otras personas?"
+    },
+    {
+      "id": "lectura",
+      "texto": "¿Qué tanto disfrutas leer, investigar, escribir o estudiar historia y filosofía?"
+    },
+    {
+      "id": "arte_diseno",
+      "texto": "¿Qué tanto te interesa dibujar, diseñar, crear imágenes, música, cine o teatro?"
+    },
+    {
+      "id": "creatividad",
+      "texto": "¿Qué tanto disfrutas imaginar ideas nuevas y expresarlas de forma creativa?"
+    },
+    {
+      "id": "calculo_logica",
+      "texto": "¿Qué tanto te gusta resolver ejercicios de lógica, cálculo o razonamiento abstracto?"
+    },
+    {
+      "id": "construccion_planos",
+      "texto": "¿Qué tanto te interesa construir, diseñar planos, edificios, máquinas o estructuras?"
+    },
+    {
+      "id": "electronica_robotica",
+      "texto": "¿Qué tanto te llaman la atención la electrónica, la robótica, los circuitos o la automatización?"
+    },
+    {
+      "id": "laboratorio",
+      "texto": "¿Qué tanto te gustaría trabajar en un laboratorio haciendo experimentos?"
+    },
+    {
+      "id": "cuerpo_humano",
+      "texto": "¿Qué tanto te interesa aprender sobre el cuerpo humano, enfermedades o tratamientos?"
+    },
+    {
+      "id": "nutricion_alimentos",
+      "texto": "¿Qué tanto te interesa la nutrición, los alimentos, la química de alimentos o la salud pública?"
+    },
+    {
+      "id": "empresa_negocios",
+      "texto": "¿Qué tanto te interesa administrar empresas, vender, emprender o manejar dinero?"
+    },
+    {
+      "id": "derechos_justicia",
+      "texto": "¿Qué tanto te interesa defender derechos, estudiar leyes o resolver conflictos sociales?"
+    },
+    {
+      "id": "psicologia_comunidad",
+      "texto": "¿Qué tanto te interesa entender emociones, conducta humana o problemas de una comunidad?"
+    },
+    {
+      "id": "idiomas_traduccion",
+      "texto": "¿Qué tanto te gustan los idiomas, traducir textos o conocer otras culturas?"
+    },
+    {
+      "id": "musica_escena",
+      "texto": "¿Qué tanto te interesa la música, el teatro, el cine, la actuación o presentarte en escena?"
+    },
+    {
+      "id": "diseno_visual",
+      "texto": "¿Qué tanto te gusta crear carteles, ilustraciones, fotografías, animaciones o contenido visual?"
+    }
   ]
 }
