@@ -1,0 +1,7 @@
+BG_COLOR = "#1e1e2f"
+CHAT_BG = "#2a2a40"
+TEXT_COLOR = "#ffffff"
+BOT_COLOR = "#4fc3f7"
+USER_COLOR = "#81c784"
+BTN_COLOR = "#3949ab"
+BTN_TEXT = "#ffffff"

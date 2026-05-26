@@ -1,0 +1,9 @@
+{
+  "preguntas": [
+    {"id": "matematicas", "texto": "¿Qué tanto te gustan las matemáticas?"},
+    {"id": "lectura", "texto": "¿Qué tanto te gusta leer o investigar?"},
+    {"id": "manual", "texto": "¿Te gusta trabajar con las manos?"},
+    {"id": "social", "texto": "¿Te gusta ayudar a las personas?"},
+    {"id": "tecnologia", "texto": "¿Qué tanto te interesa la tecnología?"}
+  ]
+}

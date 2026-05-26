@@ -1,47 +1,57 @@
-
-# ==========================================================================================
-#                                 *** Inteligencia Artificial ***
-#                            *** Proyecto Final de Inteligencia Artificial***
-# 
-#                                                Alumnos:
-#                                    ° Cisneros Rojas Héctor Manuel
-#                                    ° García Perea Pablo Emilio
-#                                    ° Hernandez Andrade Miguel Angel
-#                                    ° Navarro Rodriguez Angel Efren
-#                                    ° Toledo Duran Jesus Rodrigo
-
-# ==========================================================================================
-
-# ------------------------------------------------------------------------------------------
-#                                   MODULO: RECOMENDADOR
-# ------------------------------------------------------------------------------------------
-# Recomienda carreras universitarias basadas en el área vocacional.
-# ------------------------------------------------------------------------------------------
-
 import json
 
-def cargar_carreras(ruta):
-    with open(ruta, 'r', encoding='utf-8') as f:
-        return json.load(f)   # { "area": { "universidad": ["carrera1", ...] } }
+def _abrir_json(ruta: str):
+    with open(ruta, "r", encoding="utf-8") as f:
+        return json.load(f)
 
-def recomendar(area, carreras_data, n=4):
-    """Retorna las primeras n carreras del área especificada, agrupadas por universidad."""
-    resultados = {}
-    carreras_por_uni = carreras_data.get(area, {})
-    for uni, lista in carreras_por_uni.items():
-        resultados[uni] = lista[:n]
-    return resultados
+def _desenvolver_si_viene_envuelto(datos, clave: str):
+    if isinstance(datos, dict) and clave in datos:
+        valor = datos[clave]
+        if isinstance(valor, dict):
+            return valor
+    return datos
 
-def recomendar_segunda_opcion(probabilidades, carreras_data, n=3):
-    """Encuentra la segunda área más probable y sus carreras."""
-    areas_ordenadas = sorted(probabilidades.items(), key=lambda x: x[1], reverse=True)
-    if len(areas_ordenadas) < 2:
-        return None, {}
-    segunda_area = areas_ordenadas[1][0]
-    segundas_carreras = recomendar(segunda_area, carreras_data, n)
-    return segunda_area, segundas_carreras
+def cargar_carreras(ruta: str) -> dict:
+    datos = _abrir_json(ruta)
+    datos = _desenvolver_si_viene_envuelto(datos, "carreras")
+    return datos if isinstance(datos, dict) else {}
 
-def link_universidad(uni):
-    """Genera un enlace a la página de la universidad (placeholder)."""
-    # Puede mapearse a URLs reales
-    return f"https://www.universidades.com/{uni.replace(' ', '_')}"
+def _buscar_clave_similar(diccionario: dict, clave: str):
+    if clave in diccionario:
+        return clave
+    clave_norm = _normalizar_texto(clave)
+    for k in diccionario:
+        if _normalizar_texto(k) == clave_norm:
+            return k
+    return None
+
+def _normalizar_texto(texto: str) -> str:
+    import unicodedata, re
+    if not texto:
+        return ""
+    texto = unicodedata.normalize("NFD", texto)
+    texto = "".join(ch for ch in texto if unicodedata.category(ch) != "Mn")
+    texto = texto.lower()
+    texto = re.sub(r"[^\w\s]", " ", texto)
+    texto = re.sub(r"\s+", " ", texto).strip()
+    return texto
+
+def recomendar(area: str, data: dict, max_por_uni: int = 4) -> dict:
+    """
+    Devuelve un diccionario con carreras sugeridas por universidad.
+    Limita la cantidad de carreras por universidad para no saturar la interfaz.
+    """
+    if not area or not data:
+        return {}
+
+    clave_real = _buscar_clave_similar(data, area)
+    if not clave_real:
+        return {}
+
+    resultado = {}
+    for uni, lista in data.get(clave_real, {}).items():
+        if isinstance(lista, list):
+            resultado[uni] = lista[:max_por_uni]
+        else:
+            resultado[uni] = []
+    return resultado

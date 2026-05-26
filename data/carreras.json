@@ -1,18 +1,130 @@
-
 {
-    "ingenieria": {
-        "UNAM": ["Ingenieria en Computacion", "Ingenieria Civil", "Ingenieria Mecanica"],
-        "IPN": ["Ingenieria en Sistemas", "Ingenieria Industrial", "Ingenieria Aeronautica"],
-        "TEC": ["Ingenieria Mecatronica", "Ingenieria Industrial", "Ingenieria en Software"]
-    },
-    "salud": {
-        "UNAM": ["Medicina", "Enfermeria", "Nutricion"],
-        "IPN": ["Medicina", "Odontologia", "Terapia Fisica"],
-        "TEC": ["Medicina", "Nutricion y Bienestar", "Gerontologia"]
-    },
-    "administracion": {
-        "UNAM": ["Administracion", "Contaduria", "Negocios Internacionales"],
-        "IPN": ["Administracion Industrial", "Contaduria Publica", "Comercio Internacional"],
-        "TEC": ["Administracion Financiera", "Mercadotecnia", "Gestion Empresarial"]
-    }
+  "Área 1: Ciencias Físico-Matemáticas y de las Ingenierías": {
+    "UNAM": [
+      "Ingeniería en Computación",
+      "Ingeniería Civil",
+      "Ingeniería Eléctrica",
+      "Ingeniería Mecánica",
+      "Ingeniería Industrial",
+      "Ingeniería en Telecomunicaciones",
+      "Ingeniería Geológica",
+      "Ingeniería Petrolera"
+    ],
+    "IPN": [
+      "Ingeniería en Sistemas",
+      "Ingeniería Mecánica",
+      "Ingeniería en Comunicaciones y Electrónica",
+      "Ingeniería Robótica",
+      "Ingeniería en Inteligencia Artificial",
+      "Ingeniería Aeronáutica",
+      "Ingeniería Naval",
+      "Ingeniería en Computación"
+    ],
+    "UAM": [
+      "Ingeniería Electrónica",
+      "Ingeniería Industrial",
+      "Ingeniería Química",
+      "Ingeniería en Energía",
+      "Ingeniería Biomédica",
+      "Ingeniería en Alimentos",
+      "Ingeniería Ambiental",
+      "Ingeniería en Control y Automatización"
+    ]
+  },
+  "Área 2: Ciencias Biológicas, Químicas y de la Salud": {
+    "UNAM": [
+      "Medicina",
+      "Enfermería",
+      "Odontología",
+      "Veterinaria",
+      "Nutrición",
+      "Farmacia",
+      "Salud Pública",
+      "Rehabilitación"
+    ],
+    "IPN": [
+      "Médico Cirujano",
+      "Nutrición",
+      "Enfermería",
+      "Farmacia",
+      "Optometría",
+      "Terapia Física",
+      "Biología de la Reproducción",
+      "Medicina Nuclear"
+    ],
+    "UAM": [
+      "Biología",
+      "Medicina",
+      "Nutrición Humana",
+      "Psicobiología",
+      "Ciencias de la Salud",
+      "Genómica",
+      "Epidemiología",
+      "Neurociencias"
+    ]
+  },
+  "Área 3: Ciencias Sociales": {
+    "UNAM": [
+      "Derecho",
+      "Historia",
+      "Filosofía",
+      "Literatura",
+      "Sociología",
+      "Ciencias de la Comunicación",
+      "Pedagogía",
+      "Antropología"
+    ],
+    "IPN": [
+      "Relaciones Comerciales",
+      "Negocios Internacionales",
+      "Administración",
+      "Ciencia Política",
+      "Economía",
+      "Comunicación y Medios",
+      "Gestión Cultural",
+      "Educación Tecnológica"
+    ],
+    "UAM": [
+      "Sociología",
+      "Psicología",
+      "Economía",
+      "Comunicación",
+      "Políticas Públicas",
+      "Estudios Culturales",
+      "Lingüística",
+      "Historia del Arte"
+    ]
+  },
+  "Área 4: Humanidades y de las Artes": {
+    "UNAM": [
+      "Artes Visuales",
+      "Diseño",
+      "Música",
+      "Danza",
+      "Teatro",
+      "Cine",
+      "Historia del Arte",
+      "Arte Dramático"
+    ],
+    "IPN": [
+      "Comunicación Visual",
+      "Diseño Industrial",
+      "Animación Digital",
+      "Multimedia",
+      "Fotografía",
+      "Diseño Textil",
+      "Ilustración Científica",
+      "Artes Electrónicas"
+    ],
+    "UAM": [
+      "Diseño Gráfico",
+      "Arte Digital",
+      "Música Electroacústica",
+      "Diseño de Interacción",
+      "Artes Plásticas",
+      "Producción Sonora",
+      "Diseño de Modas",
+      "Curaduría"
+    ]
+  }
 }
