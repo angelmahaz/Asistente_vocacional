@@ -47,6 +47,10 @@ from core.recomendador import cargar_carreras, recomendar
 #_______________________________________________________________________________________________________
 
 
+# Constructor de la interfaz gráfica que configura la ventana principal, crea el área de chat con 
+# desplazamiento (Scroll) y teclado, diseña la zona de entrada de texto y carga los datos lógicos y 
+# variables de control del bot.
+
 class ChatGUI:
     def __init__(self, root):
         self.root = root
@@ -125,6 +129,8 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Ajusta dinámicamente el ancho del contenedor interno al tamaño de la ventana 
+# para mantener la interfaz adaptativa y evitar desbordamientos horizontales.
 
     def _ajustar_ancho(self, event):
         self.canvas.itemconfig(self.canvas_window, width=event.width)
@@ -132,12 +138,17 @@ class ChatGUI:
 #_______________________________________________________________________________________________________
 
 
+# Intercepta el evento de la rueda del ratón para desplazar verticalmente el área del chat de forma 
+# fluida y proporcional en la interfaz.
+
     def _on_mousewheel(self, event):
         delta = int(-1 * (event.delta / 120)) if event.delta else 0
         self.canvas.yview_scroll(delta, "units")
 
 #_______________________________________________________________________________________________________
 
+# Restablece las variables lógicas, los contadores de interacción y la puntuación de las áreas 
+# vocacionales de la sesión de chat a sus valores iniciales predeterminados.
 
     def reset_estado(self):
         self.memoria = {"matematicas": 0.0, "salud": 0.0, "humanidades": 0.0, "arte": 0.0}
@@ -149,6 +160,9 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Cancela los mensajes pendientes en la cola del chatbot, incrementa el identificador de época para 
+# ignorar procesos asíncronos activos y limpia todas las variables de estado para reiniciar de cero 
+# el test.
 
     def reiniciar_ciclo_vocacional(self):
         """Limpia por completo la ronda actual para comenzar una nueva recomendación."""
@@ -167,6 +181,9 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+
+# Actualiza los elementos gráficos pendientes en la interfaz y desplaza automáticamente la barra de 
+# scroll hasta el extremo inferior para mostrar el mensaje más reciente del chat.
 
     def bubble(self, texto, lado):
         color = "#4fc3f7" if lado == "bot" else "#81c784"
@@ -191,6 +208,8 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Genera e inserta dinámicamente un contenedor de tipo etiqueta en el área de chat, configurándolo 
+# visualmente como una burbuja de diálogo alineada a la izquierda para representar las respuestas del bot.
 
     def _crear_burbuja_bot(self, texto_inicial=""):
         contenedor = tk.Frame(self.scrollable_frame, bg="#1e1e2f")
@@ -213,6 +232,8 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Gestiona la cola de mensajes del bot, extrayendo el siguiente texto pendiente y validando su época 
+# para iniciar su animación en la interfaz de forma secuencial y asíncrona.
 
     def _procesar_siguiente_mensaje_bot(self):
         if self.bot_activo or not self.bot_queue:
@@ -230,9 +251,11 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Simula un efecto de escritura a máquina al insertar caracteres secuencialmente en la burbuja de texto,
+#  cancelando el proceso si el estado del ciclo es reiniciado.
 
     def _animar_texto(self, lbl, texto, indice, epoch):
-        # Si cambió la ronda, la animación vieja no debe seguir escribiendo
+        
         if epoch != self._mensaje_epoch:
             try:
                 lbl.destroy()
@@ -252,6 +275,8 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Finaliza el estado de animación del bot actual, estabiliza el scroll de la ventana y programa el 
+# procesamiento del siguiente mensaje en cola si existe.
 
     def _terminar_animacion(self, epoch):
         if epoch != self._mensaje_epoch:
@@ -265,6 +290,8 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Añade un nuevo texto a la cola de salida del chatbot vinculándolo con la época actual e inicia 
+# automáticamente su procesamiento si el bot se encuentra inactivo.
 
     def mensaje_bot(self, texto):
         self.bot_queue.append((self._mensaje_epoch, str(texto)))
@@ -273,18 +300,24 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Envía el texto ingresado por el usuario al gestor visual para renderizarlo inmediatamente dentro 
+# de una burbuja de diálogo formateada para el usuario.
 
     def mensaje_user(self, texto):
         self.bubble(texto, "user")
 
 #_______________________________________________________________________________________________________
 
+# Evalúa si el texto del usuario coincide con una intención de solicitud de recomendación mediante 
+# el analizador de intenciones.
 
     def _es_recomendacion(self, texto):
         return detectar_recomendacion(texto, self.intenciones)
 
 #_______________________________________________________________________________________________________
 
+# Selecciona y envía al chat la siguiente pregunta del test vocacional, actualizando el 
+# índice y cambiando el estado de la sesión a modo pregunta.
 
     def _pregunta_guiada(self):
         if self.indice_pregunta < len(self.preguntas):
@@ -300,6 +333,8 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Reenvía al chat el texto de la pregunta activa en caso de que el usuario proporcione una respuesta 
+# inválida o ambigua.
 
     def _repetir_pregunta_actual(self):
         if self.pregunta_actual:
@@ -311,6 +346,8 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Evalúa si el usuario desea terminar la sesión mediante palabras clave de despedida, respondiendo 
+# con un saludo de cierre y programando la destrucción de la ventana principal.
 
     def _manejar_finalizacion(self, texto_lower):
         if any(p in texto_lower for p in ["salir", "adios", "adiós", "terminar", "finalizar", "bye", "cerrar"]):
@@ -321,6 +358,8 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Valida si el mensaje del usuario contiene estrictamente un saludo, asegurando que no se hayan 
+# incluido intereses o preferencias vocacionales en el mismo texto.
 
     def _es_solo_saludo(self, texto):
         texto_limpio = limpiar_mensaje_nombre(texto)
@@ -328,12 +367,16 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Busca y retorna el diccionario de mapeo de categorías y puntajes asociado a un identificador 
+# de pregunta específico.
 
     def _categoria_por_pregunta(self, pregunta_id):
         return self.mapa_preguntas.get(pregunta_id, {})
 
 #_______________________________________________________________________________________________________
 
+# Calcula la ponderación de una respuesta numérica, normaliza su valor entre 0 y 1, y acumula el puntaje 
+# proporcional en las categorías vocacionales correspondientes dentro de la memoria.
 
     def _aplicar_respuesta_pregunta(self, pregunta_id, valor):
         contribuciones = self._categoria_por_pregunta(pregunta_id)
@@ -347,6 +390,8 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Método de control que normaliza el texto recibido y evalúa si corresponde a una afirmación, 
+# negación o respuesta binaria en lenguaje natural, retornando un valor booleano o None si es ambigua.
 
     def _respuesta_texto_post(self, texto):
         texto_norm = texto.strip().lower()
@@ -365,6 +410,7 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+#
 
     def _respuesta_escala(self, texto):
         valor = interpretar_respuesta_escala(texto)
@@ -372,6 +418,8 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Analiza el texto ingresado por el usuario y extrae un valor numérico correspondiente a una respuesta 
+# en escala predefinida mediante el intérprete de respuestas.
 
     def _resultado_detallado(self):
         if sum(self.memoria.values()) == 0:
@@ -421,6 +469,8 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Recorre una lista de mensajes del bot, enviándolos a la interfaz de manera secuencial y recursiva 
+# con un intervalo de retraso de 1.2 segundos entre cada uno.
 
     def mostrar_mensajes(self, mensajes, i=0):
         if i < len(mensajes):
@@ -429,6 +479,10 @@ class ChatGUI:
 
 #_______________________________________________________________________________________________________
 
+# Procesa las entradas del usuario para extraer información contextual (nombre, intereses, comandos de 
+# salida o respuestas a tests), actualiza los puntajes de las categorías vocacionales, realiza 
+# transiciones de estado de la máquina de conversación y ejecuta las respuestas pertinentes en la 
+# interfaz visual.
 
     def enviar(self, event=None):
         try:
