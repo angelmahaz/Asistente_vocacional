@@ -1,3 +1,18 @@
+
+#                                     *** Inteligencia Artificial ***
+#                              *** Proyecto Final. Asistente vocacional***
+#                                            *** Vocabot ***
+# 
+#                                                Alumnos:
+#
+#                                    ° Cisneros Rojas Hector Manuel
+#                                    ° Garcia Perea Pablo Emilio
+#                                    ° Hernández Andrade Miguel Angel 
+#                                    ° Navarro Rodriguez Angel Efren
+#                                    ° Toledo Duran Jesús Rodrigo
+
+#=======================================================================================================
+
 import json
 import math
 from typing import Dict, List, Tuple
@@ -5,11 +20,13 @@ from typing import Dict, List, Tuple
 
 INPUT_ORDER = ("matematicas", "salud", "humanidades", "arte")
 
+#_______________________________________________________________________________________________________
 
 def _abrir_json(ruta: str):
     with open(ruta, "r", encoding="utf-8") as f:
         return json.load(f)
 
+#_______________________________________________________________________________________________________
 
 def _desenvolver_si_viene_envuelto(datos, clave: str):
     if isinstance(datos, dict) and clave in datos:
@@ -18,18 +35,21 @@ def _desenvolver_si_viene_envuelto(datos, clave: str):
             return valor
     return datos
 
+#_______________________________________________________________________________________________________
 
 def cargar_areas(ruta: str) -> dict:
     datos = _abrir_json(ruta)
     datos = _desenvolver_si_viene_envuelto(datos, "areas")
     return datos if isinstance(datos, dict) else {}
 
+#_______________________________________________________________________________________________________
 
 def _sigmoid(x: float) -> float:
     # Clamp para evitar overflow en casos extremos
     x = max(-30.0, min(30.0, float(x)))
     return 1.0 / (1.0 + math.exp(-x))
 
+#_______________________________________________________________________________________________________
 
 def _normalizar_entradas(entradas: Dict[str, float]) -> List[float]:
     vector = []
@@ -39,6 +59,8 @@ def _normalizar_entradas(entradas: Dict[str, float]) -> List[float]:
         vector.append(valor / 5.0)
     return vector
 
+
+#_______________________________________________________________________________________________________
 
 def _capa_densa(vector: List[float], pesos: List[List[float]], bias: List[float], residual: float = 0.0) -> List[float]:
     salida = []
@@ -53,9 +75,12 @@ def _capa_densa(vector: List[float], pesos: List[List[float]], bias: List[float]
     return salida
 
 
+#_______________________________________________________________________________________________________
+
 # 7 capas en total:
 # 1 de entrada + 5 ocultas + 1 de salida
 # Se usan pesos fijos para conservar el enfoque sin entrenamiento.
+
 _CAPAS_OCULTAS = [
     (
         [
@@ -109,12 +134,15 @@ _CAPAS_OCULTAS = [
     ),
 ]
 
+#_______________________________________________________________________________________________________
 
 def _paso_forward(vector: List[float]) -> List[float]:
     salida = vector
     for pesos, bias, residual in _CAPAS_OCULTAS:
         salida = _capa_densa(salida, pesos, bias, residual=residual)
     return salida
+
+#_______________________________________________________________________________________________________
 
 
 def evaluar(entradas: Dict[str, float], areas: Dict[str, Dict[str, float]]):
@@ -156,6 +184,8 @@ def evaluar(entradas: Dict[str, float], areas: Dict[str, Dict[str, float]]):
     return mejor, resultados, prob
 
 
+#_______________________________________________________________________________________________________
+
 def explicar_recomendacion(entradas: Dict[str, float], areas: Dict[str, Dict[str, float]], area: str, top_n: int = 2) -> List[str]:
     """
     Devuelve las características que más contribuyeron al área recomendada.
@@ -175,6 +205,7 @@ def explicar_recomendacion(entradas: Dict[str, float], areas: Dict[str, Dict[str
     relevantes = [k for k, v in contribuciones if v > 0][:top_n]
     return relevantes
 
+#_______________________________________________________________________________________________________
 
 def descripcion_arquitectura() -> List[str]:
     return [
@@ -187,12 +218,15 @@ def descripcion_arquitectura() -> List[str]:
         "Capa de salida",
     ]
 
+#_______________________________________________________________________________________________________
+
 # ---------------------------------------------------------------------------
 # Ajuste de preservación de señal y evaluación final
 # ---------------------------------------------------------------------------
 
 # Se incrementa la conservación de la información de entrada para evitar que
 # las capas ocultas suavicen demasiado la señal y produzcan puntajes parecidos.
+
 _CAPAS_OCULTAS = [
     (
         [
@@ -246,6 +280,7 @@ _CAPAS_OCULTAS = [
     ),
 ]
 
+#_______________________________________________________________________________________________________
 
 def evaluar(entradas: Dict[str, float], areas: Dict[str, Dict[str, float]]):
     """
@@ -292,4 +327,3 @@ def evaluar(entradas: Dict[str, float], areas: Dict[str, Dict[str, float]]):
 
     mejor = max(prob, key=prob.get) if prob else None
     return mejor, resultados, prob
-

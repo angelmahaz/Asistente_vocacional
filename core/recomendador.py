@@ -1,8 +1,30 @@
+
+#                                     *** Inteligencia Artificial ***
+#                              *** Proyecto Final. Asistente vocacional***
+#                                            *** Vocabot ***
+# 
+#                                                Alumnos:
+#
+#                                    ° Cisneros Rojas Hector Manuel
+#                                    ° Garcia Perea Pablo Emilio
+#                                    ° Hernández Andrade Miguel Angel 
+#                                    ° Navarro Rodriguez Angel Efren
+#                                    ° Toledo Duran Jesús Rodrigo
+
+#=======================================================================================================
+
+
 import json
+
+#_______________________________________________________________________________________________________
+
 
 def _abrir_json(ruta: str):
     with open(ruta, "r", encoding="utf-8") as f:
         return json.load(f)
+
+#_______________________________________________________________________________________________________
+
 
 def _desenvolver_si_viene_envuelto(datos, clave: str):
     if isinstance(datos, dict) and clave in datos:
@@ -11,10 +33,16 @@ def _desenvolver_si_viene_envuelto(datos, clave: str):
             return valor
     return datos
 
+#_______________________________________________________________________________________________________
+
+
 def cargar_carreras(ruta: str) -> dict:
     datos = _abrir_json(ruta)
     datos = _desenvolver_si_viene_envuelto(datos, "carreras")
     return datos if isinstance(datos, dict) else {}
+
+#_______________________________________________________________________________________________________
+
 
 def _buscar_clave_similar(diccionario: dict, clave: str):
     if clave in diccionario:
@@ -24,6 +52,9 @@ def _buscar_clave_similar(diccionario: dict, clave: str):
         if _normalizar_texto(k) == clave_norm:
             return k
     return None
+
+#_______________________________________________________________________________________________________
+
 
 def _normalizar_texto(texto: str) -> str:
     import unicodedata, re
@@ -35,6 +66,9 @@ def _normalizar_texto(texto: str) -> str:
     texto = re.sub(r"[^\w\s]", " ", texto)
     texto = re.sub(r"\s+", " ", texto).strip()
     return texto
+
+#_______________________________________________________________________________________________________
+
 
 def recomendar(area: str, data: dict, max_por_uni: int = 4) -> dict:
     """

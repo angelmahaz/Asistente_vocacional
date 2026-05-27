@@ -1,3 +1,19 @@
+
+#                                     *** Inteligencia Artificial ***
+#                              *** Proyecto Final. Asistente vocacional***
+#                                            *** Vocabot ***
+# 
+#                                                Alumnos:
+#
+#                                    ° Cisneros Rojas Hector Manuel
+#                                    ° Garcia Perea Pablo Emilio
+#                                    ° Hernández Andrade Miguel Angel 
+#                                    ° Navarro Rodriguez Angel Efren
+#                                    ° Toledo Duran Jesús Rodrigo
+
+#=======================================================================================================
+
+
 import tkinter as tk
 import sys
 import os
@@ -27,6 +43,8 @@ from core.chatbot import (
 )
 from core.perceptron import cargar_areas, evaluar, explicar_recomendacion
 from core.recomendador import cargar_carreras, recomendar
+
+#_______________________________________________________________________________________________________
 
 
 class ChatGUI:
@@ -105,12 +123,21 @@ class ChatGUI:
         self.mensaje_bot("Hola, soy Vocabot.")
         self.mensaje_bot("Cuéntame cuáles son tus gustos o en qué eres bueno.")
 
+#_______________________________________________________________________________________________________
+
+
     def _ajustar_ancho(self, event):
         self.canvas.itemconfig(self.canvas_window, width=event.width)
+
+#_______________________________________________________________________________________________________
+
 
     def _on_mousewheel(self, event):
         delta = int(-1 * (event.delta / 120)) if event.delta else 0
         self.canvas.yview_scroll(delta, "units")
+
+#_______________________________________________________________________________________________________
+
 
     def reset_estado(self):
         self.memoria = {"matematicas": 0.0, "salud": 0.0, "humanidades": 0.0, "arte": 0.0}
@@ -120,6 +147,9 @@ class ChatGUI:
         self.pregunta_actual = None
         self.ultima_area = None
 
+#_______________________________________________________________________________________________________
+
+
     def reiniciar_ciclo_vocacional(self):
         """Limpia por completo la ronda actual para comenzar una nueva recomendación."""
         self._mensaje_epoch += 1
@@ -128,9 +158,15 @@ class ChatGUI:
         self.reset_estado()
         self.ultima_area = None
 
+#_______________________________________________________________________________________________________
+
+
     def _scroll_abajo(self):
         self.canvas.update_idletasks()
         self.canvas.yview_moveto(1.0)
+
+#_______________________________________________________________________________________________________
+
 
     def bubble(self, texto, lado):
         color = "#4fc3f7" if lado == "bot" else "#81c784"
@@ -153,6 +189,9 @@ class ChatGUI:
         lbl.pack(anchor=anchor)
         self._scroll_abajo()
 
+#_______________________________________________________________________________________________________
+
+
     def _crear_burbuja_bot(self, texto_inicial=""):
         contenedor = tk.Frame(self.scrollable_frame, bg="#1e1e2f")
         contenedor.pack(fill=tk.X, pady=4, padx=12)
@@ -172,6 +211,9 @@ class ChatGUI:
         self._scroll_abajo()
         return lbl
 
+#_______________________________________________________________________________________________________
+
+
     def _procesar_siguiente_mensaje_bot(self):
         if self.bot_activo or not self.bot_queue:
             return
@@ -185,6 +227,9 @@ class ChatGUI:
         self.bot_activo = True
         lbl = self._crear_burbuja_bot("")
         self._animar_texto(lbl, texto, 0, epoch)
+
+#_______________________________________________________________________________________________________
+
 
     def _animar_texto(self, lbl, texto, indice, epoch):
         # Si cambió la ronda, la animación vieja no debe seguir escribiendo
@@ -205,6 +250,9 @@ class ChatGUI:
         else:
             self.root.after(250, lambda: self._terminar_animacion(epoch))
 
+#_______________________________________________________________________________________________________
+
+
     def _terminar_animacion(self, epoch):
         if epoch != self._mensaje_epoch:
             self.bot_activo = False
@@ -215,16 +263,28 @@ class ChatGUI:
         if self.bot_queue:
             self.root.after(50, self._procesar_siguiente_mensaje_bot)
 
+#_______________________________________________________________________________________________________
+
+
     def mensaje_bot(self, texto):
         self.bot_queue.append((self._mensaje_epoch, str(texto)))
         if not self.bot_activo:
             self.root.after(0, self._procesar_siguiente_mensaje_bot)
 
+#_______________________________________________________________________________________________________
+
+
     def mensaje_user(self, texto):
         self.bubble(texto, "user")
 
+#_______________________________________________________________________________________________________
+
+
     def _es_recomendacion(self, texto):
         return detectar_recomendacion(texto, self.intenciones)
+
+#_______________________________________________________________________________________________________
+
 
     def _pregunta_guiada(self):
         if self.indice_pregunta < len(self.preguntas):
@@ -238,6 +298,9 @@ class ChatGUI:
                 return True
         return False
 
+#_______________________________________________________________________________________________________
+
+
     def _repetir_pregunta_actual(self):
         if self.pregunta_actual:
             texto = self.pregunta_actual.get("texto", "")
@@ -246,6 +309,9 @@ class ChatGUI:
                 return True
         return False
 
+#_______________________________________________________________________________________________________
+
+
     def _manejar_finalizacion(self, texto_lower):
         if any(p in texto_lower for p in ["salir", "adios", "adiós", "terminar", "finalizar", "bye", "cerrar"]):
             self.mensaje_bot("Fue un gusto ayudarte.")
@@ -253,12 +319,21 @@ class ChatGUI:
             return True
         return False
 
+#_______________________________________________________________________________________________________
+
+
     def _es_solo_saludo(self, texto):
         texto_limpio = limpiar_mensaje_nombre(texto)
         return es_saludo(texto_limpio, self.intenciones) and not detectar_intereses(texto_limpio, self.intenciones)
 
+#_______________________________________________________________________________________________________
+
+
     def _categoria_por_pregunta(self, pregunta_id):
         return self.mapa_preguntas.get(pregunta_id, {})
+
+#_______________________________________________________________________________________________________
+
 
     def _aplicar_respuesta_pregunta(self, pregunta_id, valor):
         contribuciones = self._categoria_por_pregunta(pregunta_id)
@@ -269,6 +344,9 @@ class ChatGUI:
         for categoria, peso in contribuciones.items():
             if categoria in self.memoria:
                 self.memoria[categoria] += factor * float(peso)
+
+#_______________________________________________________________________________________________________
+
 
     def _respuesta_texto_post(self, texto):
         texto_norm = texto.strip().lower()
@@ -285,9 +363,15 @@ class ChatGUI:
 
         return None
 
+#_______________________________________________________________________________________________________
+
+
     def _respuesta_escala(self, texto):
         valor = interpretar_respuesta_escala(texto)
         return valor
+
+#_______________________________________________________________________________________________________
+
 
     def _resultado_detallado(self):
         if sum(self.memoria.values()) == 0:
@@ -335,10 +419,16 @@ class ChatGUI:
 
         self.mostrar_mensajes(mensajes)
 
+#_______________________________________________________________________________________________________
+
+
     def mostrar_mensajes(self, mensajes, i=0):
         if i < len(mensajes):
             self.mensaje_bot(mensajes[i])
             self.root.after(1200, lambda: self.mostrar_mensajes(mensajes, i + 1))
+
+#_______________________________________________________________________________________________________
+
 
     def enviar(self, event=None):
         try:
