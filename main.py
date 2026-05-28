@@ -7,17 +7,45 @@ from core.chatbot import (
     limpiar_mensaje_nombre,
     tiene_contenido_relevante,
     respuesta_humana,
-    respuesta_general,
     respuesta_no_entendida,
     es_despedida,
     es_saludo,
     interpretar_respuesta_escala,
     interpretar_respuesta_binaria,
     cargar_preguntas,
+    normalizar_texto,
 )
 from core.perceptron import cargar_areas, evaluar, explicar_recomendacion
-from core.recomendador import cargar_carreras, recomendar
+from core.recomendador import cargar_carreras, recomendar, obtener_enlaces_oficiales
 
+
+
+def mostrar_bienvenida_terminal():
+    banner = r"""
+ VV     VV  OOOOO   CCCCC   AAAAA   BBBB    OOOOO   TTTTTTT
+ VV     VV OO   OO CC      AA   AA  BB  BB OO   OO    TTT
+  VV    VV OO   OO CC      AAAAAAA  BBBB   OO   OO    TTT
+  VV   VV  OO   OO CC      AA   AA  BB  BB OO   OO    TTT
+   VVVVV    OOOOO   CCCCC  AA   AA  BBBB    OOOOO     TTT
+
+                 V O C A B O T
+"""
+    print(banner)
+    print("Vocabot: asistente vocacional conversacional.")
+    print("Vocabot: Puedes escribir materias, hobbies, gustos, intereses o ideas sobre lo que te gustaría estudiar.")
+    print("Vocabot: También puedes responder con si, no, mucho, poco, más o menos, tal vez o no sé.")
+    print("Vocabot: Escribe 'salir' para terminar o 'ayuda' para ver estas instrucciones otra vez.")
+    print("Vocabot: Este bot es solo de apoyo y no sustituye la orientación vocacional profesional.")
+    print()
+
+
+def mostrar_ayuda_terminal():
+    print("Vocabot: Puedes hablarme de materias, hobbies, gustos, música, tecnología, lectura o cualquier interés que tengas.")
+    print("Vocabot: Responde con si, no, mucho, poco, más o menos, tal vez o no sé cuando te haga preguntas.")
+    print("Vocabot: Si quieres una nueva recomendación, puedes decírmelo en cualquier momento.")
+    print("Vocabot: Escribe 'salir' para terminar.")
+    print("Vocabot: Recuerda que esto es solo un apoyo; no reemplaza la orientación vocacional profesional.")
+    print()
 
 def main():
     intenciones   = cargar_intenciones('data/intenciones.json')
@@ -49,6 +77,8 @@ def main():
         # preguntas originales mantenidas por compatibilidad
         'manual':      {'arte': 0.25, 'matematicas': 0.20},
     }
+
+    mostrar_bienvenida_terminal()
 
     def preguntar_guiada():
         nonlocal estado, indice_pregunta, pregunta_actual
@@ -125,6 +155,12 @@ def main():
                             print(f'Vocabot:   * {c}')
                     else:
                         print('Vocabot:   * Sin carreras registradas por ahora')
+
+            enlaces = obtener_enlaces_oficiales()
+            if enlaces:
+                print('Vocabot: Puedes revisar la oferta educativa oficial en estas paginas:')
+                for uni, url in enlaces.items():
+                    print(f'Vocabot:   {uni}: {url}')
         else:
             print('Vocabot: No pude calcular una recomendacion por ahora.')
 
@@ -146,6 +182,9 @@ def main():
             continue
 
         texto_original = texto
+        if normalizar_texto(texto_original) in {'ayuda', 'help', 'instrucciones', 'como funciona'}:
+            mostrar_ayuda_terminal()
+            continue
 
         if es_despedida(texto, intenciones):
             print('Vocabot: Fue un gusto ayudarte.')
@@ -241,7 +280,7 @@ def main():
                 if area in memoria:
                     memoria[area] += float(peso)
 
-            print(f'Vocabot: {respuesta_humana(categoria)}')
+            print(f'Vocabot: {respuesta_humana(categoria, texto_limpio)}')
 
             if nombre and turnos % 2 == 0:
                 print(f'Vocabot: {nombre}, cuentame un poco mas de eso.')

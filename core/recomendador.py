@@ -1,5 +1,11 @@
 import json
 
+ENLACES_OFICIALES = {
+    "UNAM": "https://oferta.unam.mx/",
+    "IPN": "https://www.ipn.mx/oferta-educativa/educacion-superior/",
+    "UAM": "https://www.uam.mx/licenciaturas/index.html",
+}
+
 def _abrir_json(ruta: str):
     with open(ruta, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -15,6 +21,9 @@ def cargar_carreras(ruta: str) -> dict:
     datos = _abrir_json(ruta)
     datos = _desenvolver_si_viene_envuelto(datos, "carreras")
     return datos if isinstance(datos, dict) else {}
+
+def obtener_enlaces_oficiales() -> dict:
+    return dict(ENLACES_OFICIALES)
 
 def _buscar_clave_similar(diccionario: dict, clave: str):
     if clave in diccionario:

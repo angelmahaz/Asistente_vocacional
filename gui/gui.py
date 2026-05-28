@@ -15,7 +15,6 @@ from core.chatbot import (
     limpiar_mensaje_nombre,
     tiene_contenido_relevante,
     respuesta_humana,
-    respuesta_general,
     respuesta_no_entendida,
     es_despedida,
     es_afirmacion,
@@ -24,9 +23,10 @@ from core.chatbot import (
     interpretar_respuesta_escala,
     interpretar_respuesta_binaria,
     cargar_preguntas,
+    normalizar_texto,
 )
 from core.perceptron import cargar_areas, evaluar, explicar_recomendacion
-from core.recomendador import cargar_carreras, recomendar
+from core.recomendador import cargar_carreras, recomendar, obtener_enlaces_oficiales
 
 
 class ChatGUI:
@@ -104,6 +104,10 @@ class ChatGUI:
 
         self.mensaje_bot("Hola, soy Vocabot.")
         self.mensaje_bot("Cuéntame cuáles son tus gustos o en qué eres bueno.")
+        self.mensaje_bot("Puedes escribir materias, hobbies, música, tecnología o cualquier interés que tengas.")
+        self.mensaje_bot("También puedes responder con si, no, mucho, poco, más o menos, tal vez o no sé.")
+        self.mensaje_bot("Escribe 'salir' para terminar o 'ayuda' si quieres ver estas instrucciones otra vez.")
+        self.mensaje_bot("Este bot es solo de apoyo y no sustituye la orientación vocacional profesional.")
 
     def _ajustar_ancho(self, event):
         self.canvas.itemconfig(self.canvas_window, width=event.width)
@@ -328,6 +332,12 @@ class ChatGUI:
                         mensajes.append(" - " + "\n - ".join(lista))
                     else:
                         mensajes.append(" - Sin carreras registradas por ahora")
+
+            enlaces = obtener_enlaces_oficiales()
+            if enlaces:
+                mensajes.append("Consulta la oferta educativa oficial:")
+                for uni, url in enlaces.items():
+                    mensajes.append(f"{uni}: {url}")
         else:
             mensajes.append("No pude calcular una recomendación por ahora.")
 
@@ -350,7 +360,14 @@ class ChatGUI:
 
             self.mensaje_user(texto)
             texto_original = texto
-            texto_norm = texto.lower()
+            texto_norm = normalizar_texto(texto_original)
+
+            if texto_norm in {"ayuda", "help", "instrucciones", "como funciona"}:
+                self.mensaje_bot("Puedes hablarme de materias, hobbies, gustos, música, tecnología o cualquier interés que tengas.")
+                self.mensaje_bot("Responde con si, no, mucho, poco, más o menos, tal vez o no sé cuando te haga preguntas.")
+                self.mensaje_bot("Escribe 'salir' para terminar.")
+                self.mensaje_bot("Recuerda que esto es solo un apoyo y no sustituye la orientación vocacional profesional.")
+                return
 
             if self._manejar_finalizacion(texto_norm):
                 return
@@ -447,7 +464,7 @@ class ChatGUI:
                     if area in self.memoria:
                         self.memoria[area] += float(peso)
 
-                self.mensaje_bot(respuesta_humana(categoria))
+                self.mensaje_bot(respuesta_humana(categoria, texto_limpio))
 
                 if self.nombre and self.turnos % 2 == 0:
                     self.mensaje_bot(f"{self.nombre}, cuéntame un poco más de eso.")

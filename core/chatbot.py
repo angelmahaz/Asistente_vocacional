@@ -44,6 +44,31 @@ FRASES_DE_APOYO = {
 }
 
 
+# Gustos musicales usados como easter egg vocacional y como pista para el área de arte
+_GUSTOS_MUSICA_ROCK_METAL = {
+    "rock", "metal", "metalero", "metalera", "rockero", "rockera",
+    "heavy metal", "hard rock", "punk", "indie", "grunge", "alternativo"
+}
+
+_GUSTOS_MUSICA_URBANA = {
+    "reggaeton", "regueton", "trap", "rap", "hip hop", "hiphop", "urbano", "corridos tumbados"
+}
+
+_RESPUESTAS_ARTE_ROCK_METAL = [
+    "Se nota una mente abierta y un pensamiento crítico muy sólido.",
+    "Ese gusto por el rock o el metal suele ir con perfiles creativos y muy definidos.",
+    "Tienes una vibra con mucho carácter y criterio propio.",
+    "Eso encaja muy bien con personas creativas, analíticas y con personalidad fuerte.",
+]
+
+_RESPUESTAS_ARTE_URBANA = [
+    "Tienes una vibra urbana y rítmica; vamos a seguir afinando tu perfil vocacional.",
+    "Se nota energía y gusto por lo rítmico; ahora veamos qué área te queda mejor.",
+    "Tu estilo es más movido y moderno; igual podemos aterrizar bien tu orientación.",
+    "Buen ritmo y mucha presencia; sigamos construyendo tu perfil académico.",
+]
+
+
 def tiene_contenido_relevante(texto: str) -> bool:
     """
     Indica si, después de quitar saludos y muletillas, aún queda contenido útil.
@@ -375,7 +400,15 @@ def limpiar_mensaje_nombre(texto: str) -> str:
 
 
 
-def respuesta_humana(tipo: str) -> str:
+def respuesta_humana(tipo: str, contexto: str = "") -> str:
+    contexto_norm = normalizar_texto(contexto)
+
+    if tipo == "arte" and contexto_norm:
+        if coincide_frases(contexto_norm, list(_GUSTOS_MUSICA_ROCK_METAL)):
+            return random.choice(_RESPUESTAS_ARTE_ROCK_METAL)
+        if coincide_frases(contexto_norm, list(_GUSTOS_MUSICA_URBANA)):
+            return random.choice(_RESPUESTAS_ARTE_URBANA)
+
     respuestas = {
         "matematicas": [
             "Eso suena muy lógico y analítico.",
@@ -420,19 +453,6 @@ def respuesta_humana(tipo: str) -> str:
     }
     opciones = respuestas.get(tipo, ["Interesante, cuéntame un poco más."])
     return random.choice(opciones)
-
-
-def respuesta_general() -> str:
-    return random.choice([
-        "Cuéntame más.",
-        "Interesante...",
-        "Sigue, te escucho.",
-        "Eso me ayuda a conocerte mejor.",
-        "Voy entendiendo tus gustos.",
-        "Me parece interesante, continúa.",
-        "Eso es útil para trazar tu perfil.",
-        "Sigue contándome, cada detalle cuenta.",
-    ])
 
 
 def respuesta_no_entendida() -> str:
@@ -630,8 +650,15 @@ def _peso_especial_interes(area: str, termino_norm: str) -> float:
             "dibuj", "pint", "arte", "disen", "creativ", "mus", "fotograf",
             "anim", "ilustr", "cine", "teatr", "danz", "escultur", "moda",
             "multimedia", "son", "edicion", "modelado", "historiet", "mural",
+            "rock", "metal", "reggaeton", "regueton", "trap", "rap", "hip hop",
+            "jazz", "blues", "punk", "indie", "electro", "electron", "urban",
+            "musica", "cancion", "canciones", "concierto", "banda",
         )
         if any(pista in termino_norm for pista in pistas):
+            if any(pista in termino_norm for pista in ("rock", "metal")):
+                return 1.55
+            if any(pista in termino_norm for pista in ("reggaeton", "regueton", "trap", "rap", "hip hop", "urban")):
+                return 1.10
             return 1.20
 
     return 1.0
