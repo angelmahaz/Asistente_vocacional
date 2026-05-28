@@ -1,3 +1,17 @@
+#                                     *** Inteligencia Artificial ***
+#                              *** Proyecto Final. Asistente vocacional***
+#                                            *** Vocabot ***
+#
+#                                                Alumnos:
+#
+#                                    ° Cisneros Rojas Hector Manuel
+#                                    ° Garcia Perea Pablo Emilio
+#                                    ° Hernández Andrade Miguel Angel
+#                                    ° Navarro Rodriguez Angel Efren
+#                                    ° Toledo Duran Jesús Rodrigo
+
+#=======================================================================================================
+
 import json
 import random
 import re
@@ -13,6 +27,7 @@ PALABRAS_NO_NOMBRE = {
     "nombre", "apodo", "profesor", "maestro", "maestra"
 }
 
+# Disparadores para detectar nombre
 TRIGGERS_NOMBRE = (
     "me llamo",
     "mi nombre es",
@@ -26,13 +41,14 @@ TRIGGERS_NOMBRE = (
     "mi apodo es",
 )
 
+# Palabras que se ignoran al limpiar el nombre
 STOPWORDS_POST_NOMBRE = {
     "y", "pero", "porque", "pues", "aunque", "entonces", "además", "tambien",
     "también", "con", "sin", "para", "por", "que", "donde", "cuando", "si",
     "me", "mi", "soy", "llamo"
 }
 
-
+# Palabras y fragmentos de saludo
 SALUDOS_SIMPLES = {
     "hola", "buenas", "hey", "hello", "saludos", "alo", "buen", "dia",
     "dias", "tarde", "tardes", "noche", "noches", "que", "tal", "onda"
@@ -42,7 +58,6 @@ FRASES_DE_APOYO = {
     "hola", "buenas", "hey", "hello", "saludos", "alo", "que tal",
     "que onda", "buen dia", "buenos dias", "buenas tardes", "buenas noches"
 }
-
 
 # Gustos musicales usados como easter egg vocacional y como pista para el área de arte
 _GUSTOS_MUSICA_ROCK_METAL = {
@@ -79,7 +94,6 @@ def tiene_contenido_relevante(texto: str) -> bool:
     if not texto_norm:
         return False
 
-    # Si es solo saludo, no lo tratamos como contenido relevante.
     if coincide_frases(texto_norm, list(FRASES_DE_APOYO)):
         tokens = texto_norm.split()
         if len(tokens) <= 3:
@@ -138,42 +152,12 @@ def coincide_frases(texto: str, frases: List[str]) -> bool:
 
 def detectar_intereses(texto: str, intenciones: dict) -> List[str]:
     """
-    Devuelve una lista con la intención dominante entre:
-    matematicas, salud, humanidades, arte
+    Devuelve las áreas detectadas, ordenadas por evidencia descendente.
     """
-    texto_norm = normalizar_texto(texto)
-    if not texto_norm:
+    puntajes = puntuar_intereses(texto, intenciones)
+    if not puntajes:
         return []
-
-    tokens = texto_norm.split()
-    conteo = {categoria: 0.0 for categoria in AREAS_VALIDAS}
-
-    for categoria in AREAS_VALIDAS:
-        palabras = intenciones.get(categoria, []) or []
-        for palabra in palabras:
-            palabra_norm = normalizar_texto(palabra)
-            if not palabra_norm:
-                continue
-
-            # Coincidencia de frase completa
-            if " " in palabra_norm:
-                if palabra_norm in texto_norm:
-                    conteo[categoria] += 2.5 + (len(palabra_norm.split()) * 0.15)
-                continue
-
-            # Coincidencia por palabra exacta o por aproximación
-            if palabra_norm in tokens:
-                conteo[categoria] += 2.0
-            else:
-                for tok in tokens:
-                    if tok.startswith(palabra_norm) or palabra_norm.startswith(tok):
-                        conteo[categoria] += 0.85
-                        break
-
-    mejor = max(conteo, key=conteo.get)
-    if conteo[mejor] <= 0:
-        return []
-    return [mejor]
+    return [categoria for categoria, _ in sorted(puntajes.items(), key=lambda item: (-item[1], item[0]))]
 
 
 def detectar_recomendacion(texto: str, intenciones: dict) -> bool:
@@ -293,7 +277,6 @@ def interpretar_respuesta_escala(texto: str) -> Optional[int]:
     if not texto_norm:
         return None
 
-    # Si el usuario expresa que no sabe, mejor no forzar clasificación.
     if any(_contiene_frase_normalizada(texto_norm, frase) for frase in _RESPUESTAS_BINARIAS_INDEFINIDAS):
         return None
 
@@ -305,8 +288,6 @@ def interpretar_respuesta_escala(texto: str) -> Optional[int]:
         (4, sorted(_RESPUESTAS_ESCALA_4, key=len, reverse=True)),
     ]
 
-    # Primero se buscan frases específicas de menor a mayor para evitar
-    # que "no mucho" termine clasificado como "mucho".
     for valor, patrones in escalas:
         for patron in patrones:
             patron_norm = normalizar_texto(patron)
@@ -317,19 +298,10 @@ def interpretar_respuesta_escala(texto: str) -> Optional[int]:
                 if _contiene_token(texto_norm, patron_norm):
                     return valor
 
-    # Casos intermedios
     if any(_contiene_frase_normalizada(texto_norm, frase) for frase in _RESPUESTAS_ESCALA_4):
         return 4
 
     return None
-
-
-def es_afirmacion(texto: str) -> bool:
-    return interpretar_respuesta_binaria(texto) is True
-
-
-def es_negacion(texto: str) -> bool:
-    return interpretar_respuesta_binaria(texto) is False
 
 
 def _limpiar_fragmento_nombre(fragmento: str) -> str:
@@ -344,6 +316,7 @@ def _limpiar_fragmento_nombre(fragmento: str) -> str:
     return " ".join(limpias).strip(" \t\r\n,.;:!?")
 
 
+
 def extraer_nombre(texto: str) -> Optional[str]:
     """
     Intenta extraer un nombre si el usuario escribe algo como:
@@ -356,7 +329,6 @@ def extraer_nombre(texto: str) -> Optional[str]:
 
     texto_original = texto.strip()
 
-    # Patrones que capturan el texto posterior al disparador
     for trigger in TRIGGERS_NOMBRE:
         patron = re.compile(
             rf"\b{re.escape(trigger)}\b\s+([A-Za-zÁÉÍÓÚÜÑáéíóúüñ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ'\-]*(?:\s+[A-Za-zÁÉÍÓÚÜÑáéíóúüñ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ'\-]*){{0,2}})",
@@ -370,7 +342,6 @@ def extraer_nombre(texto: str) -> Optional[str]:
         if not candidato:
             continue
 
-        # Evitar falsos positivos como "soy estudiante"
         primer_token = normalizar_texto(candidato).split()[0]
         if primer_token in PALABRAS_NO_NOMBRE:
             continue
@@ -397,7 +368,6 @@ def limpiar_mensaje_nombre(texto: str) -> str:
 
     salida = re.sub(r"\s+", " ", salida).strip()
     return salida
-
 
 
 def respuesta_humana(tipo: str, contexto: str = "") -> str:
@@ -455,6 +425,16 @@ def respuesta_humana(tipo: str, contexto: str = "") -> str:
     return random.choice(opciones)
 
 
+def respuesta_general() -> str:
+    return random.choice([
+        "Cuéntame más.",
+        "Interesante...",
+        "Sigue, te escucho.",
+        "Eso me ayuda a conocerte mejor.",
+        "Voy entendiendo tus gustos.",
+    ])
+
+
 def respuesta_no_entendida() -> str:
     return random.choice([
         "No estoy seguro de entender. ¿Puedes explicarlo de otra forma?",
@@ -474,6 +454,7 @@ def cargar_preguntas(ruta: str) -> list:
     if isinstance(datos, list):
         return datos
     return []
+
 
 # ---------------------------------------------------------------------------
 # Mejora de puntuación por intereses
@@ -721,4 +702,3 @@ def detectar_intereses(texto: str, intenciones: dict) -> List[str]:
     if not puntajes:
         return []
     return [categoria for categoria, _ in sorted(puntajes.items(), key=lambda item: (-item[1], item[0]))]
-
