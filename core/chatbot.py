@@ -1,17 +1,41 @@
+
+#                                     *** Inteligencia Artificial ***
+#                              *** Proyecto Final. Asistente vocacional***
+#                                            *** Vocabot ***
+# 
+#                                                Alumnos:
+#
+#                                    ° Cisneros Rojas Hector Manuel
+#                                    ° Garcia Perea Pablo Emilio
+#                                    ° Hernández Andrade Miguel Angel 
+#                                    ° Navarro Rodriguez Angel Efren
+#                                    ° Toledo Duran Jesús Rodrigo
+
+#=======================================================================================================
+
 import json
 import random
 import re
 import unicodedata
 from typing import Dict, List, Optional
 
+
 AREAS_VALIDAS = {"matematicas", "salud", "humanidades", "arte"}
 
+#_______________________________________________________________________________________________________
+
 # Frases que no representan un nombre y no deben almacenarse como tal
+
 PALABRAS_NO_NOMBRE = {
     "estudiante", "aspirante", "persona", "alumno", "alumna", "usuario",
     "mucho", "gusto", "llamado", "llamada", "conocido", "conocida",
     "nombre", "apodo", "profesor", "maestro", "maestra"
 }
+
+#_______________________________________________________________________________________________________
+
+# Lista de frases (disparadores) que indican que el usuario está proporcionando su nombre.
+# Se utilizan en la función extraer_nombre() para detectar expresiones
 
 TRIGGERS_NOMBRE = (
     "me llamo",
@@ -26,30 +50,40 @@ TRIGGERS_NOMBRE = (
     "mi apodo es",
 )
 
+#_______________________________________________________________________________________________________
+
+# Limpia el fragmento extraído como nombre, eliminando conectores, preposiciones, pronombres y 
+# palabras que no pertenecen al nombre propio.
+
 STOPWORDS_POST_NOMBRE = {
     "y", "pero", "porque", "pues", "aunque", "entonces", "además", "tambien",
     "también", "con", "sin", "para", "por", "que", "donde", "cuando", "si",
     "me", "mi", "soy", "llamo"
 }
 
+#_______________________________________________________________________________________________________
+
+# Palabras y fragmentos de saludo que se filtran para detectar contenido relevante.
 
 SALUDOS_SIMPLES = {
     "hola", "buenas", "hey", "hello", "saludos", "alo", "buen", "dia",
     "dias", "tarde", "tardes", "noche", "noches", "que", "tal", "onda"
 }
 
+#_______________________________________________________________________________________________________
+
+# Frases de saludo y apoyo que se utilizan para identificar si el mensaje es solo un saludo básico.
 FRASES_DE_APOYO = {
     "hola", "buenas", "hey", "hello", "saludos", "alo", "que tal",
     "que onda", "buen dia", "buenos dias", "buenas tardes", "buenas noches"
 }
 
+#_______________________________________________________________________________________________________
+
+# Indica si el texto contiene información útil luego de eliminar saludos y muletillas.
 
 def tiene_contenido_relevante(texto: str) -> bool:
-    """
-    Indica si, después de quitar saludos y muletillas, aún queda contenido útil.
-    Se usa para evitar que frases como 'Hola soy Rodrigo' generen una respuesta
-    de 'no entendí' después de registrar el nombre.
-    """
+
     texto_norm = normalizar_texto(texto)
     if not texto_norm:
         return False
@@ -70,23 +104,37 @@ def tiene_contenido_relevante(texto: str) -> bool:
 
     return bool(tokens_filtrados)
 
+#_______________________________________________________________________________________________________
+
+# Abre un archivo JSON y devuelve su contenido.
 
 def _abrir_json(ruta: str):
     with open(ruta, "r", encoding="utf-8") as f:
         return json.load(f)
 
+#_______________________________________________________________________________________________________
+
+# Si los datos son un diccionario y contienen una clave cuyo valor es otro diccionario,lo extrae;
+# de lo contrario devuelve los datos originales.
 
 def _desenvolver_si_viene_envuelto(datos, clave: str):
     if isinstance(datos, dict) and clave in datos and isinstance(datos[clave], dict):
         return datos[clave]
     return datos
 
+#_______________________________________________________________________________________________________
+
+# Carga el archivo de intenciones y normaliza su estructura interna.
 
 def cargar_intenciones(ruta: str) -> dict:
     datos = _abrir_json(ruta)
     datos = _desenvolver_si_viene_envuelto(datos, "intenciones")
     return datos if isinstance(datos, dict) else {}
 
+#_______________________________________________________________________________________________________
+
+# Normaliza un texto: elimina acentos, signos de puntuación y espacios redundantes,y lo convierte a 
+# minúsculas para facilitar comparaciones.
 
 def normalizar_texto(texto: str) -> str:
     if not texto:
@@ -98,6 +146,9 @@ def normalizar_texto(texto: str) -> str:
     texto = re.sub(r"\s+", " ", texto).strip()
     return texto
 
+#_______________________________________________________________________________________________________
+
+# Verifica si alguna de las frases dadas aparece dentro del texto normalizado.
 
 def coincide_frases(texto: str, frases: List[str]) -> bool:
     texto_norm = normalizar_texto(texto)
@@ -110,12 +161,14 @@ def coincide_frases(texto: str, frases: List[str]) -> bool:
             return True
     return False
 
+#_______________________________________________________________________________________________________
+
+# Detecta el área de interés dominante (matemáticas, salud, humanidades, arte)
+# a partir del texto del usuario, usando las palabras clave definidas en intenciones.json.
+# Retorna una lista con el área de mayor puntuación (puede estar vacía si no hay coincidencias).
 
 def detectar_intereses(texto: str, intenciones: dict) -> List[str]:
-    """
-    Devuelve una lista con la intención dominante entre:
-    matematicas, salud, humanidades, arte
-    """
+
     texto_norm = normalizar_texto(texto)
     if not texto_norm:
         return []
@@ -150,28 +203,46 @@ def detectar_intereses(texto: str, intenciones: dict) -> List[str]:
         return []
     return [mejor]
 
+#_______________________________________________________________________________________________________
+
+# Detecta si el usuario está pidiendo explícitamente una recomendación.
 
 def detectar_recomendacion(texto: str, intenciones: dict) -> bool:
     return coincide_frases(texto, intenciones.get("recomendacion", []))
 
+#_______________________________________________________________________________________________________
+
+# Detecta si el usuario se está despidiendo (palabras clave como "salir", "adios", etc.).
 
 def es_despedida(texto: str, intenciones: dict) -> bool:
     return coincide_frases(texto, intenciones.get("despedida", []))
 
+#_______________________________________________________________________________________________________
+
+# Detecta si el usuario está saludando.
 
 def es_saludo(texto: str, intenciones: dict) -> bool:
     return coincide_frases(texto, intenciones.get("saludo", []))
 
+#_______________________________________________________________________________________________________
+
+# Verifica si la respuesta del usuario es una afirmación clara (sí, claro, ok, etc.).
 
 def es_afirmacion(texto: str) -> bool:
     texto_norm = normalizar_texto(texto)
     return texto_norm in {"si", "sí", "claro", "ok", "vale", "va", "correcto", "de acuerdo", "por supuesto"}
 
+#_______________________________________________________________________________________________________
+
+# Verifica si la respuesta es una negación (no, nop, nada, etc.).
 
 def es_negacion(texto: str) -> bool:
     texto_norm = normalizar_texto(texto)
     return texto_norm in {"no", "nop", "nel", "negativo", "para nada", "nada", "no gracias"}
 
+# ------------------------------------------------------------------------------------------
+# Conjuntos de palabras para interpretar respuestas binarias (sí/no) y de escala 1 a 5.
+# ------------------------------------------------------------------------------------------
 
 _RESPUESTAS_BINARIAS_AFIRMATIVAS = {
     "si", "sí", "claro", "ok", "vale", "va", "correcto", "de acuerdo",
@@ -206,6 +277,9 @@ _RESPUESTAS_ESCALA_1 = {
     "nada", "para nada", "no", "nop", "nunca", "jamas", "jamás"
 }
 
+#_______________________________________________________________________________________________________
+
+# Verifica si una frase normalizada está contenida en el texto normalizado.
 
 def _contiene_frase_normalizada(texto_norm: str, frase: str) -> bool:
     frase_norm = normalizar_texto(frase)
@@ -213,6 +287,9 @@ def _contiene_frase_normalizada(texto_norm: str, frase: str) -> bool:
         return False
     return frase_norm in texto_norm
 
+#_______________________________________________________________________________________________________
+
+# Verifica si un token (palabra) normalizado está presente en el texto normalizado.
 
 def _contiene_token(texto_norm: str, token: str) -> bool:
     token_norm = normalizar_texto(token)
@@ -220,14 +297,12 @@ def _contiene_token(texto_norm: str, token: str) -> bool:
         return False
     return token_norm in texto_norm.split()
 
+#_______________________________________________________________________________________________________
+
+# Interpreta una respuesta del usuario como afirmativa (True), negativa (False) o incierta (None).
 
 def interpretar_respuesta_binaria(texto: str) -> Optional[bool]:
-    """
-    Devuelve:
-    - True  -> respuesta afirmativa
-    - False -> respuesta negativa
-    - None  -> no se pudo clasificar
-    """
+
     texto_norm = normalizar_texto(texto)
     if not texto_norm:
         return None
@@ -253,22 +328,18 @@ def interpretar_respuesta_binaria(texto: str) -> Optional[bool]:
 
     return None
 
+#_______________________________________________________________________________________________________
+
+# Convierte una respuesta en un valor numérico de 1 a 5 según la intensidad del interés. 
 
 def interpretar_respuesta_escala(texto: str) -> Optional[int]:
-    """
-    Interpreta respuestas tipo:
-    - mucho / bastante / sí / claro -> 5
-    - me gusta / un poco / algo / regular -> 4
-    - más o menos / medio -> 3
-    - poco / muy poco / casi nada -> 2
-    - nada / no / para nada -> 1
-    Si no puede determinarse, devuelve None.
-    """
+
     texto_norm = normalizar_texto(texto)
     if not texto_norm:
         return None
 
     # Si el usuario expresa que no sabe, mejor no forzar clasificación.
+
     if any(_contiene_frase_normalizada(texto_norm, frase) for frase in _RESPUESTAS_BINARIAS_INDEFINIDAS):
         return None
 
@@ -282,6 +353,7 @@ def interpretar_respuesta_escala(texto: str) -> Optional[int]:
 
     # Primero se buscan frases específicas de menor a mayor para evitar
     # que "no mucho" termine clasificado como "mucho".
+
     for valor, patrones in escalas:
         for patron in patrones:
             patron_norm = normalizar_texto(patron)
@@ -298,14 +370,23 @@ def interpretar_respuesta_escala(texto: str) -> Optional[int]:
 
     return None
 
+#_______________________________________________________________________________________________________
+
+# Devuelve True si la respuesta es afirmativa según interpretar_respuesta_binaria.
 
 def es_afirmacion(texto: str) -> bool:
     return interpretar_respuesta_binaria(texto) is True
 
+#_______________________________________________________________________________________________________
+
+# Devuelve True si la respuesta es negativa.
 
 def es_negacion(texto: str) -> bool:
     return interpretar_respuesta_binaria(texto) is False
 
+#_______________________________________________________________________________________________________
+
+# Limpia el fragmento extraído como nombre eliminando conectores y palabras de parada.
 
 def _limpiar_fragmento_nombre(fragmento: str) -> str:
     fragmento = fragmento.strip(" \t\r\n,.;:!?")
@@ -318,14 +399,13 @@ def _limpiar_fragmento_nombre(fragmento: str) -> str:
         limpias.append(p)
     return " ".join(limpias).strip(" \t\r\n,.;:!?")
 
+#_______________________________________________________________________________________________________
+
+# Extrae el nombre del usuario si el texto contiene frases como "me llamo X" o "soy Y" y retorna el 
+# nombre capitalizado o None si no se detecta.
 
 def extraer_nombre(texto: str) -> Optional[str]:
-    """
-    Intenta extraer un nombre si el usuario escribe algo como:
-    - "me llamo Rodrigo"
-    - "soy Ana"
-    - "mi nombre es Carlos"
-    """
+
     if not texto:
         return None
 
@@ -355,10 +435,13 @@ def extraer_nombre(texto: str) -> Optional[str]:
     return None
 
 
+#_______________________________________________________________________________________________________
+
+# Elimina del texto las frases que contienen el nombre para que no interfieran con la detección 
+# de intereses.
+
 def limpiar_mensaje_nombre(texto: str) -> str:
-    """
-    Quita del texto el fragmento relacionado con nombre para no interferir con la detección de intereses.
-    """
+
     if not texto:
         return texto
 
@@ -373,7 +456,9 @@ def limpiar_mensaje_nombre(texto: str) -> str:
     salida = re.sub(r"\s+", " ", salida).strip()
     return salida
 
+#_______________________________________________________________________________________________________
 
+# Respuesta proporcionada según el área de interés detectada.
 
 def respuesta_humana(tipo: str) -> str:
     respuestas = {
@@ -421,6 +506,9 @@ def respuesta_humana(tipo: str) -> str:
     opciones = respuestas.get(tipo, ["Interesante, cuéntame un poco más."])
     return random.choice(opciones)
 
+#_______________________________________________________________________________________________________
+
+# Respuesta del bot cuando quiere seguir animando la conversación.
 
 def respuesta_general() -> str:
     return random.choice([
@@ -434,6 +522,9 @@ def respuesta_general() -> str:
         "Sigue contándome, cada detalle cuenta.",
     ])
 
+#_______________________________________________________________________________________________________
+
+# Respuesta cuando el bot no logra entender el mensaje del usuario.
 
 def respuesta_no_entendida() -> str:
     return random.choice([
@@ -446,6 +537,9 @@ def respuesta_no_entendida() -> str:
         "Creo que no comprendí bien. ¿Qué materias o actividades te llaman la atención?",
     ])
 
+#_______________________________________________________________________________________________________
+
+# Carga la lista de preguntas desde el archivo JSON
 
 def cargar_preguntas(ruta: str) -> list:
     datos = _abrir_json(ruta)
@@ -456,7 +550,7 @@ def cargar_preguntas(ruta: str) -> list:
     return []
 
 # ---------------------------------------------------------------------------
-# Mejora de puntuación por intereses
+# Pesos adicionales para ciertas palabras clave en cada área (refuerzan la puntuación).x
 # ---------------------------------------------------------------------------
 
 _PESOS_ESPECIALES_INTERESES = {
@@ -589,6 +683,9 @@ _PESOS_ESPECIALES_INTERESES = {
     },
 }
 
+#_______________________________________________________________________________________________________
+
+# 
 
 def _peso_especial_interes(area: str, termino_norm: str) -> float:
     pesos = _PESOS_ESPECIALES_INTERESES.get(area, {})
@@ -636,13 +733,13 @@ def _peso_especial_interes(area: str, termino_norm: str) -> float:
 
     return 1.0
 
+#_______________________________________________________________________________________________________
+
+# Puntúa el texto del usuario asignando evidencia a cada área (matemáticas, salud, etc.)
+# usando las palabras clave y los pesos especiales. Normaliza los puntajes para que sumen 1.
 
 def puntuar_intereses(texto: str, intenciones: dict) -> Dict[str, float]:
-    """
-    Calcula una distribución de evidencia por área a partir de un mensaje.
-    Cada mensaje reparte su peso entre las áreas que realmente aparezcan,
-    evitando que una frase larga distorsione el resultado.
-    """
+
     texto_norm = normalizar_texto(texto)
     if not texto_norm:
         return {}
@@ -685,13 +782,13 @@ def puntuar_intereses(texto: str, intenciones: dict) -> Dict[str, float]:
         if valor > 0
     }
 
+#_______________________________________________________________________________________________________
+
+# Devuelve las áreas detectadas ordenadas por mayor evidencia (la primera es la más probable).
 
 def detectar_intereses(texto: str, intenciones: dict) -> List[str]:
-    """
-    Devuelve las áreas detectadas, ordenadas por evidencia descendente.
-    """
+
     puntajes = puntuar_intereses(texto, intenciones)
     if not puntajes:
         return []
     return [categoria for categoria, _ in sorted(puntajes.items(), key=lambda item: (-item[1], item[0]))]
-
