@@ -1,5 +1,7 @@
 {
+
   "recomendacion": [
+
     "que me recomiendas",
     "qué me recomiendas",
     "recomiendame",
@@ -19,7 +21,9 @@
     "dame ideas",
     "recomendación de carreras"
   ],
+
   "nombre": [
+
     "soy",
     "me llamo",
     "mi nombre es",
@@ -34,7 +38,9 @@
     "soy estudiante",
     "soy aspirante"
   ],
+
   "saludo": [
+
     "hola",
     "buenas",
     "hey",
@@ -52,7 +58,9 @@
     "alo",
     "buen día"
   ],
+
   "despedida": [
+
     "salir",
     "terminar",
     "finalizar",
@@ -70,7 +78,9 @@
     "terminamos",
     "cortar conversación"
   ],
+
   "matematicas": [
+
     "matematicas",
     "numeros",
     "calculo",
@@ -112,7 +122,9 @@
     "arquitectura de software",
     "ciencia computacional"
   ],
+
   "salud": [
+
     "medicina",
     "doctor",
     "hospital",
@@ -147,7 +159,9 @@
     "quimicos",
     "quimica biologica"
   ],
+
   "humanidades": [
+
     "leer",
     "historia",
     "derecho",
@@ -177,7 +191,9 @@
     "bibliotecologia",
     "arqueologia"
   ],
+
   "arte": [
+    
     "dibujar",
     "pintar",
     "arte",

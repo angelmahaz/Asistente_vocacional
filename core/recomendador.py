@@ -39,7 +39,7 @@ def _desenvolver_si_viene_envuelto(datos, clave: str):
 
 #_______________________________________________________________________________________________________
 
-# carga el catálogo de carreras desde un archivo JSON, extrae el diccionario interno correspondiente si 
+# Carga el catálogo de carreras desde un archivo JSON, extrae el diccionario interno correspondiente si 
 # la estructura viene envuelta bajo la clave "carreras" y valida que el resultado final sea un diccionario.
 
 def cargar_carreras(ruta: str) -> dict:
