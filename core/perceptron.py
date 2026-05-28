@@ -1,3 +1,18 @@
+
+#                                     *** Inteligencia Artificial ***
+#                              *** Proyecto Final. Asistente vocacional***
+#                                            *** Vocabot ***
+# 
+#                                                Alumnos:
+#
+#                                    ° Cisneros Rojas Hector Manuel
+#                                    ° Garcia Perea Pablo Emilio
+#                                    ° Hernández Andrade Miguel Angel 
+#                                    ° Navarro Rodriguez Angel Efren
+#                                    ° Toledo Duran Jesús Rodrigo
+
+#=======================================================================================================
+
 import json
 import math
 from typing import Dict, List, Tuple
@@ -5,11 +20,17 @@ from typing import Dict, List, Tuple
 
 INPUT_ORDER = ("matematicas", "salud", "humanidades", "arte")
 
+#_______________________________________________________________________________________________________
+
+# Abre un archivo JSON y devuelve su contenido.
 
 def _abrir_json(ruta: str):
     with open(ruta, "r", encoding="utf-8") as f:
         return json.load(f)
 
+#_______________________________________________________________________________________________________
+
+# Si los datos contienen una clave que envuelve un diccionario interno, lo extrae.
 
 def _desenvolver_si_viene_envuelto(datos, clave: str):
     if isinstance(datos, dict) and clave in datos:
@@ -18,18 +39,27 @@ def _desenvolver_si_viene_envuelto(datos, clave: str):
             return valor
     return datos
 
+#_______________________________________________________________________________________________________
+
+# Carga el archivo de áreas y normaliza su estructura. 
 
 def cargar_areas(ruta: str) -> dict:
     datos = _abrir_json(ruta)
     datos = _desenvolver_si_viene_envuelto(datos, "areas")
     return datos if isinstance(datos, dict) else {}
 
+#_______________________________________________________________________________________________________
+
+# Función sigmoide con clamp para evitar desbordamiento. 
 
 def _sigmoid(x: float) -> float:
     # Clamp para evitar overflow en casos extremos
     x = max(-30.0, min(30.0, float(x)))
     return 1.0 / (1.0 + math.exp(-x))
 
+#_______________________________________________________________________________________________________
+
+# Normaliza las entradas (valores 0-5) a un vector de 0 a 1.
 
 def _normalizar_entradas(entradas: Dict[str, float]) -> List[float]:
     vector = []
@@ -39,6 +69,10 @@ def _normalizar_entradas(entradas: Dict[str, float]) -> List[float]:
         vector.append(valor / 5.0)
     return vector
 
+
+#_______________________________________________________________________________________________________
+
+# Capa densa de una red neuronal: multiplica, suma, aplica sigmoide y conexión residual.
 
 def _capa_densa(vector: List[float], pesos: List[List[float]], bias: List[float], residual: float = 0.0) -> List[float]:
     salida = []
@@ -53,9 +87,12 @@ def _capa_densa(vector: List[float], pesos: List[List[float]], bias: List[float]
     return salida
 
 
+#_______________________________________________________________________________________________________
+
 # 7 capas en total:
 # 1 de entrada + 5 ocultas + 1 de salida
 # Se usan pesos fijos para conservar el enfoque sin entrenamiento.
+
 _CAPAS_OCULTAS = [
     (
         [
@@ -67,6 +104,7 @@ _CAPAS_OCULTAS = [
         [0.05, 0.03, 0.02, 0.04],
         0.25,
     ),
+
     (
         [
             [1.10, 0.12, 0.06, 0.08],
@@ -77,6 +115,7 @@ _CAPAS_OCULTAS = [
         [0.04, 0.02, 0.03, 0.03],
         0.20,
     ),
+
     (
         [
             [1.08, 0.08, 0.05, 0.05],
@@ -87,6 +126,7 @@ _CAPAS_OCULTAS = [
         [0.03, 0.02, 0.02, 0.03],
         0.18,
     ),
+
     (
         [
             [1.04, 0.08, 0.04, 0.06],
@@ -97,6 +137,7 @@ _CAPAS_OCULTAS = [
         [0.02, 0.02, 0.02, 0.02],
         0.15,
     ),
+
     (
         [
             [1.02, 0.06, 0.04, 0.05],
@@ -109,6 +150,9 @@ _CAPAS_OCULTAS = [
     ),
 ]
 
+#_______________________________________________________________________________________________________
+
+# Propaga la entrada a través de las capas ocultas.
 
 def _paso_forward(vector: List[float]) -> List[float]:
     salida = vector
@@ -116,19 +160,12 @@ def _paso_forward(vector: List[float]) -> List[float]:
         salida = _capa_densa(salida, pesos, bias, residual=residual)
     return salida
 
+#_______________________________________________________________________________________________________
+
+# Versión inicial de evaluación. Calcula puntajes y probabilidades.
 
 def evaluar(entradas: Dict[str, float], areas: Dict[str, Dict[str, float]]):
-    """
-    Red neuronal multicapa manual:
-    - Capa de entrada: 4 variables vocacionales.
-    - 5 capas ocultas con pesos fijos.
-    - Capa de salida: calcula puntaje por área usando los pesos de areas.json.
 
-    Devuelve:
-    - mejor_area
-    - resultados (puntajes)
-    - probabilidad relativa por área
-    """
     vector_entrada = _normalizar_entradas(entradas)
     representacion_final = _paso_forward(vector_entrada)
 
@@ -156,11 +193,12 @@ def evaluar(entradas: Dict[str, float], areas: Dict[str, Dict[str, float]]):
     return mejor, resultados, prob
 
 
+#_______________________________________________________________________________________________________
+
+# Explica qué características (áreas) contribuyeron más a la recomendación.
+
 def explicar_recomendacion(entradas: Dict[str, float], areas: Dict[str, Dict[str, float]], area: str, top_n: int = 2) -> List[str]:
-    """
-    Devuelve las características que más contribuyeron al área recomendada.
-    Útil para explicar el resultado al usuario.
-    """
+
     if not area or area not in areas:
         return []
 
@@ -175,6 +213,9 @@ def explicar_recomendacion(entradas: Dict[str, float], areas: Dict[str, Dict[str
     relevantes = [k for k, v in contribuciones if v > 0][:top_n]
     return relevantes
 
+#_______________________________________________________________________________________________________
+
+# Devuelve los nombres de las capas de la red neuronal para depuración. 
 
 def descripcion_arquitectura() -> List[str]:
     return [
@@ -187,12 +228,15 @@ def descripcion_arquitectura() -> List[str]:
         "Capa de salida",
     ]
 
+#_______________________________________________________________________________________________________
+
 # ---------------------------------------------------------------------------
 # Ajuste de preservación de señal y evaluación final
 # ---------------------------------------------------------------------------
 
-# Se incrementa la conservación de la información de entrada para evitar que
-# las capas ocultas suavicen demasiado la señal y produzcan puntajes parecidos.
+# Se incrementa la conservación de la información de entrada para evitar que las capas ocultas 
+# suavicen demasiado la señal y produzcan puntajes parecidos.
+
 _CAPAS_OCULTAS = [
     (
         [
@@ -246,14 +290,12 @@ _CAPAS_OCULTAS = [
     ),
 ]
 
+#_______________________________________________________________________________________________________
+
+# Versión final de evaluación con mezcla conservadora (preserva la entrada original). 
 
 def evaluar(entradas: Dict[str, float], areas: Dict[str, Dict[str, float]]):
-    """
-    Versión refinada de la red multicapa manual.
 
-    Mantiene la arquitectura de 7 capas, pero preserva mejor la señal original
-    para que los gustos realmente dominantes no se diluyan en puntajes parecidos.
-    """
     vector_entrada = _normalizar_entradas(entradas)
     representacion_oculta = _paso_forward(vector_entrada)
 
@@ -292,4 +334,3 @@ def evaluar(entradas: Dict[str, float], areas: Dict[str, Dict[str, float]]):
 
     mejor = max(prob, key=prob.get) if prob else None
     return mejor, resultados, prob
-

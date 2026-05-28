@@ -115,6 +115,14 @@ def main():
                 return True
         return False
 
+
+#_______________________________________________________________________________________________________
+
+# Función Repetir la pregunta
+#   Reenvía y vuelve a imprimir en consola el texto del reactivo vigente en ese momento, útil cuando 
+#   el usuario introduce una respuesta inválida, solicita una aclaración o activa una pausa.
+
+
     def repetir_pregunta_actual():
         if pregunta_actual:
             texto = pregunta_actual.get('texto', '')
@@ -123,11 +131,28 @@ def main():
                 return True
         return False
 
+
+#_______________________________________________________________________________________________________
+
+# Función para calcular la respuesta
+#   Calcula el impacto cuantitativo de la respuesta del usuario sobre su perfil vocacional, normalizando
+#   la puntuación recibida a una escala de 0.0 a 1.0 y aplicando los coeficientes ponderados a la memoria
+#   de aptitudes.
+
     def aplicar_respuesta_pregunta(pregunta_id, valor):
         factor = max(0.0, min(1.0, (float(valor) - 1.0) / 4.0))
         for categoria, peso in mapa_preguntas.get(pregunta_id, {}).items():
             if categoria in memoria:
                 memoria[categoria] += factor * float(peso)
+
+
+#_______________________________________________________________________________________________________
+
+
+# Función que reinicia la memoria
+#   Restablece todas las variables de control, puntuaciones vocacionales y estados de la sesión, 
+#   permitiendo al usuario volver a iniciar el test y la interacción desde cero sin necesidad de 
+#   reiniciar la ejecución del programa.
 
     def reiniciar_ciclo_vocacional():
         nonlocal memoria, turnos, estado, indice_pregunta, pregunta_actual, ultima_area
@@ -137,6 +162,14 @@ def main():
         indice_pregunta = 0
         pregunta_actual = None
         ultima_area = None
+
+
+#_______________________________________________________________________________________________________
+
+
+# Función que despliega las recomendaciones de las áreas
+#   Procesa y despliega las recomendaciones de áreas de estudio y carreras universitarias,o solicita 
+#   más datos al usuario si la información recopilada en memoria es insuficiente.
 
     def resultado():
         nonlocal estado, pregunta_actual, ultima_area
@@ -317,6 +350,8 @@ def main():
 
         if turnos >= 5 and sum(memoria.values()) > 0 and estado == 'charla':
             resultado()
+
+#_______________________________________________________________________________________________________
 
 
 if __name__ == '__main__':
