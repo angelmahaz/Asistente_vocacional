@@ -1,13 +1,12 @@
-
 #                                     *** Inteligencia Artificial ***
 #                              *** Proyecto Final. Asistente vocacional***
 #                                            *** Vocabot ***
-# 
+#
 #                                                Alumnos:
 #
 #                                    ° Cisneros Rojas Hector Manuel
 #                                    ° Garcia Perea Pablo Emilio
-#                                    ° Hernández Andrade Miguel Angel 
+#                                    ° Hernández Andrade Miguel Angel
 #                                    ° Navarro Rodriguez Angel Efren
 #                                    ° Toledo Duran Jesús Rodrigo
 
@@ -29,36 +28,61 @@ from core.chatbot import (
     interpretar_respuesta_escala,
     interpretar_respuesta_binaria,
     cargar_preguntas,
+    normalizar_texto,
 )
 
 from core.perceptron import cargar_areas, evaluar, explicar_recomendacion
-from core.recomendador import cargar_carreras, recomendar
+from core.recomendador import cargar_carreras, recomendar, obtener_enlaces_oficiales
 
 
 #=======================================================================================================
 #                                         *** Funciones ***
 #=======================================================================================================
 
+def mostrar_bienvenida_terminal():
+    banner = r"""
+ VV     VV  OOOOO   CCCCC   AAAAA   BBBB    OOOOO   TTTTTTT
+ VV     VV OO   OO CC      AA   AA  BB  BB OO   OO    TTT
+  VV    VV OO   OO CC      AAAAAAA  BBBB   OO   OO    TTT
+  VV   VV  OO   OO CC      AA   AA  BB  BB OO   OO    TTT
+   VVVVV    OOOOO   CCCCC  AA   AA  BBBB    OOOOO     TTT
 
-#_______________________________________________________________________________________________________
+                 V O C A B O T
+"""
+    print(banner)
+    print("Vocabot: asistente vocacional conversacional.")
+    print("Vocabot: Puedes escribir materias, hobbies, gustos, intereses o ideas sobre lo que te gustaría estudiar.")
+    print("Vocabot: También puedes responder con si, no, mucho, poco, más o menos, tal vez o no sé.")
+    print("Vocabot: Escribe 'salir' para terminar o 'ayuda' para ver estas instrucciones otra vez.")
+    print("Vocabot: Este bot es solo de apoyo y no sustituye la orientación vocacional profesional.")
+    print()
+
+
+def mostrar_ayuda_terminal():
+    print("Vocabot: Puedes hablarme de materias, hobbies, gustos, música, tecnología, lectura o cualquier interés que tengas.")
+    print("Vocabot: Responde con si, no, mucho, poco, más o menos, tal vez o no sé cuando te haga preguntas.")
+    print("Vocabot: Si quieres una nueva recomendación, puedes decírmelo en cualquier momento.")
+    print("Vocabot: Escribe 'salir' para terminar.")
+    print("Vocabot: Recuerda que esto es solo un apoyo; no reemplaza la orientación vocacional profesional.")
+    print()
+
 
 # Función principal
-#   Inicializa el entorno de ejecución, carga la base de conocimientos en formato JSON, 
-#   establece el estado inicial de la sesión y define la matriz de pesos 
-
+# Inicializa el entorno de ejecución, carga la base de conocimientos en formato JSON,
+# establece el estado inicial de la sesión y define la matriz de pesos.
 def main():
-    intenciones   = cargar_intenciones('data/intenciones.json')
-    areas         = cargar_areas('data/areas.json')
+    intenciones = cargar_intenciones('data/intenciones.json')
+    areas = cargar_areas('data/areas.json')
     carreras_data = cargar_carreras('data/carreras.json')
-    preguntas     = cargar_preguntas('data/preguntas.json')
+    preguntas = cargar_preguntas('data/preguntas.json')
 
-    nombre         = None
-    memoria        = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
-    turnos         = 0
-    estado         = 'charla'
+    nombre = None
+    memoria = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
+    turnos = 0
+    estado = 'charla'
     indice_pregunta = 0
     pregunta_actual = None
-    ultima_area     = None
+    ultima_area = None
 
     # -----------------------------------------------------------------------
     # Mapa de preguntas ampliado a las 8 del nuevo preguntas.json
@@ -77,19 +101,14 @@ def main():
         'manual':      {'arte': 0.25, 'matematicas': 0.20},
     }
 
-#_______________________________________________________________________________________________________
-
-
-# Función de despliegue de preguntas
-#   Gestiona de manera secuencial la asignación y el despliegue de las preguntas del test vocacional, 
-#   actualizando la máquina de estados del chatbot mientras queden reactivos disponibles.
+    mostrar_bienvenida_terminal()
 
     def preguntar_guiada():
         nonlocal estado, indice_pregunta, pregunta_actual
         if indice_pregunta < len(preguntas):
-            pregunta_actual  = preguntas[indice_pregunta]
+            pregunta_actual = preguntas[indice_pregunta]
             indice_pregunta += 1
-            estado           = 'pregunta'
+            estado = 'pregunta'
             texto = pregunta_actual.get('texto', '')
             if texto:
                 print(f'Vocabot: {texto}')
@@ -137,12 +156,12 @@ def main():
 
     def reiniciar_ciclo_vocacional():
         nonlocal memoria, turnos, estado, indice_pregunta, pregunta_actual, ultima_area
-        memoria         = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
-        turnos          = 0
-        estado          = 'charla'
+        memoria = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
+        turnos = 0
+        estado = 'charla'
         indice_pregunta = 0
         pregunta_actual = None
-        ultima_area     = None
+        ultima_area = None
 
 
 #_______________________________________________________________________________________________________
@@ -163,11 +182,11 @@ def main():
 
         estado = 'post'
         area, _, prob = evaluar(memoria, areas)
-        ultima_area   = area
+        ultima_area = area
 
         print('Vocabot: Estoy analizando tus respuestas con IA...')
         for a, p in sorted(prob.items(), key=lambda x: x[1], reverse=True):
-            print(f'Vocabot:   {a}: {p:.0%}')
+            print(f'Vocabot: {a}: {p:.2f}')
 
         if area:
             if nombre:
@@ -179,7 +198,6 @@ def main():
             if top:
                 print(f'Vocabot: Tome en cuenta principalmente: {", ".join(top)}.')
 
-            # Mostrar TODAS las carreras sin limite
             carreras = recomendar(area, carreras_data, max_por_uni=999)
             if not carreras:
                 print('Vocabot: No encontre carreras disponibles por ahora.')
@@ -192,6 +210,12 @@ def main():
                             print(f'Vocabot:   * {c}')
                     else:
                         print('Vocabot:   * Sin carreras registradas por ahora')
+
+            enlaces = obtener_enlaces_oficiales()
+            if enlaces:
+                print('Vocabot: Puedes revisar la oferta educativa oficial en estas paginas:')
+                for uni, url in enlaces.items():
+                    print(f'Vocabot:   {uni}: {url}')
         else:
             print('Vocabot: No pude calcular una recomendacion por ahora.')
 
@@ -214,13 +238,17 @@ def main():
 
         texto_original = texto
 
+        if normalizar_texto(texto_original) in {'ayuda', 'help', 'instrucciones', 'como funciona'}:
+            mostrar_ayuda_terminal()
+            continue
+
         if es_despedida(texto, intenciones):
             print('Vocabot: Fue un gusto ayudarte.')
             break
 
         nombre_detectado = extraer_nombre(texto_original)
         if nombre_detectado:
-            nombre         = nombre_detectado
+            nombre = nombre_detectado
             texto_sin_nombre = limpiar_mensaje_nombre(texto_original)
 
             if not tiene_contenido_relevante(texto_sin_nombre):
@@ -287,7 +315,7 @@ def main():
             else:
                 print('Vocabot: Entendido, veo poco interes en eso.')
 
-            estado          = 'charla'
+            estado = 'charla'
             pregunta_actual = None
 
             if sum(memoria.values()) < 2 and indice_pregunta < len(preguntas):
@@ -299,8 +327,8 @@ def main():
             print('Vocabot: Hola, soy Vocabot, dime cuales son tus gustos.')
             continue
 
-        texto_limpio     = limpiar_mensaje_nombre(texto_original)
-        contribuciones   = puntuar_intereses(texto_limpio, intenciones)
+        texto_limpio = limpiar_mensaje_nombre(texto_original)
+        contribuciones = puntuar_intereses(texto_limpio, intenciones)
 
         if contribuciones:
             categoria = max(contribuciones, key=contribuciones.get)
@@ -308,7 +336,7 @@ def main():
                 if area in memoria:
                     memoria[area] += float(peso)
 
-            print(f'Vocabot: {respuesta_humana(categoria)}')
+            print(f'Vocabot: {respuesta_humana(categoria, texto_limpio)}')
 
             if nombre and turnos % 2 == 0:
                 print(f'Vocabot: {nombre}, cuentame un poco mas de eso.')

@@ -1,13 +1,12 @@
-
 #                                     *** Inteligencia Artificial ***
 #                              *** Proyecto Final. Asistente vocacional***
 #                                            *** Vocabot ***
-# 
+#
 #                                                Alumnos:
 #
 #                                    ° Cisneros Rojas Hector Manuel
 #                                    ° Garcia Perea Pablo Emilio
-#                                    ° Hernández Andrade Miguel Angel 
+#                                    ° Hernández Andrade Miguel Angel
 #                                    ° Navarro Rodriguez Angel Efren
 #                                    ° Toledo Duran Jesús Rodrigo
 
@@ -32,11 +31,7 @@ PALABRAS_NO_NOMBRE = {
     "nombre", "apodo", "profesor", "maestro", "maestra"
 }
 
-#_______________________________________________________________________________________________________
-
-# Lista de frases (disparadores) que indican que el usuario está proporcionando su nombre.
-# Se utilizan en la función extraer_nombre() para detectar expresiones
-
+# Disparadores para detectar nombre
 TRIGGERS_NOMBRE = (
     "me llamo",
     "mi nombre es",
@@ -50,21 +45,14 @@ TRIGGERS_NOMBRE = (
     "mi apodo es",
 )
 
-#_______________________________________________________________________________________________________
-
-# Limpia el fragmento extraído como nombre, eliminando conectores, preposiciones, pronombres y 
-# palabras que no pertenecen al nombre propio.
-
+# Palabras que se ignoran al limpiar el nombre
 STOPWORDS_POST_NOMBRE = {
     "y", "pero", "porque", "pues", "aunque", "entonces", "además", "tambien",
     "también", "con", "sin", "para", "por", "que", "donde", "cuando", "si",
     "me", "mi", "soy", "llamo"
 }
 
-#_______________________________________________________________________________________________________
-
-# Palabras y fragmentos de saludo que se filtran para detectar contenido relevante.
-
+# Palabras y fragmentos de saludo
 SALUDOS_SIMPLES = {
     "hola", "buenas", "hey", "hello", "saludos", "alo", "buen", "dia",
     "dias", "tarde", "tardes", "noche", "noches", "que", "tal", "onda"
@@ -78,9 +66,30 @@ FRASES_DE_APOYO = {
     "que onda", "buen dia", "buenos dias", "buenas tardes", "buenas noches"
 }
 
-#_______________________________________________________________________________________________________
+# Gustos musicales usados como easter egg vocacional y como pista para el área de arte
+_GUSTOS_MUSICA_ROCK_METAL = {
+    "rock", "metal", "metalero", "metalera", "rockero", "rockera",
+    "heavy metal", "hard rock", "punk", "indie", "grunge", "alternativo"
+}
 
-# Indica si el texto contiene información útil luego de eliminar saludos y muletillas.
+_GUSTOS_MUSICA_URBANA = {
+    "reggaeton", "regueton", "trap", "rap", "hip hop", "hiphop", "urbano", "corridos tumbados"
+}
+
+_RESPUESTAS_ARTE_ROCK_METAL = [
+    "Se nota una mente abierta y un pensamiento crítico muy sólido.",
+    "Ese gusto por el rock o el metal suele ir con perfiles creativos y muy definidos.",
+    "Tienes una vibra con mucho carácter y criterio propio.",
+    "Eso encaja muy bien con personas creativas, analíticas y con personalidad fuerte.",
+]
+
+_RESPUESTAS_ARTE_URBANA = [
+    "Tienes una vibra urbana y rítmica; vamos a seguir afinando tu perfil vocacional.",
+    "Se nota energía y gusto por lo rítmico; ahora veamos qué área te queda mejor.",
+    "Tu estilo es más movido y moderno; igual podemos aterrizar bien tu orientación.",
+    "Buen ritmo y mucha presencia; sigamos construyendo tu perfil académico.",
+]
+
 
 def tiene_contenido_relevante(texto: str) -> bool:
 
@@ -88,7 +97,6 @@ def tiene_contenido_relevante(texto: str) -> bool:
     if not texto_norm:
         return False
 
-    # Si es solo saludo, no lo tratamos como contenido relevante.
     if coincide_frases(texto_norm, list(FRASES_DE_APOYO)):
         tokens = texto_norm.split()
         if len(tokens) <= 3:
@@ -168,40 +176,13 @@ def coincide_frases(texto: str, frases: List[str]) -> bool:
 # Retorna una lista con el área de mayor puntuación (puede estar vacía si no hay coincidencias).
 
 def detectar_intereses(texto: str, intenciones: dict) -> List[str]:
-
-    texto_norm = normalizar_texto(texto)
-    if not texto_norm:
+    """
+    Devuelve las áreas detectadas, ordenadas por evidencia descendente.
+    """
+    puntajes = puntuar_intereses(texto, intenciones)
+    if not puntajes:
         return []
-
-    tokens = texto_norm.split()
-    conteo = {categoria: 0.0 for categoria in AREAS_VALIDAS}
-
-    for categoria in AREAS_VALIDAS:
-        palabras = intenciones.get(categoria, []) or []
-        for palabra in palabras:
-            palabra_norm = normalizar_texto(palabra)
-            if not palabra_norm:
-                continue
-
-            # Coincidencia de frase completa
-            if " " in palabra_norm:
-                if palabra_norm in texto_norm:
-                    conteo[categoria] += 2.5 + (len(palabra_norm.split()) * 0.15)
-                continue
-
-            # Coincidencia por palabra exacta o por aproximación
-            if palabra_norm in tokens:
-                conteo[categoria] += 2.0
-            else:
-                for tok in tokens:
-                    if tok.startswith(palabra_norm) or palabra_norm.startswith(tok):
-                        conteo[categoria] += 0.85
-                        break
-
-    mejor = max(conteo, key=conteo.get)
-    if conteo[mejor] <= 0:
-        return []
-    return [mejor]
+    return [categoria for categoria, _ in sorted(puntajes.items(), key=lambda item: (-item[1], item[0]))]
 
 #_______________________________________________________________________________________________________
 
@@ -338,8 +319,6 @@ def interpretar_respuesta_escala(texto: str) -> Optional[int]:
     if not texto_norm:
         return None
 
-    # Si el usuario expresa que no sabe, mejor no forzar clasificación.
-
     if any(_contiene_frase_normalizada(texto_norm, frase) for frase in _RESPUESTAS_BINARIAS_INDEFINIDAS):
         return None
 
@@ -351,9 +330,6 @@ def interpretar_respuesta_escala(texto: str) -> Optional[int]:
         (4, sorted(_RESPUESTAS_ESCALA_4, key=len, reverse=True)),
     ]
 
-    # Primero se buscan frases específicas de menor a mayor para evitar
-    # que "no mucho" termine clasificado como "mucho".
-
     for valor, patrones in escalas:
         for patron in patrones:
             patron_norm = normalizar_texto(patron)
@@ -364,7 +340,6 @@ def interpretar_respuesta_escala(texto: str) -> Optional[int]:
                 if _contiene_token(texto_norm, patron_norm):
                     return valor
 
-    # Casos intermedios
     if any(_contiene_frase_normalizada(texto_norm, frase) for frase in _RESPUESTAS_ESCALA_4):
         return 4
 
@@ -373,20 +348,6 @@ def interpretar_respuesta_escala(texto: str) -> Optional[int]:
 #_______________________________________________________________________________________________________
 
 # Devuelve True si la respuesta es afirmativa según interpretar_respuesta_binaria.
-
-def es_afirmacion(texto: str) -> bool:
-    return interpretar_respuesta_binaria(texto) is True
-
-#_______________________________________________________________________________________________________
-
-# Devuelve True si la respuesta es negativa.
-
-def es_negacion(texto: str) -> bool:
-    return interpretar_respuesta_binaria(texto) is False
-
-#_______________________________________________________________________________________________________
-
-# Limpia el fragmento extraído como nombre eliminando conectores y palabras de parada.
 
 def _limpiar_fragmento_nombre(fragmento: str) -> str:
     fragmento = fragmento.strip(" \t\r\n,.;:!?")
@@ -404,6 +365,7 @@ def _limpiar_fragmento_nombre(fragmento: str) -> str:
 # Extrae el nombre del usuario si el texto contiene frases como "me llamo X" o "soy Y" y retorna el 
 # nombre capitalizado o None si no se detecta.
 
+
 def extraer_nombre(texto: str) -> Optional[str]:
 
     if not texto:
@@ -411,7 +373,6 @@ def extraer_nombre(texto: str) -> Optional[str]:
 
     texto_original = texto.strip()
 
-    # Patrones que capturan el texto posterior al disparador
     for trigger in TRIGGERS_NOMBRE:
         patron = re.compile(
             rf"\b{re.escape(trigger)}\b\s+([A-Za-zÁÉÍÓÚÜÑáéíóúüñ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ'\-]*(?:\s+[A-Za-zÁÉÍÓÚÜÑáéíóúüñ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ'\-]*){{0,2}})",
@@ -425,7 +386,6 @@ def extraer_nombre(texto: str) -> Optional[str]:
         if not candidato:
             continue
 
-        # Evitar falsos positivos como "soy estudiante"
         primer_token = normalizar_texto(candidato).split()[0]
         if primer_token in PALABRAS_NO_NOMBRE:
             continue
@@ -458,9 +418,15 @@ def limpiar_mensaje_nombre(texto: str) -> str:
 
 #_______________________________________________________________________________________________________
 
-# Respuesta proporcionada según el área de interés detectada.
+def respuesta_humana(tipo: str, contexto: str = "") -> str:
+    contexto_norm = normalizar_texto(contexto)
 
-def respuesta_humana(tipo: str) -> str:
+    if tipo == "arte" and contexto_norm:
+        if coincide_frases(contexto_norm, list(_GUSTOS_MUSICA_ROCK_METAL)):
+            return random.choice(_RESPUESTAS_ARTE_ROCK_METAL)
+        if coincide_frases(contexto_norm, list(_GUSTOS_MUSICA_URBANA)):
+            return random.choice(_RESPUESTAS_ARTE_URBANA)
+
     respuestas = {
         "matematicas": [
             "Eso suena muy lógico y analítico.",
@@ -517,9 +483,6 @@ def respuesta_general() -> str:
         "Sigue, te escucho.",
         "Eso me ayuda a conocerte mejor.",
         "Voy entendiendo tus gustos.",
-        "Me parece interesante, continúa.",
-        "Eso es útil para trazar tu perfil.",
-        "Sigue contándome, cada detalle cuenta.",
     ])
 
 #_______________________________________________________________________________________________________
@@ -548,6 +511,7 @@ def cargar_preguntas(ruta: str) -> list:
     if isinstance(datos, list):
         return datos
     return []
+
 
 # ---------------------------------------------------------------------------
 # Pesos adicionales para ciertas palabras clave en cada área (refuerzan la puntuación).x
@@ -727,8 +691,15 @@ def _peso_especial_interes(area: str, termino_norm: str) -> float:
             "dibuj", "pint", "arte", "disen", "creativ", "mus", "fotograf",
             "anim", "ilustr", "cine", "teatr", "danz", "escultur", "moda",
             "multimedia", "son", "edicion", "modelado", "historiet", "mural",
+            "rock", "metal", "reggaeton", "regueton", "trap", "rap", "hip hop",
+            "jazz", "blues", "punk", "indie", "electro", "electron", "urban",
+            "musica", "cancion", "canciones", "concierto", "banda",
         )
         if any(pista in termino_norm for pista in pistas):
+            if any(pista in termino_norm for pista in ("rock", "metal")):
+                return 1.55
+            if any(pista in termino_norm for pista in ("reggaeton", "regueton", "trap", "rap", "hip hop", "urban")):
+                return 1.10
             return 1.20
 
     return 1.0
