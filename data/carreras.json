@@ -1,681 +1,225 @@
 {
   "Área 1: Ciencias Físico-Matemáticas y de las Ingenierías": {
-
-    "UNAM": {
-
-      "Facultad de Ingeniería": [
-
-        "Ingeniería Aeroespacial",
-        "Ingeniería Ambiental",
-        "Ingeniería Civil",
-        "Ingeniería de Minas y Metalurgia",
-        "Ingeniería Eléctrica Electrónica",
-        "Ingeniería Geofísica",
-        "Ingeniería Geológica",
-        "Ingeniería Geomática",
-        "Ingeniería Industrial",
-        "Ingeniería Mecánica",
-        "Ingeniería Mecánica Eléctrica",
-        "Ingeniería Mecatrónica",
-        "Ingeniería Petrolera",
-        "Ingeniería Química",
-        "Ingeniería Química Metalúrgica",
-        "Ingeniería en Computación"
-      ],
-
-      "Facultad de Ciencias": [
-
-        "Actuaría",
-        "Ciencia de Datos",
-        "Ciencias de la Computación",
-        "Física",
-        "Física Biomédica",
-        "Matemáticas",
-        "Matemáticas Aplicadas"
-      ],
-
-      "Facultad de Arquitectura": [
-
-        "Arquitectura",
-        "Arquitectura de Paisaje",
-        "Diseño Industrial",
-        "Urbanismo"
-      ],
-
-      "Facultad de Química": [
-
-        "Ingeniería Química",
-        "Ingeniería Química Metalúrgica"
-      ],
-
-      "FES Acatlán": [
-
-        "Actuaría",
-        "Arquitectura",
-        "Ingeniería Civil",
-        "Ingeniería en Computación",
-        "Matemáticas Aplicadas y Computación"
-      ],
-
-      "FES Aragón": [
-
-        "Arquitectura",
-        "Diseño Industrial",
-        "Ingeniería Civil",
-        "Ingeniería Eléctrica Electrónica",
-        "Ingeniería Industrial"
-      ],
-
-      "FES Cuautitlán": [
-
-        "Ingeniería en Telecomunicaciones, Sistemas y Electrónica",
-        "Ingeniería Industrial",
-        "Ingeniería Mecánica Eléctrica",
-        "Ingeniería Química"
-      ]
-    },
-
-
-    "IPN": {
-
-      "ESIME (Escuela Superior de Ingeniería Mecánica y Eléctrica)": [
-
-        "Ingeniería en Computación",
-        "Ingeniería en Comunicaciones y Electrónica",
-        "Ingeniería Eléctrica",
-        "Ingeniería Mecánica",
-        "Ingeniería Robótica",
-        "Ingeniería en Inteligencia Artificial",
-        "Ingeniería Aeronáutica",
-        "Ingeniería Naval"
-      ],
-
-      "ESIA (Escuela Superior de Ingeniería y Arquitectura)": [
-
-        "Ingeniería Civil",
-        "Ingeniería Geodésica y Topográfica",
-        "Ingeniería Geológica",
-        "Ingeniería en Sistemas Ambientales",
-        "Arquitectura"
-      ],
-
-      "ESIQIE (Escuela Superior de Ingeniería Química e Industrias Extractivas)": [
-
-        "Ingeniería Química",
-        "Ingeniería Metalúrgica",
-        "Ingeniería en Energía",
-        "Ingeniería en Control y Automatización"
-      ],
-  
-      "UPIICSA (Unidad Profesional Interdisciplinaria de Ingeniería y Ciencias Sociales y Administrativas)": [
-        
-        "Ingeniería en Informática",
-        "Ingeniería en Transporte",
-        "Ingeniería Industrial"
-      ],
-
-      "UPII (Unidades Profesionales Interdisciplinarias de Ingeniería)": [
-
-        "Ingeniería en Sistemas Automotrices",
-        "Ingeniería en Mecatrónica",
-        "Ingeniería en Biotecnología",
-        "Ingeniería en Nanotecnología"
-      ]
-    },
-  
-
-    "UAM": {
-
-      "Unidad Azcapotzalco": [
-
-        "Ingeniería Ambiental",
-        "Ingeniería Civil",
-        "Ingeniería en Computación",
-        "Ingeniería Eléctrica",
-        "Ingeniería Electrónica",
-        "Ingeniería en Energía",
-        "Ingeniería Hidrológica",
-        "Ingeniería Mecatrónica",
-        "Ingeniería Química",
-        "Ingeniería en Sistemas"
-      ],
-
-      "Unidad Cuajimalpa": [
-
-        "Ingeniería Biológica",
-        "Ingeniería en Computación",
-        "Matemáticas Aplicadas",
-        "Tecnologías y Sistemas de Información"
-      ],
-
-      "Unidad Iztapalapa": [
-
-        "Ciencias Atmosféricas",
-        "Computación",
-        "Física",
-        "Ingeniería Biomédica",
-        "Ingeniería Electrónica",
-        "Ingeniería en Energía",
-        "Ingeniería Hidrológica",
-        "Ingeniería Química"
-      ],
-
-      "Unidad Lerma": [
-
-        "Ingeniería en Recursos Hídricos",
-        "Ingeniería en Sistemas Mecatrónicos Industriales"
-      ],
-
-      "Unidad Xochimilco": [
-
-        "Ingeniería Ambiental",
-        "Ingeniería Biomédica",
-        "Ingeniería Civil",
-        "Ingeniería Eléctrica",
-        "Ingeniería en Computación",
-        "Ingeniería Hidrológica"
-      ]
-    }
+    "UNAM": [
+      "Actuaría",
+      "Ciencias de la Computación",
+      "Ciencias de la Tierra",
+      "Física",
+      "Ingeniería Civil",
+      "Ingeniería de Minas y Metalurgia",
+      "Ingeniería Eléctrica Electrónica",
+      "Ingeniería en Computación",
+      "Ingeniería en Telecomunicaciones",
+      "Ingeniería Geofísica",
+      "Ingeniería Geológica",
+      "Ingeniería Industrial",
+      "Ingeniería Mecánica",
+      "Ingeniería Mecánica Eléctrica",
+      "Ingeniería Petrolera",
+      "Ingeniería Química",
+      "Matemáticas",
+      "Matemáticas Aplicadas y Computación"
+    ],
+    "IPN": [
+      "Biónica y Tecnología Naval",
+      "Ingeniería Aeronáutica",
+      "Ingeniería Civil",
+      "Ingeniería en Comunicaciones y Electrónica",
+      "Ingeniería en Computación",
+      "Ingeniería en Control y Automatización",
+      "Ingeniería en Inteligencia Artificial",
+      "Ingeniería en Robótica Industrial",
+      "Ingeniería en Sistemas Computacionales",
+      "Ingeniería en Tecnologías de la Información y Comunicaciones",
+      "Ingeniería Industrial",
+      "Ingeniería Mecánica",
+      "Ingeniería Mecatrónica",
+      "Ingeniería Naval",
+      "Ingeniería Química Industrial",
+      "Ingeniería Topográfica y Geodésica",
+      "Licenciatura en Física y Matemáticas",
+      "Licenciatura en Ciencias de la Informática"
+    ],
+    "UAM": [
+      "Ingeniería Ambiental",
+      "Ingeniería Biomédica",
+      "Ingeniería Electrónica",
+      "Ingeniería en Computación",
+      "Ingeniería en Control y Automatización",
+      "Ingeniería en Energía",
+      "Ingeniería en Sistemas de Transporte Urbano",
+      "Ingeniería en Telecomunicaciones",
+      "Ingeniería Industrial",
+      "Ingeniería Mecánica",
+      "Ingeniería Química",
+      "Licenciatura en Ciencias de la Computación",
+      "Licenciatura en Estadística",
+      "Licenciatura en Física",
+      "Licenciatura en Matemáticas Aplicadas",
+      "Licenciatura en Matemáticas"
+    ]
   },
-
-
 
   "Área 2: Ciencias Biológicas, Químicas y de la Salud": {
-
-    "UNAM": {
-
-      "Facultad de Medicina": [
-
-        "Médico Cirujano",
-        "Fisioterapia (Rehabilitación)",
-        "Ciencia de la Nutrición Humana",
-        "Salud Pública",
-        "Neurociencias",
-        "Investigación Biomédica Básica",
-        "Ciencia Forense",
-        "Plan de Estudios Combinados en Medicina (PECEM)"
-      ],
-
-      "Facultad de Enfermería y Obstetricia": [
-
-        "Licenciatura en Enfermería y Obstetricia",
-        "Licenciatura en Enfermería"
-      ],
-
-      "Facultad de Odontología": [
-
-        "Cirujano Dentista"
-      ],
-
-      "Facultad de Medicina Veterinaria y Zootecnia": [
-
-        "Medicina Veterinaria y Zootecnia"
-      ],
-
-      "Facultad de Química": [
-
-        "Licenciatura en Farmacia",
-        "Química Farmacéutico Biológica"
-      ],
-
-      "Facultad de Estudios Superiores (FES) Zaragoza": [
-
-        "Nutriología"
-      ]
-    },
-
-
-
-    "IPN": {
-
-      "Centro Interdisciplinario de Ciencias de la Salud (CICS) Unidad Santo Tomás": [
-
-        "Licenciatura en Odontología",
-        "Licenciatura en Optometría",
-        "Licenciatura en Psicología"
-      ],
-
-      "Centro Interdisciplinario de Ciencias de la Salud (CICS) Unidad Milpa Alta": [
-
-        "Licenciatura en Enfermería",
-        "Licenciatura en Nutrición",
-        "Licenciatura en Odontología",
-        "Licenciatura en Optometría",
-        "Licenciatura en Trabajo Social",
-        "Médico Cirujano Partero"
-      ],
-
-      "Escuela Nacional de Ciencias Biológicas (ENCB)": [
-
-        "Licenciatura en Biología",
-        "Ingeniería Bioquímica",
-        "Ingeniería en Sistemas Ambientales",
-        "Químico Bacteriólogo y Parasitólogo",
-        "Químico Farmacéutico Industrial"
-      ],
-
-      "Escuela Superior de Medicina (ESM)": [
-
-        "Médico Cirujano Partero"
-      ],
-
-      "Escuela Superior de Enfermería y Obstetricia (ESEO)": [
-
-        "Licenciatura en Enfermería",
-        "Licenciatura en Enfermería y Obstetricia"
-      ],
-
-      "Escuela Nacional de Medicina y Homeopatía (ENMyH)": [
-
-        "Médico Cirujano Homeópata"
-      ],
-
-      "Unidad Profesional Interdisciplinaria de Ingeniería Campus Hidalgo (UPIIH)": [
-
-        "Ingeniería en Biotecnología"
-      ],
-
-      "Unidad Profesional Interdisciplinaria de Biotecnología (UPIBI)": [
-
-        "Ingeniería Biomédica",
-        "Ingeniería Biotecnológica",
-        "Ingeniería Farmacéutica",
-        "Ingeniería en Nanotecnología",
-        "Ingeniería Molecular"
-      ]
-    },
-
-
-
-    "UAM": {
-
-      "Unidad Xochimilco": [
-
-        "Agronomía",
-        "Biología",
-        "Enfermería",
-        "Estomatología",
-        "Medicina",
-        "Medicina Veterinaria y Zootecnia",
-        "Nutrición Humana",
-        "Química Farmacéutica Biológica"
-      ],
-
-      "Unidad Iztapalapa": [
-
-        "Biología",
-        "Biología Experimental",
-        "Hidrobiología",
-        "Ingeniería de los Alimentos",
-        "Ingeniería Bioquímica Industrial",
-        "Producción Animal"
-      ],
-
-      "Unidad Lerma": [
-
-        "Biología Ambiental",
-        "Ciencia y Tecnología de Alimentos",
-        "Psicología Biomédica"
-      ]
-    }
+    "UNAM": [
+      "Biología",
+      "Bioquímica Diagnóstica",
+      "Cirujano Dentista",
+      "Enfermería",
+      "Enfermería y Obstetricia",
+      "Farmacología",
+      "Física Biomédica",
+      "Fisioterapia",
+      "Ingeniería en Alimentos",
+      "Ingeniería Química",
+      "Licenciatura en Nutrición",
+      "Medicina",
+      "Medicina Veterinaria y Zootecnia",
+      "Optometría",
+      "Psicología",
+      "Química",
+      "Química de Alimentos",
+      "Química Farmacéutica Biológica",
+      "Terapia Física y Rehabilitación",
+      "Terapia Ocupacional"
+    ],
+    "IPN": [
+      "Bioquímica Diagnóstica",
+      "Cirujano Dentista",
+      "Enfermería",
+      "Ingeniería Bioquímica",
+      "Ingeniería en Biotecnología",
+      "Licenciatura en Biología",
+      "Licenciatura en Nutriología",
+      "Licenciatura en Optometría",
+      "Licenciatura en Psicología",
+      "Licenciatura en Química Industrial",
+      "Médico Cirujano y Partero",
+      "Médico Veterinario Zootecnista",
+      "Medicina Nuclear",
+      "Quimicofarmacobiología",
+      "Terapia Física y Rehabilitación",
+      "Terapia Ocupacional"
+    ],
+    "UAM": [
+      "Biología",
+      "Biotecnología",
+      "Hidrobiología",
+      "Ingeniería Bioquímica",
+      "Ingeniería en Alimentos",
+      "Licenciatura en Ciencias de la Salud",
+      "Licenciatura en Enfermería",
+      "Licenciatura en Médico Cirujano",
+      "Licenciatura en Nutrición Humana",
+      "Licenciatura en Optometría",
+      "Licenciatura en Psicología",
+      "Licenciatura en Química",
+      "Licenciatura en Química Farmacéutica Industrial",
+      "Médico Veterinario Zootecnista",
+      "Psicobiología",
+      "Química"
+    ]
   },
 
-
-  
   "Área 3: Ciencias Sociales": {
-
-    "UNAM": {
-
-      "Facultad de Ciencias Políticas y Sociales": [
-
-        "Administración Pública",
-        "Antropología",
-        "Ciencias de la Comunicación",
-        "Ciencias Políticas",
-        "Relaciones Internacionales",
-        "Sociología"
-      ],
-
-      "Facultad de Economía": [
-
-        "Economía"
-      ],
-
-      "Facultad de Derecho": [
-
-        "Derecho"
-      ],
-
-      "Facultad de Psicología": [
-
-        "Psicología"
-      ],
-
-      "Escuela Nacional de Trabajo Social": [
-
-        "Trabajo Social"
-      ],
-
-      "FES Acatlán": [
-
-        "Economía",
-        "Ciencias de la Comunicación",
-        "Sociología",
-        "Derecho"
-      ],
-
-      "FES Aragón": [
-
-        "Derecho",
-        "Economía",
-        "Ciencias de la Comunicación",
-        "Relaciones Internacionales"
-      ],
-
-      "FES Cuautitlán": [
-
-        "Ciencias de la Comunicación",
-        "Derecho"
-      ],
-
-      "FES Iztacala": [
-
-        "Psicología"
-      ],
-
-      "FES Zaragoza": [
-
-        "Psicología"
-      ],
-
-      "ENES León": [
-
-        "Estudios Sociales y Gestión Local",
-        "Economía Industrial"
-      ],
-
-      "ENES Morelia": [
-
-        "Estudios Sociales y Gestión Local"
-      ],
-
-      "ENES Mérida": [
-
-        "Ciencias de la Comunicación"
-      ]
-
-    },
-
-
-    "IPN": {
-
-      "CICS Unidad Santo Tomás": [
-
-        "Odontología",
-        "Optometría",
-        "Psicología"
-      ],
-
-      "CICS Unidad Milpa Alta": [
-
-        "Enfermería",
-        "Nutrición",
-        "Odontología",
-        "Optometría",
-        "Trabajo Social",
-        "Médico Cirujano Partero"
-      ],
-
-      "CICS Unidad Nueva": [
-
-        "Medicina"
-      ],
-
-      "UPIICSA": [
-
-        "Administración Industrial",
-        "Administración y Desarrollo Empresarial",
-        "Archivonomía",
-        "Biblioteconomía",
-        "Ciencias de la Informática",
-        "Contador Público",
-        "Economía",
-        "Física y Matemáticas",
-        "Ingeniería en Informática",
-        "Ingeniería en Transporte",
-        "Ingeniería Industrial"
-      ],
-
-      "ESIA": [
-
-        "Arquitectura"
-      ],
-
-      "Escuela Superior de Turismo": [
-
-        "Turismo"
-      ],
-
-      "Escuela Superior de Comercio y Administración (ESCA)": [
-        
-        "Contaduría",
-        "Administración",
-        "Negocios Internacionales",
-        "Relaciones Comerciales"
-      ]
-    },
-
-
-    "UAM": {
-
-      "Unidad Xochimilco": [
-
-        "Administración",
-        "Antropología Social",
-        "Comunicación Social",
-        "Economía",
-        "Política y Gestión Social",
-        "Psicología",
-        "Sociología"
-      ],
-
-      "Unidad Iztapalapa": [
-
-        "Administración",
-        "Antropología Social",
-        "Ciencia Política",
-        "Economía",
-        "Filosofía",
-        "Geografía Humana",
-        "Historia",
-        "Letras Hispánicas",
-        "Sociología"
-      ],
-
-      "Unidad Azcapotzalco": [
-
-        "Administración",
-        "Comunicación Social",
-        "Derecho",
-        "Economía",
-        "Filosofía",
-        "Historia",
-        "Letras Hispánicas",
-        "Psicología Social",
-        "Sociología"
-      ],
-
-      "Unidad Cuajimalpa": [
-
-        "Arte y Comunicación Digitales",
-        "Comunicación Social",
-        "Derecho",
-        "Economía",
-        "Estudios Sociales",
-        "Filosofía",
-        "Historia del Arte",
-        "Literatura Hispánica",
-        "Política y Gestión Social",
-        "Psicología Clínica"
-      ],
-
-      "Unidad Lerma": [
-
-        "Administración",
-        "Antropología Social",
-        "Comunicación Social",
-        "Economía",
-        "Estudios Latinoamericanos",
-        "Filosofía",
-        "Historia",
-        "Letras Hispánicas",
-        "Psicología",
-        "Sociología"
-      ]
-    }
+    "UNAM": [
+      "Administración",
+      "Ciencias Actuariales",
+      "Ciencias de la Comunicación",
+      "Ciencias Políticas y Administración Pública",
+      "Contaduría",
+      "Derecho",
+      "Economía",
+      "Geografía",
+      "Licenciatura en Trabajo Social",
+      "Pedagogía",
+      "Psicología",
+      "Relaciones Internacionales",
+      "Sociología"
+    ],
+    "IPN": [
+      "Administración Industrial",
+      "Ciencia Política",
+      "Comercio Internacional",
+      "Comunicación Corporativa",
+      "Contaduría Pública",
+      "Economía",
+      "Gestión Empresarial",
+      "Licenciatura en Administración de Empresas Turísticas",
+      "Licenciatura en Relaciones Comerciales",
+      "Negocios Internacionales",
+      "Pedagogía Tecnológica",
+      "Psicología",
+      "Relaciones Comerciales",
+      "Turismo"
+    ],
+    "UAM": [
+      "Administración",
+      "Ciencias de la Comunicación",
+      "Derecho",
+      "Economía",
+      "Gestión y Administración de PyMES",
+      "Licenciatura en Ciencia Política",
+      "Licenciatura en Negocios Internacionales",
+      "Licenciatura en Relaciones Internacionales",
+      "Licenciatura en Sociología",
+      "Planeación Territorial",
+      "Psicología Social",
+      "Trabajo Social"
+    ]
   },
-
-
 
   "Área 4: Humanidades y de las Artes": {
-
-    "UNAM": {
-
-      "Facultad de Artes y Diseño": [
-
-        "Artes Visuales",
-        "Arte Dramático (Teatro)",
-        "Danza",
-        "Diseño Gráfico",
-        "Diseño Industrial",
-        "Diseño Textil",
-        "Escultura",
-        "Grabado",
-        "Pintura",
-        "Restauración de Bienes Muebles"
-      ],
-
-      "Facultad de Música": [
-
-        "Composición Musical",
-        "Dirección Musical",
-        "Educación Musical",
-        "Etnomusicología",
-        "Instrumentista",
-        "Música",
-        "Piano",
-        "Canto"
-      ],
-
-      "Facultad de Arquitectura": [
-
-        "Arquitectura",
-        "Arquitectura de Paisaje",
-        "Urbanismo"
-      ],
-
-      "Facultad de Ciencias Políticas y Sociales": [
-
-        "Ciencias de la Comunicación (opción en producción audiovisual)"
-      ],
-
-      "FES Acatlán": [
-
-        "Arquitectura",
-        "Diseño Gráfico",
-        "Música"
-      ],
-
-      "FES Aragón": [
-
-        "Arquitectura",
-        "Diseño Industrial",
-        "Urbanismo"
-      ],
-
-      "FES Cuautitlán": [
-
-        "Diseño y Comunicación Visual"
-      ],
-
-      "ENES Morelia": [
-
-        "Artes Audiovisuales"
-      ]
-
-    },
-
-
-    "IPN": {
-
-      "ESIA (Escuela Superior de Ingeniería y Arquitectura)": [
-
-        "Arquitectura",
-        "Diseño Industrial"
-      ],
-
-      "UPIICSA (Unidad Profesional Interdisciplinaria de Ingeniería y Ciencias Sociales y Administrativas)": [
-
-        "Comunicación Visual",
-        "Diseño Textil"
-      ],
-
-      "Escuela Superior de Diseño Textil": [
-
-        "Diseño Textil"
-      ],
-
-      "Escuela Superior de Comercio y Administración (ESCA)": [
-
-        "Publicidad"
-      ],
-
-      "Centro de Estudios Científicos y Tecnológicos (CECyT)": [
-
-        "Técnico en Diseño Gráfico",
-        "Técnico en Multimedia"
-      ],
-
-      "Escuela Superior de Ciencias y Humanidades (ESCH)": [
-
-        "Técnico en Artes Visuales",
-        "Técnico en Música"
-      ],
-
-      "Unidad Profesional Interdisciplinaria en Ingeniería y Tecnologías Avanzadas (UPIITA)": [
-
-        "Animación Digital"
-      ]
-
-    },
-
-
-    "UAM": {
-
-      "Unidad Xochimilco": [
-
-        "Arquitectura",
-        "Diseño de la Comunicación Gráfica"
-      ],
-
-      "Unidad Azcapotzalco": [
-
-        "Arquitectura",
-        "Diseño de la Comunicación Gráfica",
-        "Diseño Industrial"
-      ],
-
-      "Unidad Cuajimalpa": [
-
-        "Arte y Comunicación Digitales",
-        "Diseño de Interacción",
-        "Diseño Digital"
-      ],
-
-      "Unidad Lerma": [
-
-        "Arte y Patrimonio Cultural"
-      ]
-    }
+    "UNAM": [
+      "Arquitectura",
+      "Artes Visuales",
+      "Bibliotecología y Estudios de la Información",
+      "Comunicación",
+      "Desarrollo y Gestión Interculturales",
+      "Diseño Gráfico",
+      "Diseño Industrial",
+      "Escritura Creativa",
+      "Estudios Latinoamericanos",
+      "Filosofía",
+      "Historia",
+      "Historia del Arte",
+      "Lengua y Literaturas Hispánicas",
+      "Lengua y Literaturas Modernas (Alemán)",
+      "Lengua y Literaturas Modernas (Francés)",
+      "Lengua y Literaturas Modernas (Inglés)",
+      "Lengua y Literaturas Modernas (Italiano)",
+      "Lengua y Literaturas Modernas (Portugués)",
+      "Lingüística",
+      "Literatura Dramática y Teatro",
+      "Música",
+      "Pedagogía"
+    ],
+    "IPN": [
+      "Animación Digital y Efectos Visuales",
+      "Comunicación Visual",
+      "Diseño Gráfico y Comunicación",
+      "Diseño Industrial",
+      "Diseño Textil y de Modas",
+      "Fotografía",
+      "Ilustración Científica y Artística",
+      "Multimedia e Interactividad",
+      "Producción Musical Digital"
+    ],
+    "UAM": [
+      "Arquitectura",
+      "Arte y Patrimonio Cultural",
+      "Comunicación Social",
+      "Diseño de la Comunicación Gráfica",
+      "Diseño Industrial",
+      "Educación",
+      "Filosofía",
+      "Historia",
+      "Humanidades",
+      "Lingüística",
+      "Literatura Latinoamericana",
+      "Planeación y Desarrollo Urbano",
+      "Producción y Distribución Musical",
+      "Sociología"
+    ]
   }
 }
