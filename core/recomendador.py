@@ -18,6 +18,7 @@ import json
 
 #_______________________________________________________________________________________________________
 
+# Abre un archivo en formato JSON desde una ruta específica
 
 def _abrir_json(ruta: str):
     with open(ruta, "r", encoding="utf-8") as f:
@@ -25,6 +26,9 @@ def _abrir_json(ruta: str):
 
 #_______________________________________________________________________________________________________
 
+# Inspecciona si un diccionario contiene una clave específica cuyo valor es otro diccionario, 
+# "desenvolviendo" este subdiccionario interno si existe o retornando la estructura original de lo 
+# contrario.
 
 def _desenvolver_si_viene_envuelto(datos, clave: str):
     if isinstance(datos, dict) and clave in datos:
@@ -35,6 +39,8 @@ def _desenvolver_si_viene_envuelto(datos, clave: str):
 
 #_______________________________________________________________________________________________________
 
+# carga el catálogo de carreras desde un archivo JSON, extrae el diccionario interno correspondiente si 
+# la estructura viene envuelta bajo la clave "carreras" y valida que el resultado final sea un diccionario.
 
 def cargar_carreras(ruta: str) -> dict:
     datos = _abrir_json(ruta)
@@ -43,6 +49,8 @@ def cargar_carreras(ruta: str) -> dict:
 
 #_______________________________________________________________________________________________________
 
+# Busca una clave dentro de un diccionario, validando primero una coincidencia exacta y, en su defecto, 
+# comparando las claves mediante sus versiones normalizadas de texto hasta encontrar una equivalencia.
 
 def _buscar_clave_similar(diccionario: dict, clave: str):
     if clave in diccionario:
@@ -55,6 +63,8 @@ def _buscar_clave_similar(diccionario: dict, clave: str):
 
 #_______________________________________________________________________________________________________
 
+# Estandariza una cadena de texto eliminando acentos, caracteres diacríticos, signos de puntuación y 
+# espaciados redundantes, transformándola completamente a minúsculas para facilitar comparaciones precisas.
 
 def _normalizar_texto(texto: str) -> str:
     import unicodedata, re
@@ -69,6 +79,9 @@ def _normalizar_texto(texto: str) -> str:
 
 #_______________________________________________________________________________________________________
 
+# Busca las carreras universitarias asociadas a un área vocacional específica dentro del conjunto de 
+# datos y agrupa los resultados por institución, limitando la cantidad de opciones por universidad 
+# para optimizar la visualización en la interfaz
 
 def recomendar(area: str, data: dict, max_por_uni: int = 4) -> dict:
     """
