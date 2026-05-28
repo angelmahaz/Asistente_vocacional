@@ -1,15 +1,36 @@
+#                                     *** Inteligencia Artificial ***
+#                              *** Proyecto Final. Asistente vocacional***
+#                                            *** Vocabot ***
+#
+#                                                Alumnos:
+#
+#                                    ° Cisneros Rojas Hector Manuel
+#                                    ° Garcia Perea Pablo Emilio
+#                                    ° Hernández Andrade Miguel Angel
+#                                    ° Navarro Rodriguez Angel Efren
+#                                    ° Toledo Duran Jesús Rodrigo
+
+#=======================================================================================================
+
 import json
 
+# Enlaces oficiales de las universidades
 ENLACES_OFICIALES = {
     "UNAM": "https://oferta.unam.mx/",
     "IPN": "https://www.ipn.mx/oferta-educativa/educacion-superior/",
     "UAM": "https://www.uam.mx/licenciaturas/index.html",
 }
 
+#_______________________________________________________________________________________________________
+# Abre un archivo en formato JSON desde una ruta específica
 def _abrir_json(ruta: str):
     with open(ruta, "r", encoding="utf-8") as f:
         return json.load(f)
 
+#_______________________________________________________________________________________________________
+# Inspecciona si un diccionario contiene una clave específica cuyo valor es otro diccionario,
+# "desenvolviendo" este subdiccionario interno si existe o retornando la estructura original de lo
+# contrario.
 def _desenvolver_si_viene_envuelto(datos, clave: str):
     if isinstance(datos, dict) and clave in datos:
         valor = datos[clave]
@@ -17,27 +38,16 @@ def _desenvolver_si_viene_envuelto(datos, clave: str):
             return valor
     return datos
 
-def cargar_carreras(ruta: str) -> dict:
-    datos = _abrir_json(ruta)
-    datos = _desenvolver_si_viene_envuelto(datos, "carreras")
-    return datos if isinstance(datos, dict) else {}
-
-def obtener_enlaces_oficiales() -> dict:
-    return dict(ENLACES_OFICIALES)
-
-def _buscar_clave_similar(diccionario: dict, clave: str):
-    if clave in diccionario:
-        return clave
-    clave_norm = _normalizar_texto(clave)
-    for k in diccionario:
-        if _normalizar_texto(k) == clave_norm:
-            return k
-    return None
-
+#_______________________________________________________________________________________________________
+# Estandariza una cadena de texto eliminando acentos, signos de puntuación y espacios redundantes,
+# transformándola completamente a minúsculas para facilitar comparaciones.
 def _normalizar_texto(texto: str) -> str:
-    import unicodedata, re
+    import unicodedata
+    import re
+
     if not texto:
         return ""
+
     texto = unicodedata.normalize("NFD", texto)
     texto = "".join(ch for ch in texto if unicodedata.category(ch) != "Mn")
     texto = texto.lower()
@@ -45,6 +55,36 @@ def _normalizar_texto(texto: str) -> str:
     texto = re.sub(r"\s+", " ", texto).strip()
     return texto
 
+#_______________________________________________________________________________________________________
+# Busca una clave dentro de un diccionario, validando primero una coincidencia exacta y, en su defecto,
+# comparando las claves mediante sus versiones normalizadas de texto.
+def _buscar_clave_similar(diccionario: dict, clave: str):
+    if clave in diccionario:
+        return clave
+
+    clave_norm = _normalizar_texto(clave)
+    for k in diccionario:
+        if _normalizar_texto(k) == clave_norm:
+            return k
+
+    return None
+
+#_______________________________________________________________________________________________________
+# Carga el catálogo de carreras desde un archivo JSON, extrae el diccionario interno correspondiente si
+# la estructura viene envuelta bajo la clave "carreras" y valida que el resultado final sea un diccionario.
+def cargar_carreras(ruta: str) -> dict:
+    datos = _abrir_json(ruta)
+    datos = _desenvolver_si_viene_envuelto(datos, "carreras")
+    return datos if isinstance(datos, dict) else {}
+
+#_______________________________________________________________________________________________________
+# Devuelve un diccionario con los enlaces oficiales de las universidades.
+def obtener_enlaces_oficiales() -> dict:
+    return dict(ENLACES_OFICIALES)
+
+#_______________________________________________________________________________________________________
+# Busca las carreras universitarias asociadas a un área vocacional específica dentro del conjunto de datos
+# y agrupa los resultados por institución, limitando la cantidad de opciones por universidad.
 def recomendar(area: str, data: dict, max_por_uni: int = 4) -> dict:
     """
     Devuelve un diccionario con carreras sugeridas por universidad.
@@ -63,4 +103,5 @@ def recomendar(area: str, data: dict, max_por_uni: int = 4) -> dict:
             resultado[uni] = lista[:max_por_uni]
         else:
             resultado[uni] = []
+
     return resultado
