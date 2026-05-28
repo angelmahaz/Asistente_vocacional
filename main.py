@@ -20,33 +20,42 @@ from core.recomendador import cargar_carreras, recomendar
 
 
 def main():
-    intenciones = cargar_intenciones('data/intenciones.json')
-    areas = cargar_areas('data/areas.json')
+    intenciones   = cargar_intenciones('data/intenciones.json')
+    areas         = cargar_areas('data/areas.json')
     carreras_data = cargar_carreras('data/carreras.json')
-    preguntas = cargar_preguntas('data/preguntas.json')
+    preguntas     = cargar_preguntas('data/preguntas.json')
 
-    nombre = None
-    memoria = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
-    turnos = 0
-    estado = 'charla'
+    nombre         = None
+    memoria        = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
+    turnos         = 0
+    estado         = 'charla'
     indice_pregunta = 0
     pregunta_actual = None
-    ultima_area = None
+    ultima_area     = None
 
+    # -----------------------------------------------------------------------
+    # Mapa de preguntas ampliado a las 8 del nuevo preguntas.json
+    # Pesos calibrados por area dominante de cada pregunta
+    # -----------------------------------------------------------------------
     mapa_preguntas = {
         'matematicas': {'matematicas': 1.15},
-        'lectura': {'humanidades': 0.45},
-        'manual': {'arte': 0.25, 'matematicas': 0.20},
-        'social': {'salud': 0.35, 'humanidades': 0.15},
-        'tecnologia': {'matematicas': 1.25},
+        'tecnologia':  {'matematicas': 1.25},
+        'salud':       {'salud': 1.20},
+        'social':      {'salud': 0.35, 'humanidades': 0.65},
+        'lectura':     {'humanidades': 0.90},
+        'arte':        {'arte': 1.20},
+        'naturaleza':  {'salud': 0.55, 'matematicas': 0.20},
+        'negocios':    {'humanidades': 0.85},
+        # preguntas originales mantenidas por compatibilidad
+        'manual':      {'arte': 0.25, 'matematicas': 0.20},
     }
 
     def preguntar_guiada():
         nonlocal estado, indice_pregunta, pregunta_actual
         if indice_pregunta < len(preguntas):
-            pregunta_actual = preguntas[indice_pregunta]
+            pregunta_actual  = preguntas[indice_pregunta]
             indice_pregunta += 1
-            estado = 'pregunta'
+            estado           = 'pregunta'
             texto = pregunta_actual.get('texto', '')
             if texto:
                 print(f'Vocabot: {texto}')
@@ -69,12 +78,12 @@ def main():
 
     def reiniciar_ciclo_vocacional():
         nonlocal memoria, turnos, estado, indice_pregunta, pregunta_actual, ultima_area
-        memoria = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
-        turnos = 0
-        estado = 'charla'
+        memoria         = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
+        turnos          = 0
+        estado          = 'charla'
         indice_pregunta = 0
         pregunta_actual = None
-        ultima_area = None
+        ultima_area     = None
 
     def resultado():
         nonlocal estado, pregunta_actual, ultima_area
@@ -87,11 +96,11 @@ def main():
 
         estado = 'post'
         area, _, prob = evaluar(memoria, areas)
-        ultima_area = area
+        ultima_area   = area
 
         print('Vocabot: Estoy analizando tus respuestas con IA...')
         for a, p in sorted(prob.items(), key=lambda x: x[1], reverse=True):
-            print(f'Vocabot: {a}: {p:.2f}')
+            print(f'Vocabot:   {a}: {p:.0%}')
 
         if area:
             if nombre:
@@ -103,18 +112,19 @@ def main():
             if top:
                 print(f'Vocabot: Tome en cuenta principalmente: {", ".join(top)}.')
 
-            carreras = recomendar(area, carreras_data)
+            # Mostrar TODAS las carreras sin limite
+            carreras = recomendar(area, carreras_data, max_por_uni=999)
             if not carreras:
                 print('Vocabot: No encontre carreras disponibles por ahora.')
             else:
-                print('Vocabot: Carreras sugeridas:')
+                print('Vocabot: Carreras disponibles en tu area:')
                 for uni, lista in carreras.items():
-                    print(f'Vocabot: {uni}:')
+                    print(f'Vocabot: -- {uni} --')
                     if lista:
                         for c in lista:
-                            print(f'Vocabot: - {c}')
+                            print(f'Vocabot:   * {c}')
                     else:
-                        print('Vocabot: - Sin carreras registradas por ahora')
+                        print('Vocabot:   * Sin carreras registradas por ahora')
         else:
             print('Vocabot: No pude calcular una recomendacion por ahora.')
 
@@ -143,7 +153,7 @@ def main():
 
         nombre_detectado = extraer_nombre(texto_original)
         if nombre_detectado:
-            nombre = nombre_detectado
+            nombre         = nombre_detectado
             texto_sin_nombre = limpiar_mensaje_nombre(texto_original)
 
             if not tiene_contenido_relevante(texto_sin_nombre):
@@ -210,7 +220,7 @@ def main():
             else:
                 print('Vocabot: Entendido, veo poco interes en eso.')
 
-            estado = 'charla'
+            estado          = 'charla'
             pregunta_actual = None
 
             if sum(memoria.values()) < 2 and indice_pregunta < len(preguntas):
@@ -222,8 +232,8 @@ def main():
             print('Vocabot: Hola, soy Vocabot, dime cuales son tus gustos.')
             continue
 
-        texto_limpio = limpiar_mensaje_nombre(texto_original)
-        contribuciones = puntuar_intereses(texto_limpio, intenciones)
+        texto_limpio     = limpiar_mensaje_nombre(texto_original)
+        contribuciones   = puntuar_intereses(texto_limpio, intenciones)
 
         if contribuciones:
             categoria = max(contribuciones, key=contribuciones.get)
