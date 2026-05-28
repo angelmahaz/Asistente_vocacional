@@ -1,54 +1,36 @@
 {
   "preguntas": [
-    {"id": "matematicas", "texto": "¿Qué tanto te gustan las matemáticas?"},
-    {"id": "lectura", "texto": "¿Qué tanto te gusta leer o investigar?"},
-    {"id": "manual", "texto": "¿Te gusta trabajar con las manos?"},
-    {"id": "social", "texto": "¿Te gusta ayudar a las personas?"},
-    {"id": "tecnologia", "texto": "¿Qué tanto te interesa la tecnología?"},
-    {"id": "ciencias", "texto": "¿Te interesa la biología, la química o la física?"},
-    {"id": "arte_visual", "texto": "¿Disfrutas dibujar, pintar o diseñar?"},
-    {"id": "musica", "texto": "¿Te gusta la música, tocar instrumentos o componer?"},
-    {"id": "historia", "texto": "¿Te gusta aprender sobre historia y civilizaciones pasadas?"},
-    {"id": "politica", "texto": "¿Te interesa la política, el derecho o los temas sociales?"},
-    {"id": "negocios", "texto": "¿Te llama la atención la administración, los negocios o el emprendimiento?"},
-    {"id": "salud", "texto": "¿Te interesa el cuidado de la salud, la medicina o la nutrición?"},
-    {"id": "programacion", "texto": "¿Te gusta programar o resolver problemas lógicos?"},
-    {"id": "trabajo_equipo", "texto": "¿Prefieres trabajar en equipo o de manera independiente?"},
-    {"id": "creatividad", "texto": "¿Te consideras una persona creativa?"},
-    {"id": "analisis", "texto": "¿Disfrutas analizar datos y encontrar patrones?"},
-    {"id": "comunicacion", "texto": "¿Se te facilita comunicarte y expresar tus ideas?"},
-    {"id": "liderazgo", "texto": "¿Te gusta liderar proyectos o grupos?"},
-    {"id": "idiomas", "texto": "¿Te interesa aprender idiomas extranjeros?"},
-    {"id": "deporte", "texto": "¿Te gusta el deporte o la actividad física?"},
-    {"id": "robotica", "texto": "¿Te llama la atención la robótica o la automatización?"},
-    {"id": "medio_ambiente", "texto": "¿Te preocupa el medio ambiente y la sustentabilidad?"},
-    {"id": "economia", "texto": "¿Te interesa la economía, los mercados y las finanzas?"},
-    {"id": "antropologia", "texto": "¿Te gusta estudiar las culturas y el comportamiento humano?"},
-    {"id": "filosofia", "texto": "¿Disfrutas reflexionar sobre la existencia, la ética o el conocimiento?"},
-    {"id": "cine", "texto": "¿Te apasiona el cine, la fotografía o la producción audiovisual?"},
-    {"id": "literatura", "texto": "¿Te gusta escribir poesía, cuentos o análisis literario?"},
-    {"id": "diseno_interiores", "texto": "¿Te interesa el diseño de interiores o la arquitectura?"},
-    {"id": "gastronomia", "texto": "¿Te gusta cocinar, experimentar con sabores o la gastronomía?"},
-    {"id": "psicologia", "texto": "¿Te interesa entender la mente humana y el comportamiento?"},
-    {"id": "ingenieria_civil", "texto": "¿Te atrae construir puentes, edificios o infraestructura?"},
-    {"id": "medicina_investigacion", "texto": "¿Te gustaría investigar curas para enfermedades?"},
-    {"id": "educacion", "texto": "¿Te interesa enseñar, formar o guiar a otros?"},
-    {"id": "mercadotecnia", "texto": "¿Te llama la atención la publicidad, las marcas o el marketing?"},
-    {"id": "videojuegos", "texto": "¿Te gusta diseñar o analizar videojuegos?"},
-    {"id": "estadistica", "texto": "¿Te interesa el análisis de datos y la estadística?"},
-    {"id": "arquitectura_paisaje", "texto": "¿Te gusta diseñar espacios verdes o planificar ciudades?"},
-    {"id": "veterinaria", "texto": "¿Te interesa el cuidado de los animales?"},
-    {"id": "astronomia", "texto": "¿Te fascina el espacio, las estrellas o los planetas?"},
-    {"id": "danza", "texto": "¿Te gusta bailar o la expresión corporal?"},
-    {"id": "teatro", "texto": "¿Te atrae actuar, dirigir o producir obras de teatro?"},
-    {"id": "periodismo", "texto": "¿Te interesa investigar y comunicar noticias?"},
-    {"id": "ingenieria_quimica", "texto": "¿Te gusta transformar materiales o procesos químicos?"},
-    {"id": "neurociencia", "texto": "¿Te atrae estudiar el cerebro y el sistema nervioso?"},
-    {"id": "diseno_grafico", "texto": "¿Te gusta crear identidades visuales o ilustraciones?"},
-    {"id": "ingenieria_industrial", "texto": "¿Te interesa optimizar procesos, producción o logística?"},
-    {"id": "ciencias_ambientales", "texto": "¿Te gusta estudiar el impacto humano en la naturaleza?"},
-    {"id": "farmacia", "texto": "¿Te interesa la producción de medicamentos o la química farmacéutica?"},
-    {"id": "derecho", "texto": "¿Te atrae el estudio de las leyes y la justicia?"},
-    {"id": "administracion_hotelera", "texto": "¿Te gusta la gestión hotelera, el turismo o eventos?"}
+    {
+      "id": "matematicas",
+      "texto": "¿Qué tanto te gustan las matemáticas, la física o resolver problemas lógicos?"
+    },
+    {
+      "id": "tecnologia",
+      "texto": "¿Qué tanto te interesa la tecnología, la programación o las computadoras?"
+    },
+    {
+      "id": "salud",
+      "texto": "¿Qué tanto te interesa la biología, la medicina o el cuidado de la salud?"
+    },
+    {
+      "id": "social",
+      "texto": "¿Te gusta ayudar a las personas, trabajar con la sociedad o estudiar el comportamiento humano?"
+    },
+    {
+      "id": "lectura",
+      "texto": "¿Qué tanto disfrutas leer, escribir, debatir o analizar temas de historia, filosofía o cultura?"
+    },
+    {
+      "id": "arte",
+      "texto": "¿Qué tanto te atrae el arte, el diseño, la música, el cine o cualquier forma de expresión creativa?"
+    },
+    {
+      "id": "naturaleza",
+      "texto": "¿Te interesa la naturaleza, los ecosistemas, los animales o el medio ambiente?"
+    },
+    {
+      "id": "negocios",
+      "texto": "¿Te llaman la atención los negocios, la economía, la administración o el emprendimiento?"
+    }
   ]
 }
