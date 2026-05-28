@@ -381,24 +381,44 @@ def respuesta_humana(tipo: str) -> str:
             "Eso suena muy lógico y analítico.",
             "Tienes perfil para resolver problemas complejos.",
             "Veo afinidad con áreas técnicas y de razonamiento.",
+            "Ese tipo de pensamiento es muy valioso en ingeniería y ciencias exactas.",
+            "La tecnología y las matemáticas son campos con un enorme futuro.",
+            "Interesante, ese perfil encaja muy bien con las ingenierías.",
+            "Los sistemas, los datos y la lógica son tu mundo, se nota.",
+            "Esa inclinación hacia lo técnico abre muchas puertas profesionales.",
         ],
         "salud": [
             "Se nota que te importa ayudar a otros.",
             "Tienes vocación de servicio.",
             "Eso encaja muy bien con profesiones de cuidado y apoyo.",
+            "El área de salud necesita personas con esa sensibilidad.",
+            "Quienes se orientan a la salud suelen tener un gran compromiso humano.",
+            "La biología y las ciencias de la salud son apasionantes.",
+            "Ese interés por el cuerpo humano y la vida es muy valioso.",
+            "Cuidar a los demás es una de las vocaciones más significativas.",
         ],
         "humanidades": [
             "Eso refleja pensamiento crítico.",
             "Te interesa entender la sociedad.",
             "Veo interés por la comunicación y el análisis social.",
+            "Las humanidades forman personas capaces de interpretar el mundo.",
+            "Ese perfil analítico y social tiene mucho campo de acción.",
+            "Las ciencias sociales ofrecen una visión muy completa de la realidad.",
+            "Entender cómo funciona la sociedad es fundamental hoy en día.",
+            "Ese interés por la cultura, las ideas y las personas dice mucho de ti.",
         ],
         "arte": [
             "Tienes creatividad.",
             "Eso es muy valioso en el arte.",
             "Se nota un perfil creativo y expresivo.",
-        ]
+            "La expresión artística es una habilidad que pocas personas desarrollan bien.",
+            "El diseño, el arte y la cultura necesitan personas como tú.",
+            "Esa sensibilidad creativa es un rasgo muy particular y valioso.",
+            "El arte y el diseño tienen cada vez más presencia en el mundo profesional.",
+            "Crear, diseñar y expresar son habilidades que abren muchas puertas.",
+        ],
     }
-    opciones = respuestas.get(tipo, ["Interesante... cuéntame un poco más."])
+    opciones = respuestas.get(tipo, ["Interesante, cuéntame un poco más."])
     return random.choice(opciones)
 
 
@@ -409,6 +429,9 @@ def respuesta_general() -> str:
         "Sigue, te escucho.",
         "Eso me ayuda a conocerte mejor.",
         "Voy entendiendo tus gustos.",
+        "Me parece interesante, continúa.",
+        "Eso es útil para trazar tu perfil.",
+        "Sigue contándome, cada detalle cuenta.",
     ])
 
 
@@ -418,6 +441,9 @@ def respuesta_no_entendida() -> str:
         "Tal vez hubo un pequeño error al escribir. ¿Puedes repetirlo?",
         "No lo capté del todo, pero sigo contigo. ¿Me lo cuentas diferente?",
         "No entendí esa parte. ¿Puedes decirlo con otras palabras?",
+        "Creo que no comprendí bien. Puedes hablarme de materias, hobbies o actividades que disfrutes.",
+        "No logré identificar tus intereses en eso. ¿Puedes ser un poco más específico?",
+        "Creo que no comprendí bien. ¿Qué materias o actividades te llaman la atención?",
     ])
 
 

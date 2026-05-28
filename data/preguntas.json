@@ -1,9 +1,36 @@
 {
   "preguntas": [
-    {"id": "matematicas", "texto": "¿Qué tanto te gustan las matemáticas?"},
-    {"id": "lectura", "texto": "¿Qué tanto te gusta leer o investigar?"},
-    {"id": "manual", "texto": "¿Te gusta trabajar con las manos?"},
-    {"id": "social", "texto": "¿Te gusta ayudar a las personas?"},
-    {"id": "tecnologia", "texto": "¿Qué tanto te interesa la tecnología?"}
+    {
+      "id": "matematicas",
+      "texto": "¿Qué tanto te gustan las matemáticas, la física o resolver problemas lógicos?"
+    },
+    {
+      "id": "tecnologia",
+      "texto": "¿Qué tanto te interesa la tecnología, la programación o las computadoras?"
+    },
+    {
+      "id": "salud",
+      "texto": "¿Qué tanto te interesa la biología, la medicina o el cuidado de la salud?"
+    },
+    {
+      "id": "social",
+      "texto": "¿Te gusta ayudar a las personas, trabajar con la sociedad o estudiar el comportamiento humano?"
+    },
+    {
+      "id": "lectura",
+      "texto": "¿Qué tanto disfrutas leer, escribir, debatir o analizar temas de historia, filosofía o cultura?"
+    },
+    {
+      "id": "arte",
+      "texto": "¿Qué tanto te atrae el arte, el diseño, la música, el cine o cualquier forma de expresión creativa?"
+    },
+    {
+      "id": "naturaleza",
+      "texto": "¿Te interesa la naturaleza, los ecosistemas, los animales o el medio ambiente?"
+    },
+    {
+      "id": "negocios",
+      "texto": "¿Te llaman la atención los negocios, la economía, la administración o el emprendimiento?"
+    }
   ]
 }
