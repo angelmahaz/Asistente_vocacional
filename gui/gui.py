@@ -36,7 +36,7 @@ from core.chatbot import (
     cargar_preguntas,
     normalizar_texto,
 )
-from core.perceptron import cargar_areas, evaluar, explicar_recomendacion
+from core.perceptron import cargar_areas, evaluar, explicar_recomendacion, descripcion_arquitectura
 from core.recomendador import cargar_carreras, recomendar, obtener_enlaces_oficiales
 
 
@@ -97,10 +97,15 @@ class ChatGUI:
         self.preguntas = cargar_preguntas("data/preguntas.json")
         self.mapa_preguntas = {
             "matematicas": {"matematicas": 1.15},
-            "lectura": {"humanidades": 0.45},
-            "manual": {"arte": 0.25, "matematicas": 0.20},
-            "social": {"salud": 0.35, "humanidades": 0.15},
-            "tecnologia": {"matematicas": 1.25},
+            "lectura":     {"humanidades": 0.45},
+            "manual":      {"arte": 0.25, "matematicas": 0.20},
+            "social":      {"salud": 0.35, "humanidades": 0.15},
+            "tecnologia":  {"matematicas": 1.25},
+            # Claves añadidas para cubrir el nuevo preguntas.json
+            "salud":       {"salud": 1.20},
+            "arte":        {"arte": 1.20},
+            "naturaleza":  {"salud": 0.55, "matematicas": 0.20},
+            "negocios":    {"humanidades": 0.85},
         }
         self.nombre = None
         self.ultima_area = None
@@ -110,13 +115,32 @@ class ChatGUI:
         self.bot_activo = False
         self._mensaje_epoch = 0
 
-        # Mensajes de bienvenida completos
+        # ── Banner ASCII y disclaimers (se muestran antes que cualquier mensaje) ──
+        banner_txt = (
+            " VV     VV  OOOOO   CCCCC   AAAAA   BBBB    OOOOO   TTTTTTT\n"
+            " VV     VV OO   OO CC      AA   AA  BB  BB OO   OO    TTT\n"
+            "  VV    VV OO   OO CC      AAAAAAA  BBBB   OO   OO    TTT\n"
+            "  VV   VV  OO   OO CC      AA   AA  BB  BB OO   OO    TTT\n"
+            "   VVVVV    OOOOO   CCCCC  AA   AA  BBBB    OOOOO     TTT\n"
+            "\n"
+            "              V O C A B O T"
+        )
+        self.bubble_banner(banner_txt)
+
+        disclaimers = [
+            "Asistente vocacional conversacional.",
+            "Puedes escribir materias, hobbies, gustos, intereses o ideas sobre lo que te gustaria estudiar.",
+            "Tambien puedes responder con si, no, mucho, poco, mas o menos, tal vez o no se.",
+            "Escribe 'salir' para terminar o 'ayuda' para ver estas instrucciones.",
+            "Este bot es solo de apoyo y no sustituye la orientacion vocacional profesional.",
+        ]
+        for d in disclaimers:
+            self.bubble_disclaimer(d)
+
+        # ── Mensajes de bienvenida ──
         self.mensaje_bot("Hola, soy Vocabot.")
         self.mensaje_bot("Cuéntame cuáles son tus gustos o en qué eres bueno.")
-        self.mensaje_bot("Puedes escribir materias, hobbies, música, tecnología o cualquier interés que tengas.")
-        self.mensaje_bot("También puedes responder con si, no, mucho, poco, más o menos, tal vez o no sé.")
-        self.mensaje_bot("Escribe 'salir' para terminar o 'ayuda' si quieres ver estas instrucciones otra vez.")
-        self.mensaje_bot("Este bot es solo de apoyo y no sustituye la orientación vocacional profesional.")
+        
 
     # -------------------------------------------------------------------
     def _ajustar_ancho(self, event):
@@ -192,6 +216,77 @@ class ChatGUI:
         self._scroll_abajo()
 
     # -------------------------------------------------------------------
+    # -------------------------------------------------------------------
+    def bubble_banner(self, texto):
+        """
+        Muestra el banner ASCII de Vocabot con fuente monoespaciada
+        para respetar el espaciado del arte ASCII y sin animacion de tipeo.
+        Se llama una sola vez al arrancar la aplicacion.
+        """
+        contenedor = tk.Frame(self.scrollable_frame, bg="#0d0d1a")
+        contenedor.pack(fill=tk.X, pady=(10, 2), padx=12)
+        lbl = tk.Label(
+            contenedor,
+            text=texto,
+            bg="#0d0d1a",
+            fg="#4fc3f7",
+            font=("Courier", 9, "bold"),
+            justify="left",
+            anchor="w",
+            wraplength=0,
+            padx=12,
+            pady=10,
+        )
+        lbl.pack(anchor="w")
+        self._scroll_abajo()
+
+    # -------------------------------------------------------------------
+    def bubble_disclaimer(self, texto):
+        """
+        Muestra una linea de disclaimer/instruccion inicial con un estilo
+        diferenciado (fondo gris oscuro) para distinguirla de los mensajes
+        normales del bot.
+        """
+        contenedor = tk.Frame(self.scrollable_frame, bg="#1e1e2f")
+        contenedor.pack(fill=tk.X, pady=1, padx=12)
+        lbl = tk.Label(
+            contenedor,
+            text=texto,
+            bg="#2a2a40",
+            fg="#aaaacc",
+            font=("Arial", 10, "italic"),
+            justify="left",
+            anchor="w",
+            wraplength=700,
+            padx=10,
+            pady=4,
+        )
+        lbl.pack(anchor="w")
+        self._scroll_abajo()
+
+    # -------------------------------------------------------------------
+    def _mostrar_carreras(self, area):
+        """
+        Muestra todas las carreras del area recomendada agrupadas por universidad
+        y los enlaces oficiales. Se invoca solo cuando el usuario acepta verlas.
+        """
+        carreras = recomendar(area, self.carreras, max_por_uni=999)
+        if not carreras:
+            self.mensaje_bot("No encontre carreras registradas para esa area por ahora.")
+            return
+        for uni, lista in carreras.items():
+            self.mensaje_bot(f"-- {uni} --")
+            if lista:
+                bloque = "\n".join(f"  * {c}" for c in lista)
+                self.mensaje_bot(bloque)
+            else:
+                self.mensaje_bot("  * Sin carreras registradas por ahora.")
+        enlaces = obtener_enlaces_oficiales()
+        if enlaces:
+            self.mensaje_bot("Consulta la oferta educativa oficial:")
+            for uni, url in enlaces.items():
+                self.mensaje_bot(f"{uni}: {url}")
+
     def _crear_burbuja_bot(self, texto_inicial=""):
         """
         Genera e inserta dinámicamente un contenedor de tipo etiqueta en el área de chat,
@@ -392,44 +487,43 @@ class ChatGUI:
                 self.mensaje_bot("Cuéntame un poco más sobre lo que te gusta.")
             return
 
-        self.estado = "post"
+        # Obtener info de la red neuronal y calcular resultado
+        capas   = descripcion_arquitectura()
         area, _, prob = evaluar(self.memoria, self.areas)
         self.ultima_area = area
 
-        mensajes = ["Estoy analizando tus respuestas con IA..."]
+        # Mensaje de analisis con contexto de la red neuronal
+        mensajes = [f"Analizando tus respuestas con la red neuronal ({len(capas)} capas)..."]
+
+        # Probabilidades con barra visual
+        mensajes.append("Resultado del análisis de la red neuronal:")
         for a, p in sorted(prob.items(), key=lambda x: x[1], reverse=True):
-            mensajes.append(f"{a}: {p:.2f}")
+            barra = "|" * int(p * 20)
+            mensajes.append(f"{a}:\n{barra} {p:.0%}")
 
         if area:
-            msg = f"Te recomiendo el área de {area}."
+            # Area recomendada
+            msg_area = f"La red neuronal identifica que tu perfil encaja mejor con:\n>> {area} <<"
             if self.nombre:
-                msg = f"{self.nombre}, {msg}"
-            mensajes.append(msg)
+                msg_area = f"{self.nombre}, " + msg_area
+            mensajes.append(msg_area)
+
+            # Factores que influyeron
             top = explicar_recomendacion(self.memoria, self.areas, area)
             if top:
-                mensajes.append(f"Tomé en cuenta principalmente: {', '.join(top)}.")
+                mensajes.append(f"Las características que más influyeron en la red neuronal fueron: {', '.join(top)}.")
 
-        carreras = recomendar(area, self.carreras)
-        if not carreras:
-            mensajes.append("No encontré carreras disponibles por ahora.")
+            # Ofrecer carreras — el usuario decide si las ve
+            mensajes.append("Tengo algunas opciones de carreras que te pueden interesar.")
+            mensajes.append("¿Quieres que te las muestre?")
+            self.mostrar_mensajes(mensajes)
+            self.estado = "ofreciendo_carreras"
+
         else:
-            for uni, lista in carreras.items():
-                mensajes.append(f"{uni}:")
-                if lista:
-                    mensajes.append(" - " + "\n - ".join(lista))
-                else:
-                    mensajes.append(" - Sin carreras registradas por ahora")
-
-        enlaces = obtener_enlaces_oficiales()
-        if enlaces:
-            mensajes.append("Consulta la oferta educativa oficial:")
-            for uni, url in enlaces.items():
-                mensajes.append(f"{uni}: {url}")
-        else:
-            mensajes.append("No pude calcular una recomendación por ahora.")
-
-        mensajes.append("¿Te gustaría explorar otras recomendaciones?")
-        self.mostrar_mensajes(mensajes)
+            mensajes.append("No pude calcular una recomendación con los datos actuales.")
+            mensajes.append("¿Quieres contarme un poco más sobre tus intereses?")
+            self.mostrar_mensajes(mensajes)
+            self.estado = "charla"
 
     # -------------------------------------------------------------------
     def mostrar_mensajes(self, mensajes, i=0):
@@ -488,6 +582,26 @@ class ChatGUI:
                 self._resultado_detallado()
                 return
 
+            # ── Estado: ofreciendo_carreras ─────────────────────────────────
+            # El bot acaba de dar el resultado y ofrece mostrar carreras.
+            # Espera un si/no; nunca se rompe ante respuestas inesperadas.
+            if self.estado == "ofreciendo_carreras":
+                respuesta = self._respuesta_texto_post(texto_original)
+                if respuesta is True:
+                    self.mensaje_bot(f"Aquí están las carreras del área de {self.ultima_area}:")
+                    self._mostrar_carreras(self.ultima_area)
+                    self.mensaje_bot("¿Te gustaría explorar otras recomendaciones? (si / no)")
+                    self.estado = "post"
+                    return
+                if respuesta is False:
+                    self.mensaje_bot("No hay problema. ¿Te gustaría explorar otras recomendaciones? (si / no)")
+                    self.estado = "post"
+                    return
+                # Respuesta no reconocida — re-preguntar sin romperse
+                self.mensaje_bot("Solo dime si quieres ver las carreras o no.")
+                self.mensaje_bot("¿Quieres que te muestre las carreras disponibles? (si / no)")
+                return
+
             # Estado post-recomendación
             if self.estado == "post":
                 respuesta = self._respuesta_texto_post(texto_original)
@@ -497,17 +611,17 @@ class ChatGUI:
                     self.mensaje_bot("Cuéntame nuevamente sobre tus intereses.")
                     return
                 if respuesta is False:
-                    self.mensaje_bot("Creo que no comprendí bien. ¿Quieres finalizar el programa?")
+                    self.mensaje_bot("Entendido. ¿Deseas finalizar el programa? (si / no)")
                     self.estado = "confirmar"
                     return
-                self.mensaje_bot("Creo que no comprendí bien. ¿Quieres explorar otras recomendaciones?")
+                self.mensaje_bot("Puedes responder con 'si' para explorar otra área o 'no' para terminar.")
                 return
 
             # Estado confirmación
             if self.estado == "confirmar":
                 respuesta = self._respuesta_texto_post(texto_original)
                 if respuesta is True:
-                    self.mensaje_bot("Gracias por usar el asistente.")
+                    self.mensaje_bot("Gracias por usar el asistente. ¡Hasta luego!")
                     self.root.after(1500, self.root.destroy)
                     return
                 if respuesta is False:
@@ -515,7 +629,7 @@ class ChatGUI:
                     self.reiniciar_ciclo_vocacional()
                     self.mensaje_bot("Cuéntame sobre tus intereses.")
                     return
-                self.mensaje_bot("Creo que no comprendí bien. ¿Quieres finalizar el programa?")
+                self.mensaje_bot("Responde con 'si' para salir o 'no' para continuar.")
                 return
 
             # Estado pregunta (test vocacional)
