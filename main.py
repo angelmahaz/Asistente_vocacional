@@ -68,8 +68,6 @@ def mostrar_ayuda_terminal():
 
 
 # Función principal
-# Inicializa el entorno de ejecución, carga la base de conocimientos en formato JSON,
-# establece el estado inicial de la sesión y define la matriz de pesos.
 def main():
     intenciones = cargar_intenciones('data/intenciones.json')
     areas = cargar_areas('data/areas.json')
@@ -84,10 +82,6 @@ def main():
     pregunta_actual = None
     ultima_area = None
 
-    # -----------------------------------------------------------------------
-    # Mapa de preguntas ampliado a las 8 del nuevo preguntas.json
-    # Pesos calibrados por area dominante de cada pregunta
-    # -----------------------------------------------------------------------
     mapa_preguntas = {
         'matematicas': {'matematicas': 1.15},
         'tecnologia':  {'matematicas': 1.25},
@@ -97,7 +91,6 @@ def main():
         'arte':        {'arte': 1.20},
         'naturaleza':  {'salud': 0.55, 'matematicas': 0.20},
         'negocios':    {'humanidades': 0.85},
-        # preguntas originales mantenidas por compatibilidad
         'manual':      {'arte': 0.25, 'matematicas': 0.20},
     }
 
@@ -115,14 +108,6 @@ def main():
                 return True
         return False
 
-
-#_______________________________________________________________________________________________________
-
-# Función Repetir la pregunta
-#   Reenvía y vuelve a imprimir en consola el texto del reactivo vigente en ese momento, útil cuando 
-#   el usuario introduce una respuesta inválida, solicita una aclaración o activa una pausa.
-
-
     def repetir_pregunta_actual():
         if pregunta_actual:
             texto = pregunta_actual.get('texto', '')
@@ -131,28 +116,11 @@ def main():
                 return True
         return False
 
-
-#_______________________________________________________________________________________________________
-
-# Función para calcular la respuesta
-#   Calcula el impacto cuantitativo de la respuesta del usuario sobre su perfil vocacional, normalizando
-#   la puntuación recibida a una escala de 0.0 a 1.0 y aplicando los coeficientes ponderados a la memoria
-#   de aptitudes.
-
     def aplicar_respuesta_pregunta(pregunta_id, valor):
         factor = max(0.0, min(1.0, (float(valor) - 1.0) / 4.0))
         for categoria, peso in mapa_preguntas.get(pregunta_id, {}).items():
             if categoria in memoria:
                 memoria[categoria] += factor * float(peso)
-
-
-#_______________________________________________________________________________________________________
-
-
-# Función que reinicia la memoria
-#   Restablece todas las variables de control, puntuaciones vocacionales y estados de la sesión, 
-#   permitiendo al usuario volver a iniciar el test y la interacción desde cero sin necesidad de 
-#   reiniciar la ejecución del programa.
 
     def reiniciar_ciclo_vocacional():
         nonlocal memoria, turnos, estado, indice_pregunta, pregunta_actual, ultima_area
@@ -162,14 +130,6 @@ def main():
         indice_pregunta = 0
         pregunta_actual = None
         ultima_area = None
-
-
-#_______________________________________________________________________________________________________
-
-
-# Función que despliega las recomendaciones de las áreas
-#   Procesa y despliega las recomendaciones de áreas de estudio y carreras universitarias,o solicita 
-#   más datos al usuario si la información recopilada en memoria es insuficiente.
 
     def resultado():
         nonlocal estado, pregunta_actual, ultima_area
@@ -198,16 +158,19 @@ def main():
             if top:
                 print(f'Vocabot: Tome en cuenta principalmente: {", ".join(top)}.')
 
-            carreras = recomendar(area, carreras_data, max_por_uni=999)
+            # Mostrar solo algunas carreras de ejemplo (máximo 5 por universidad)
+            carreras = recomendar(area, carreras_data, max_por_uni=5)  # Cambia 5 por el número que prefieras
             if not carreras:
                 print('Vocabot: No encontre carreras disponibles por ahora.')
             else:
-                print('Vocabot: Carreras disponibles en tu area:')
+                print('Vocabot: Algunas carreras de ejemplo en esta area:')
                 for uni, lista in carreras.items():
                     print(f'Vocabot: -- {uni} --')
                     if lista:
                         for c in lista:
                             print(f'Vocabot:   * {c}')
+                        if len(lista) == 5:  # si se mostraron exactamente 5, indicar que hay más
+                            print('Vocabot:   ... y mas opciones en la pagina oficial')
                     else:
                         print('Vocabot:   * Sin carreras registradas por ahora')
 
@@ -238,14 +201,17 @@ def main():
 
         texto_original = texto
 
+        # Comando de ayuda
         if normalizar_texto(texto_original) in {'ayuda', 'help', 'instrucciones', 'como funciona'}:
             mostrar_ayuda_terminal()
             continue
 
+        # Despedida
         if es_despedida(texto, intenciones):
             print('Vocabot: Fue un gusto ayudarte.')
             break
 
+        # Detectar nombre
         nombre_detectado = extraer_nombre(texto_original)
         if nombre_detectado:
             nombre = nombre_detectado
@@ -259,10 +225,12 @@ def main():
             print(f'Vocabot: Mucho gusto, {nombre}.')
             texto_original = texto_sin_nombre
 
+        # Solicitar recomendación explícita
         if detectar_recomendacion(texto_original, intenciones):
             resultado()
             continue
 
+        # ---- ESTADO POST (después de dar recomendación) ----
         if estado == 'post':
             respuesta = interpretar_respuesta_binaria(texto_original)
 
@@ -273,13 +241,13 @@ def main():
                 continue
 
             if respuesta is False:
-                print('Vocabot: Creo que no comprendí bien. ¿Quieres finalizar el programa?')
-                estado = 'confirmar'
-                continue
+                print('Vocabot: Gracias por usar el asistente. ¡Hasta luego!')
+                break
 
-            print('Vocabot: Creo que no comprendí bien. ¿Quieres explorar otras recomendaciones?')
+            print('Vocabot: No comprendí bien. Responde con "si" para empezar de nuevo o "no" para salir.')
             continue
 
+        # ---- ESTADO CONFIRMAR ----
         if estado == 'confirmar':
             respuesta = interpretar_respuesta_binaria(texto_original)
 
@@ -296,6 +264,7 @@ def main():
             print('Vocabot: Creo que no comprendí bien. ¿Quieres finalizar el programa?')
             continue
 
+        # ---- ESTADO PREGUNTA (test vocacional) ----
         if estado == 'pregunta':
             valor = interpretar_respuesta_escala(texto_original)
 
@@ -323,10 +292,15 @@ def main():
 
             continue
 
+        # ---- SALUDO SIMPLE SIN INTERESES ----
         if es_saludo(texto_original, intenciones) and not detectar_intereses(texto_original, intenciones):
             print('Vocabot: Hola, soy Vocabot, dime cuales son tus gustos.')
             continue
 
+        # CAMBIO: Eliminado el bloque que atrapaba respuestas binarias en modo charla
+        # Ya no se pide más información ante un simple "sí" o "no".
+
+        # ---- CONVERSACIÓN LIBRE: extraer intereses del texto ----
         texto_limpio = limpiar_mensaje_nombre(texto_original)
         contribuciones = puntuar_intereses(texto_limpio, intenciones)
 
@@ -338,6 +312,10 @@ def main():
 
             print(f'Vocabot: {respuesta_humana(categoria, texto_limpio)}')
 
+            # CAMBIO: Después de dar una respuesta humana, si aún faltan datos, hacer una pregunta guiada
+            if sum(memoria.values()) < 2 and indice_pregunta < len(preguntas):
+                preguntar_guiada()
+
             if nombre and turnos % 2 == 0:
                 print(f'Vocabot: {nombre}, cuentame un poco mas de eso.')
         else:
@@ -348,10 +326,13 @@ def main():
 
         turnos += 1
 
-        if turnos >= 5 and sum(memoria.values()) > 0 and estado == 'charla':
+        # CAMBIO: Reducir el umbral de turnos a 3 y asegurar que se llame a resultado incluso si la memoria es baja
+        if turnos >= 3 and sum(memoria.values()) > 0 and estado == 'charla':
+            # Si ya hay algo en memoria y han pasado al menos 3 turnos, mostrar recomendación
             resultado()
-
-#_______________________________________________________________________________________________________
+        elif sum(memoria.values()) >= 2 and estado == 'charla':
+            # Si la memoria ya tiene suficiente evidencia, mostrar recomendación antes de llegar a 3 turnos
+            resultado()
 
 
 if __name__ == '__main__':
