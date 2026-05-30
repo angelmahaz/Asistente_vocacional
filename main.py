@@ -132,7 +132,6 @@ def main():
         ultima_area = None
 
     def mostrar_carreras(area):
-        """Muestra carreras y enlaces oficiales."""
         carreras = recomendar(area, carreras_data, max_por_uni=5)
         if not carreras:
             print('Vocabot: No encontre carreras registradas para esa area por ahora.')
@@ -144,6 +143,8 @@ def main():
             if lista:
                 for c in lista:
                     print(f'Vocabot:   * {c}')
+                if len(lista) == 5:
+                    print('Vocabot:   ... y mas opciones en la pagina oficial')
             else:
                 print('Vocabot:   * Sin carreras registradas por ahora.')
 
