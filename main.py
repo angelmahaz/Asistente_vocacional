@@ -70,12 +70,15 @@ def mostrar_bienvenida_terminal():
 
 def mostrar_ayuda_terminal():
     """Muestra instrucciones generales de uso (comando 'ayuda' en cualquier momento)."""
-    print("Vocabot: Puedes hablarme de materias, hobbies, gustos, música, tecnología, lectura o cualquier interés que tengas.")
+
+    print("Vocabot: Vocabot es un asistente vocacional que usa inteligencia artificial para ayudarte")
+    print("         a identificar qué área de estudios universitarios va mejor con tu perfil.")
+    print("Vocabot: Solo cuéntame sobre tus gustos, hobbies e intereses y yo analizo la información.")
     print("Vocabot: Responde con si, no, mucho, poco, más o menos, tal vez o no sé cuando te haga preguntas.")
     print("Vocabot: Si quieres una nueva recomendación, puedes decírmelo en cualquier momento.")
+    print("Escribe 'ayuda' para orientarte si no sabes por donde empezar")
     print("Vocabot: Escribe 'salir' para terminar.")
-    print("Vocabot: Recuerda que esto es solo un apoyo; no reemplaza la orientación vocacional profesional.")
-    print()
+    print("Vocabot: Recuerda que soy un asistente vocacional y la información proporcionada no reemplaza la orientación vocacional profesional.")
 
 
 # Menú de ayuda interactiva
