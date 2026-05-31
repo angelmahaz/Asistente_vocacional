@@ -35,6 +35,16 @@ from core.chatbot import (
     interpretar_respuesta_binaria,
     cargar_preguntas,
     normalizar_texto,
+    # ── Nuevas funciones v4 ──────────────────────────────────────────
+    es_peticion_ayuda,
+    respuesta_ayuda_empatica,
+    es_expresion_confusion,
+    respuesta_confusion,
+    es_expresion_frustracion,
+    respuesta_frustracion,
+    es_groseria,
+    respuesta_groseria,
+    generar_resumen_memoria,
 )
 from core.perceptron import cargar_areas, evaluar, explicar_recomendacion, descripcion_arquitectura
 from core.recomendador import cargar_carreras, recomendar, obtener_enlaces_oficiales
@@ -479,6 +489,91 @@ class ChatGUI:
         return valor
 
     # -------------------------------------------------------------------
+    def _mostrar_menu_ayuda(self):
+        """
+        Muestra el menú de ayuda interactiva con 5 opciones numeradas.
+        El usuario puede escribir el número o el nombre de la opción.
+        """
+        self.mensaje_bot("¿Sobre qué quieres saber? Elige una opción:")
+        opciones = (
+            "1. ¿Cómo funciona Vocabot?\n"
+            "2. ¿Qué áreas de conocimiento existen?\n"
+            "3. ¿Cómo se calcula mi recomendación?\n"
+            "4. Quiero empezar de nuevo.\n"
+            "5. Continuar la conversación."
+        )
+        self.mensaje_bot(opciones)
+
+    # -------------------------------------------------------------------
+    def _manejar_opcion_ayuda(self, texto: str) -> bool:
+        """
+        Interpreta la opción elegida del menú de ayuda y responde en consecuencia.
+        Retorna True si se procesó una opción válida, False si no se reconoció.
+        """
+        norm = normalizar_texto(texto)
+        opcion = None
+
+        if "1" in norm or "como funciona" in norm or "funciona" in norm:
+            opcion = "1"
+        elif "2" in norm or "areas" in norm or "conocimiento" in norm:
+            opcion = "2"
+        elif "3" in norm or "calcula" in norm or "neuronal" in norm:
+            opcion = "3"
+        elif "4" in norm or "empezar de nuevo" in norm or "reiniciar" in norm or "nuevo" in norm:
+            opcion = "4"
+        elif "5" in norm or "continuar" in norm or "seguir" in norm or "sigue" in norm:
+            opcion = "5"
+
+        if opcion == "1":
+            self.mensaje_bot(
+                "Vocabot es un asistente vocacional con inteligencia artificial.\n\n"
+                "Solo cuéntame sobre tus gustos, hobbies e intereses y yo analizo la información.\n"
+                "La red neuronal procesa todo y calcula las probabilidades de afinidad con cada área de conocimiento."
+            )
+            self.estado = "charla"
+            return True
+
+        if opcion == "2":
+            self.mensaje_bot(
+                "Existen 4 áreas de conocimiento:\n\n"
+                "  Área 1 — Ciencias Físico-Matemáticas y de las Ingenierías\n"
+                "             (matemáticas, física, programación, ingeniería, tecnología)\n\n"
+                "  Área 2 — Ciencias Biológicas, Químicas y de la Salud\n"
+                "             (medicina, biología, química, enfermería, nutrición)\n\n"
+                "  Área 3 — Ciencias Sociales\n"
+                "             (derecho, economía, administración, comunicación, psicología)\n\n"
+                "  Área 4 — Humanidades y de las Artes\n"
+                "             (filosofía, historia, literatura, música, diseño, arte)\n\n"
+                "Las carreras disponibles son de la UNAM, IPN y UAM."
+            )
+            self.estado = "charla"
+            return True
+
+        if opcion == "3":
+            capas = descripcion_arquitectura()
+            detalle = "\n".join(f"  Capa {i+1}: {c}" for i, c in enumerate(capas))
+            self.mensaje_bot(
+                f"La recomendación se calcula con una red neuronal de {len(capas)} capas:\n\n"
+                f"{detalle}\n\n"
+                "Mientras más información me des, más precisa es la recomendación."
+            )
+            self.estado = "charla"
+            return True
+
+        if opcion == "4":
+            self.mensaje_bot("Perfecto. Empecemos de nuevo.")
+            self.reiniciar_ciclo_vocacional()
+            self.mensaje_bot("Cuéntame sobre tus intereses.")
+            return True
+
+        if opcion == "5":
+            self.mensaje_bot("Perfecto, sigamos donde estábamos. Cuéntame más sobre tus gustos.")
+            self.estado = "charla"
+            return True
+
+        return False
+
+    # -------------------------------------------------------------------
     def _resultado_detallado(self):
         if sum(self.memoria.values()) == 0:
             self.estado = "charla"
@@ -553,7 +648,27 @@ class ChatGUI:
             texto_original = texto
             texto_norm = normalizar_texto(texto_original)
 
-            # Ayuda y comandos especiales
+            # ── GUARDIA GLOBAL 1: Groserías ────────────────────────────
+            # Se evalúa primero para que nunca rompa la conversación.
+            if es_groseria(texto_original, self.intenciones):
+                self.mensaje_bot(respuesta_groseria())
+                return
+
+            # ── GUARDIA GLOBAL 2: Despedida ────────────────────────────
+            if self._manejar_finalizacion(texto_norm):
+                resumen = generar_resumen_memoria(self.memoria, self.nombre)
+                self.mensaje_bot(resumen)
+                return
+
+            # ── GUARDIA GLOBAL 3: Petición de ayuda interactiva ───────
+            # Solo se dispara fuera del menú de ayuda para no crear bucles.
+            if self.estado != "ayuda_menu" and es_peticion_ayuda(texto_original, self.intenciones):
+                self.mensaje_bot(respuesta_ayuda_empatica(self.nombre))
+                self._mostrar_menu_ayuda()
+                self.estado = "ayuda_menu"
+                return
+
+            # ── GUARDIA GLOBAL 4: Comando de ayuda rápida (palabras exactas) ─
             if texto_norm in {"ayuda", "help", "instrucciones", "como funciona"}:
                 self.mensaje_bot("Puedes hablarme de materias, hobbies, gustos, música, tecnología o cualquier interés que tengas.")
                 self.mensaje_bot("Responde con si, no, mucho, poco, más o menos, tal vez o no sé cuando te haga preguntas.")
@@ -561,10 +676,7 @@ class ChatGUI:
                 self.mensaje_bot("Recuerda que esto es solo un apoyo y no sustituye la orientación vocacional profesional.")
                 return
 
-            if self._manejar_finalizacion(texto_norm):
-                return
-
-            # Extraer nombre
+            # ── Detectar nombre ────────────────────────────────────────
             nombre = extraer_nombre(texto_original)
             if nombre:
                 self.nombre = nombre
@@ -577,14 +689,19 @@ class ChatGUI:
                 texto_original = texto_sin_nombre
                 texto_norm = texto_original.lower()
 
-            # Recomendación explícita
+            # ── Recomendación explícita ────────────────────────────────
             if self._es_recomendacion(texto_original):
                 self._resultado_detallado()
                 return
 
-            # ── Estado: ofreciendo_carreras ─────────────────────────────────
-            # El bot acaba de dar el resultado y ofrece mostrar carreras.
-            # Espera un si/no; nunca se rompe ante respuestas inesperadas.
+            # ── Estado: ayuda_menu ─────────────────────────────────────
+            if self.estado == "ayuda_menu":
+                if not self._manejar_opcion_ayuda(texto_original):
+                    self.mensaje_bot("No entendí la opción. Elige un número del 1 al 5.")
+                    self._mostrar_menu_ayuda()
+                return
+
+            # ── Estado: ofreciendo_carreras ────────────────────────────
             if self.estado == "ofreciendo_carreras":
                 respuesta = self._respuesta_texto_post(texto_original)
                 if respuesta is True:
@@ -597,12 +714,11 @@ class ChatGUI:
                     self.mensaje_bot("No hay problema. ¿Te gustaría explorar otras recomendaciones? (si / no)")
                     self.estado = "post"
                     return
-                # Respuesta no reconocida — re-preguntar sin romperse
                 self.mensaje_bot("Solo dime si quieres ver las carreras o no.")
                 self.mensaje_bot("¿Quieres que te muestre las carreras disponibles? (si / no)")
                 return
 
-            # Estado post-recomendación
+            # ── Estado: post ───────────────────────────────────────────
             if self.estado == "post":
                 respuesta = self._respuesta_texto_post(texto_original)
                 if respuesta is True:
@@ -617,12 +733,14 @@ class ChatGUI:
                 self.mensaje_bot("Puedes responder con 'si' para explorar otra área o 'no' para terminar.")
                 return
 
-            # Estado confirmación
+            # ── Estado: confirmar ──────────────────────────────────────
             if self.estado == "confirmar":
                 respuesta = self._respuesta_texto_post(texto_original)
                 if respuesta is True:
+                    resumen = generar_resumen_memoria(self.memoria, self.nombre)
+                    self.mensaje_bot(resumen)
                     self.mensaje_bot("Gracias por usar el asistente. ¡Hasta luego!")
-                    self.root.after(1500, self.root.destroy)
+                    self.root.after(2500, self.root.destroy)
                     return
                 if respuesta is False:
                     self.mensaje_bot("Perfecto. Sigamos entonces.")
@@ -632,13 +750,17 @@ class ChatGUI:
                 self.mensaje_bot("Responde con 'si' para salir o 'no' para continuar.")
                 return
 
-            # Estado pregunta (test vocacional)
+            # ── Estado: pregunta ───────────────────────────────────────
             if self.estado == "pregunta":
                 valor = self._respuesta_escala(texto_original)
                 if valor is None:
-                    self.mensaje_bot("Creo que no comprendí bien.")
-                    if not self._repetir_pregunta_actual():
-                        self.mensaje_bot("Puedes responder con mucho, poco, más o menos o nada.")
+                    if es_expresion_confusion(texto_original, self.intenciones):
+                        self.mensaje_bot(respuesta_confusion())
+                        self._repetir_pregunta_actual()
+                    else:
+                        self.mensaje_bot("Creo que no comprendí bien.")
+                        if not self._repetir_pregunta_actual():
+                            self.mensaje_bot("Puedes responder con mucho, poco, más o menos o nada.")
                     return
                 pregunta_id = (self.pregunta_actual or {}).get("id", "")
                 self._aplicar_respuesta_pregunta(pregunta_id, valor)
@@ -654,12 +776,25 @@ class ChatGUI:
                     self._pregunta_guiada()
                 return
 
-            # Solo saludo, sin intereses
+            # ── Solo saludo, sin intereses ─────────────────────────────
             if es_saludo(texto_original, self.intenciones) and not detectar_intereses(texto_original, self.intenciones):
                 self.mensaje_bot("Hola, soy Vocabot, dime cuáles son tus gustos.")
                 return
 
-            # Detección y puntuación de intereses
+            # ── Confusión en charla libre ──────────────────────────────
+            if es_expresion_confusion(texto_original, self.intenciones):
+                self.mensaje_bot(respuesta_confusion())
+                if not self._pregunta_guiada():
+                    self.mensaje_bot("¿Hay alguna materia o actividad que hayas disfrutado alguna vez?")
+                return
+
+            # ── Frustración en charla libre ────────────────────────────
+            if es_expresion_frustracion(texto_original, self.intenciones):
+                self.mensaje_bot(respuesta_frustracion())
+                self.mensaje_bot("Cuéntame algo que hayas disfrutado hacer, aunque parezca pequeño.")
+                return
+
+            # ── Detección y puntuación de intereses ────────────────────
             texto_limpio = limpiar_mensaje_nombre(texto_original)
             contribuciones = puntuar_intereses(texto_limpio, self.intenciones)
             if contribuciones:
