@@ -1,7 +1,5 @@
 {
-
   "recomendacion": [
-
     "que me recomiendas",
     "qué me recomiendas",
     "recomiendame",
@@ -33,9 +31,7 @@
     "que licenciatura me recomiendas",
     "quiero orientacion"
   ],
-
   "nombre": [
-
     "soy",
     "me llamo",
     "mi nombre es",
@@ -50,9 +46,7 @@
     "soy estudiante",
     "soy aspirante"
   ],
-
   "saludo": [
-
     "hola",
     "buenas",
     "hey",
@@ -75,9 +69,7 @@
     "quiubo",
     "que tal"
   ],
-
   "despedida": [
-
     "salir",
     "terminar",
     "finalizar",
@@ -99,9 +91,7 @@
     "listo gracias",
     "eso es todo"
   ],
-
   "matematicas": [
-
     "matematicas",
     "matemáticas",
     "numeros",
@@ -204,9 +194,7 @@
     "cloud",
     "nube"
   ],
-
   "salud": [
-
     "medicina",
     "doctor",
     "hospital",
@@ -305,9 +293,7 @@
     "diagnostico clinico",
     "ciencias de la salud"
   ],
-
   "humanidades": [
-
     "leer",
     "historia",
     "derecho",
@@ -407,9 +393,7 @@
     "macroeconomia",
     "microeconomia"
   ],
-
   "arte": [
-    
     "dibujar",
     "pintar",
     "arte",
@@ -530,5 +514,100 @@
     "soul",
     "urbano",
     "corridos tumbados"
+  ],
+  "ayuda": [
+    "ayuda",
+    "ayúdame",
+    "ayudame",
+    "necesito ayuda",
+    "puedes ayudarme",
+    "me puedes ayudar",
+    "quiero ayuda",
+    "necesito orientacion",
+    "necesito orientación",
+    "no se que hacer",
+    "no sé qué hacer",
+    "estoy perdido",
+    "estoy perdida",
+    "no entiendo",
+    "no comprendo",
+    "como funciona",
+    "cómo funciona",
+    "explícame",
+    "explicame",
+    "que hago",
+    "qué hago",
+    "ayuda por favor",
+    "socorro",
+    "no se por donde empezar",
+    "no sé por dónde empezar",
+    "dame una pista",
+    "una pista",
+    "que opciones tengo",
+    "qué opciones tengo"
+  ],
+  "confusion": [
+    "estoy confundido",
+    "estoy confundida",
+    "no tengo claro",
+    "no sé",
+    "no se",
+    "no lo sé",
+    "tengo dudas",
+    "me da igual",
+    "no sé qué elegir",
+    "todo me gusta igual",
+    "ninguno me llama",
+    "no me llama nada",
+    "no se me ocurre nada",
+    "no encuentro nada",
+    "estoy bloqueado",
+    "estoy bloqueada",
+    "no sé por dónde empezar",
+    "me cuesta decidir",
+    "es difícil decidir",
+    "no sé qué decir",
+    "no sé cómo responder"
+  ],
+  "frustracion": [
+    "no me gusta nada",
+    "nada me interesa",
+    "todo me aburre",
+    "esto no sirve",
+    "es una perdida de tiempo",
+    "no quiero hacer esto",
+    "me aburro",
+    "para qué sirve esto",
+    "no va a funcionar",
+    "no me ayuda",
+    "estoy harto",
+    "estoy harta",
+    "ya me cansé",
+    "ya me canse",
+    "no quiero seguir",
+    "me rindo",
+    "es inútil",
+    "qué flojera",
+    "que flojera",
+    "me da pereza"
+  ],
+  "groseria": [
+    "tonto",
+    "idiota",
+    "estúpido",
+    "estupido",
+    "inútil",
+    "inutil",
+    "basura",
+    "maldito",
+    "maldita",
+    "odio esto",
+    "asco",
+    "horrible",
+    "pesimo",
+    "pésimo",
+    "te odio",
+    "que asco",
+    "qué asco"
   ]
 }

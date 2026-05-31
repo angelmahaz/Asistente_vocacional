@@ -763,3 +763,148 @@ def detectar_intereses(texto: str, intenciones: dict) -> List[str]:
     if not puntajes:
         return []
     return [categoria for categoria, _ in sorted(puntajes.items(), key=lambda item: (-item[1], item[0]))]
+
+# =======================================================================
+#                    NUEVAS FUNCIONES — Mejoras v4
+# =======================================================================
+
+# -----------------------------------------------------------------------
+# Detecta si el usuario está pidiendo ayuda de cualquier tipo.
+# -----------------------------------------------------------------------
+
+def es_peticion_ayuda(texto: str, intenciones: dict) -> bool:
+    """
+    Retorna True si el texto contiene alguna palabra o frase de ayuda.
+    Funciona con el campo 'ayuda' de intenciones.json.
+    """
+    return coincide_frases(texto, intenciones.get("ayuda", []))
+
+
+# -----------------------------------------------------------------------
+# Respuesta empática cuando el usuario pide ayuda.
+# -----------------------------------------------------------------------
+
+def respuesta_ayuda_empatica(nombre: str = None) -> str:
+    """
+    Retorna una frase de apoyo antes de mostrar el menú de ayuda.
+    """
+    frases = [
+        "Estoy aquí para ayudarte.",
+        "No te preocupes, para eso estoy aquí.",
+        "Claro que puedo orientarte, es justamente mi función.",
+        "Tranquilo, juntos encontramos la opción que mejor te va.",
+        "Por supuesto, cuéntame qué necesitas y lo resolvemos.",
+        "Aquí estoy, dime en qué te puedo apoyar.",
+    ]
+    base = random.choice(frases)
+    if nombre:
+        return f"{nombre}, {base}"
+    return base
+
+
+# -----------------------------------------------------------------------
+# Detecta si el usuario expresa confusión o indecisión profunda.
+# -----------------------------------------------------------------------
+
+def es_expresion_confusion(texto: str, intenciones: dict) -> bool:
+    """
+    Retorna True si el texto contiene frases de confusión o bloqueo.
+    """
+    return coincide_frases(texto, intenciones.get("confusion", []))
+
+
+# -----------------------------------------------------------------------
+# Respuesta empática ante confusión.
+# -----------------------------------------------------------------------
+
+def respuesta_confusion() -> str:
+    return random.choice([
+        "Es completamente normal no tener todo claro, para eso estoy aquí.",
+        "No te preocupes, vamos paso a paso y lo vamos a resolver.",
+        "La orientación vocacional puede ser confusa, pero con calma llegamos a algo.",
+        "Es normal tener dudas; eso no significa que no tengas un perfil claro.",
+        "Muchas personas sienten lo mismo y aun así encontramos una buena dirección.",
+        "Tómatelo con calma. Dime algo que hayas disfrutado hacer alguna vez, por pequeño que sea.",
+    ])
+
+
+# -----------------------------------------------------------------------
+# Detecta frustración o desmotivación en el usuario.
+# -----------------------------------------------------------------------
+
+def es_expresion_frustracion(texto: str, intenciones: dict) -> bool:
+    """
+    Retorna True si el texto expresa frustración, aburrimiento o rechazo.
+    """
+    return coincide_frases(texto, intenciones.get("frustracion", []))
+
+
+# -----------------------------------------------------------------------
+# Respuesta ante frustración.
+# -----------------------------------------------------------------------
+
+def respuesta_frustracion() -> str:
+    return random.choice([
+        "Entiendo que puede ser frustrante, tomémoslo con calma.",
+        "No pasa nada, vamos a tu ritmo, sin prisa.",
+        "Te entiendo; a veces estas decisiones son complicadas. Sigamos juntos.",
+        "Está bien sentir eso; lo importante es que aquí puedo apoyarte.",
+        "La elección de carrera es una decisión importante, es normal que genere tensión.",
+        "No te rindas, muchas personas pasan por esto y terminan encontrando su camino.",
+    ])
+
+
+# -----------------------------------------------------------------------
+# Detecta groserías o palabras fuertes para que el bot nunca se rompa.
+# -----------------------------------------------------------------------
+
+def es_groseria(texto: str, intenciones: dict) -> bool:
+    """
+    Retorna True si el texto contiene palabras ofensivas.
+    """
+    return coincide_frases(texto, intenciones.get("groseria", []))
+
+
+# -----------------------------------------------------------------------
+# Respuesta tranquila ante groserías.
+# -----------------------------------------------------------------------
+
+def respuesta_groseria() -> str:
+    return random.choice([
+        "Entiendo que puede haber algo de frustración. Sigamos con calma cuando quieras.",
+        "No hay problema, aquí sigo cuando estés listo para continuar.",
+        "No te preocupes, estoy aquí para ayudarte cuando lo necesites.",
+        "Sigamos adelante; cuéntame sobre tus intereses cuando quieras.",
+    ])
+
+
+# -----------------------------------------------------------------------
+# Genera un resumen textual de lo que el bot aprendió del usuario.
+# -----------------------------------------------------------------------
+
+def generar_resumen_memoria(memoria: dict, nombre: str = None) -> str:
+    """
+    Construye una frase descriptiva del perfil vocacional acumulado en memoria.
+    """
+    if not any(v > 0 for v in memoria.values()):
+        return "No recopilé suficiente información en esta sesión."
+
+    mapas = {
+        "matematicas": "las ciencias exactas, la tecnología y la lógica",
+        "salud":       "las ciencias de la salud y el cuidado de las personas",
+        "humanidades": "las humanidades, la sociedad y las ciencias sociales",
+        "arte":        "el arte, el diseño y la expresión creativa",
+    }
+
+    ordenado = sorted(memoria.items(), key=lambda x: x[1], reverse=True)
+    primer  = mapas.get(ordenado[0][0], ordenado[0][0])
+    segundo = mapas.get(ordenado[1][0], ordenado[1][0]) if len(ordenado) > 1 and ordenado[1][1] > 0 else None
+
+    if segundo:
+        base = f"Durante nuestra conversación noté mayor afinidad hacia {primer}, con un interés secundario en {segundo}."
+    else:
+        base = f"Durante nuestra conversación noté mayor afinidad hacia {primer}."
+
+    if nombre:
+        base = f"{nombre}, {base}"
+    return base
