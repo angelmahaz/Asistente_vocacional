@@ -773,11 +773,15 @@ def detectar_intereses(texto: str, intenciones: dict) -> List[str]:
 # -----------------------------------------------------------------------
 
 def es_peticion_ayuda(texto: str, intenciones: dict) -> bool:
-    """
-    Retorna True si el texto contiene alguna palabra o frase de ayuda.
-    Funciona con el campo 'ayuda' de intenciones.json.
-    """
-    return coincide_frases(texto, intenciones.get("ayuda", []))
+    texto_norm = normalizar_texto(texto)
+    # Usar coincidencia exacta con la palabra "ayuda"
+    if texto_norm == "ayuda":
+        return True
+    # También podrías conservar otras frases como "necesito ayuda", etc.
+    for frase in intenciones.get("ayuda", []):
+        if normalizar_texto(frase) in texto_norm:
+            return True
+    return False
 
 
 # -----------------------------------------------------------------------
