@@ -116,6 +116,14 @@ def _seleccionar_respuesta_variante(clave: str, opciones):
     return elegida
 
 
+def reiniciar_rotacion_respuestas():
+    """
+    Limpia el historial interno de respuestas variantes para que, al reiniciar el ciclo,
+    el bot no conserve la última frase usada en una sesión anterior.
+    """
+    _ULTIMAS_RESPUESTAS.clear()
+
+
 def pregunta_seguimiento(tipo: str, contexto: str = "") -> str:
     """
     Genera una pregunta breve y natural para profundizar en el interés
@@ -128,19 +136,35 @@ def pregunta_seguimiento(tipo: str, contexto: str = "") -> str:
             "Me parece una buena idea, ¿te llama más la programación, la lógica o resolver problemas?",
             "Eso suena interesante, ¿prefieres trabajar con computadoras, datos o con problemas matemáticos?",
             "¿Te atrae más construir software, analizar datos o resolver retos lógicos?",
+            "¿Te gustaría crear aplicaciones, videojuegos o herramientas tecnológicas?",
+            "¿Te interesan más la física, la electrónica o la ingeniería?",
+            "¿Prefieres algo más de computación, de sistemas o de ciencia de datos?",
+            "¿Te llama más la atención programar, diseñar algoritmos o trabajar con inteligencia artificial?",
         ]
-        if coincide_frases(contexto_norm, ["comput", "program", "codigo", "software", "datos", "algorit", "tecnolog"]):
+        if coincide_frases(contexto_norm, ["ia", "inteligencia artificial", "machine learning", "datos", "algorit", "analisis numerico"]):
+            opciones.insert(0, "Me parece una buena idea, ¿te interesa más la inteligencia artificial, el análisis de datos o los algoritmos?")
+        if coincide_frases(contexto_norm, ["comput", "program", "codigo", "software", "informat", "tecnolog", "redes", "ciber"]):
             opciones.insert(0, "Me parece una buena idea, ¿te gusta más programar, usar computadoras o resolver problemas?")
+        if coincide_frases(contexto_norm, ["videoj", "juego", "apps", "aplicacion"]):
+            opciones.insert(0, "¿Te gustaría crear videojuegos, apps o herramientas digitales?")
         return _seleccionar_respuesta_variante("seguimiento_matematicas", opciones)
 
     if tipo == "salud":
         opciones = [
-            "Me parece una buena idea, ¿te llama la atención la biología, los animales o las plantas?",
+            "Me parece una buena idea, ¿te interesa más la medicina, la enfermería o la nutrición?",
             "Eso suena interesante, ¿te gustaría trabajar en laboratorio o en el cuidado de personas?",
             "¿Te interesa más el cuerpo humano, la investigación o ayudar a otras personas?",
+            "¿Prefieres estudiar biología, química o temas de salud pública?",
+            "¿Te atrae más atender personas, investigar enfermedades o trabajar con seres vivos?",
+            "¿Te gustaría enfocarte en la prevención, el diagnóstico o la rehabilitación?",
+            "¿Te llama más la atención la biología, los animales y las plantas?",
         ]
         if coincide_frases(contexto_norm, ["biolog", "anim", "plant", "naturalez", "ecolog", "seres vivos", "laboratorio"]):
-            opciones.insert(0, "Me parece una buena idea, ¿te llama la atención la biología, los animales y las plantas?")
+            opciones.insert(0, "Me parece una buena idea, ¿te llama la atención la biología, los animales o las plantas?")
+        if coincide_frases(contexto_norm, ["medic", "enferm", "nutric", "terapia", "diagnost", "salud"]):
+            opciones.insert(0, "Eso suena muy bien, ¿te gustaría orientar tu camino hacia medicina, enfermería o nutrición?")
+        if coincide_frases(contexto_norm, ["deport", "ejercicio", "actividad fisica", "actividad física"]):
+            opciones.insert(0, "¿Te interesa más la salud, el deporte o el bienestar físico?")
         return _seleccionar_respuesta_variante("seguimiento_salud", opciones)
 
     if tipo == "humanidades":
@@ -148,7 +172,15 @@ def pregunta_seguimiento(tipo: str, contexto: str = "") -> str:
             "Me parece una buena idea, ¿te interesa más leer, debatir o entender la sociedad?",
             "Eso suena interesante, ¿prefieres escribir, analizar o hablar sobre temas sociales?",
             "¿Te llama más la atención la historia, la filosofía o el derecho?",
+            "¿Te gustaría trabajar con comunicación, política o economía?",
+            "¿Prefieres ideas, cultura, debates o problemas sociales?",
+            "¿Te atrae más investigar, argumentar o escribir sobre temas humanos?",
+            "¿Te interesaría más la lectura, la docencia o las ciencias sociales?",
         ]
+        if coincide_frases(contexto_norm, ["leer", "escribir", "debate", "historia", "filosofia", "sociedad", "comunicacion", "argument", "cultura", "derecho"]):
+            opciones.insert(0, "Me parece una buena idea, ¿te interesa más la lectura, el debate o analizar temas sociales?")
+        if coincide_frases(contexto_norm, ["lider", "equipo", "organizacion", "viajes", "culturas"]):
+            opciones.insert(0, "¿Te llama más coordinar equipos, organizar ideas o explorar culturas distintas?")
         return _seleccionar_respuesta_variante("seguimiento_humanidades", opciones)
 
     if tipo == "arte":
@@ -156,17 +188,25 @@ def pregunta_seguimiento(tipo: str, contexto: str = "") -> str:
             "Me parece una buena idea, ¿te llama más el dibujo, el diseño o la música?",
             "Eso suena interesante, ¿te gustaría crear algo visual, sonoro o escénico?",
             "¿Te atrae más el cine, la ilustración o el diseño?",
+            "¿Prefieres crear imágenes, sonidos o experiencias artísticas?",
+            "¿Te gustaría expresarte con música, fotografía, animación o teatro?",
+            "¿Qué te llama más: la parte visual, la musical o la escénica?",
+            "¿Te interesa más la creatividad visual, la música o el diseño digital?",
         ]
-        if coincide_frases(contexto_norm, ["rock", "metal", "mus", "guit", "bater", "cancion", "canciones"]):
+        if coincide_frases(contexto_norm, ["rock", "metal", "mus", "guit", "bater", "cancion", "canciones", "rap", "trap", "hip hop"]):
             opciones.insert(0, "Me parece una buena idea, ¿te gusta más la música, el diseño o la expresión artística?")
+        if coincide_frases(contexto_norm, ["dibuj", "disen", "ilustr", "cine", "teatro", "fotograf", "anim"]):
+            opciones.insert(0, "¿Te gustaría crear algo visual, como dibujo, diseño, cine o animación?")
         return _seleccionar_respuesta_variante("seguimiento_arte", opciones)
 
     return _seleccionar_respuesta_variante("seguimiento_general", [
         "Me parece buena idea, cuéntame un poco más de eso.",
         "Eso suena interesante, ¿puedes darme un poco más de contexto?",
         "Perfecto, cuéntame un poco más para conocerte mejor.",
+        "Eso me ayuda a entender mejor tu perfil, sigue contándome.",
+        "Me interesa lo que me dices, ¿puedes detallar un poco más?",
+        "No está mal, dime un poco más para orientarte mejor.",
     ])
-
 
 def tiene_contenido_relevante(texto: str) -> bool:
 
@@ -644,12 +684,10 @@ def respuesta_general() -> str:
             "Dime un poco más de eso.",
             "Eso suena útil para tu perfil.",
             "Me interesa saber más de lo que te gusta.",
+            "¿Puedes contarme un poco más?",
+            "Sigo contigo, dime más detalles.",
         ],
     )
-
-#_______________________________________________________________________________________________________
-
-# Respuesta cuando el bot no logra entender el mensaje del usuario.
 
 def respuesta_no_entendida() -> str:
     """
@@ -666,12 +704,10 @@ def respuesta_no_entendida() -> str:
             "No logré identificar tus intereses en eso. ¿Puedes ser un poco más específico?",
             "Creo que no comprendí bien. ¿Qué materias o actividades te llaman la atención?",
             "No estoy seguro de entender, pero seguimos paso a paso.",
+            "Aún no logro clasificarlo. ¿Podrías decírmelo con otras palabras?",
+            "No pasa nada, intentemos con otra frase.",
         ],
     )
-
-#_______________________________________________________________________________________________________
-
-# Carga la lista de preguntas desde el archivo JSON
 
 def cargar_preguntas(ruta: str) -> list:
     datos = _abrir_json(ruta)

@@ -13,6 +13,7 @@
 #=======================================================================================================
 
 import random
+import re
 
 from core.chatbot import (
     cargar_intenciones,
@@ -31,6 +32,7 @@ from core.chatbot import (
     interpretar_respuesta_escala,
     interpretar_respuesta_binaria,
     cargar_preguntas,
+    reiniciar_rotacion_respuestas,
     es_peticion_ayuda,
     respuesta_ayuda_empatica,
     es_expresion_confusion,
@@ -85,11 +87,11 @@ def mostrar_ayuda_terminal():
 
 # Menú de ayuda interactiva
 MENU_AYUDA = [
-
     "1. ¿Cómo funciona Vocabot?",
     "2. ¿Qué áreas de conocimiento existen?",
     "3. ¿Cómo se calcula mi recomendación?",
-    "4. Continuar la conversación.",
+    "4. Quiero empezar de nuevo.",
+    "5. Continuar la conversación.",
 ]
 
 def mostrar_menu_ayuda():
@@ -104,15 +106,19 @@ def manejar_opcion_menu_ayuda(opcion_texto: str) -> str:
     Acepta el número solo o parte del texto de la opción.
     """
     norm = normalizar_texto(opcion_texto)
-    if "1" in norm or "como funciona" in norm or "funciona" in norm:
+
+    def tiene_numero(n):
+        return re.search(rf"\b{n}\b", norm) is not None
+
+    if tiene_numero("1") or "como funciona" in norm or "funciona" in norm:
         return "1"
-    if "2" in norm or "areas" in norm or "área" in norm or "conocimiento" in norm:
+    if tiene_numero("2") or "areas" in norm or "área" in norm or "conocimiento" in norm:
         return "2"
-    if "3" in norm or "calcula" in norm or "neuronal" in norm or "recomendacion" in norm:
+    if tiene_numero("3") or "calcula" in norm or "neuronal" in norm or "recomendacion" in norm:
         return "3"
-    if "4" in norm or "empezar desde el principio" in norm or "reiniciar" in norm or "nuevo" in norm:
+    if tiene_numero("4") or "empezar desde el principio" in norm or "reiniciar" in norm or "nuevo" in norm:
         return "4"
-    if "5" in norm or "continuar" in norm or "seguir" in norm or "sigue" in norm:
+    if tiene_numero("5") or "continuar" in norm or "seguir" in norm or "sigue" in norm:
         return "5"
     return None
 
@@ -170,13 +176,14 @@ def main():
     preguntas = cargar_preguntas('data/preguntas.json')
     random.shuffle(preguntas)   # Esto reordena las preguntas aleatoriamente
 
-    nombre          = None
-    memoria         = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
-    turnos          = 0
-    estado          = 'charla'
-    indice_pregunta = 0
-    pregunta_actual = None
-    ultima_area     = None
+    nombre             = None
+    memoria            = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
+    turnos             = 0
+    estado             = 'charla'
+    indice_pregunta    = 0
+    pregunta_actual    = None
+    ultima_area        = None
+    reintentos_pregunta = 0
 
     mapa_preguntas = {
         'matematicas': {'matematicas': 1.15},
@@ -198,6 +205,19 @@ def main():
         'emprendimiento': {'humanidades': 0.75},
         'investigacion': {'matematicas': 0.35, 'salud': 0.35, 'humanidades': 0.35},
         'servicio_social': {'salud': 0.65, 'humanidades': 0.35},
+
+        'deportes': {'salud': 0.90, 'humanidades': 0.10},
+        'investigacion_cientifica': {'matematicas': 0.45, 'salud': 0.45, 'humanidades': 0.10},
+        'lectura_profundidad': {'humanidades': 1.00},
+        'liderazgo': {'humanidades': 0.80, 'salud': 0.20},
+        'arte_visual': {'arte': 1.00},
+        'musica_creativa': {'arte': 1.00},
+        'naturaleza_ecologia': {'salud': 0.80, 'humanidades': 0.20},
+        'emprendimiento_propio': {'humanidades': 0.70, 'matematicas': 0.10},
+        'tecnologia_videojuegos': {'matematicas': 0.90, 'arte': 0.20},
+        'servicio_personas': {'salud': 0.80, 'humanidades': 0.30},
+        'viajes_culturas': {'humanidades': 0.80, 'arte': 0.10},
+        'ciencia_aplicada': {'matematicas': 0.55, 'salud': 0.25, 'humanidades': 0.10},
     }
 
     mostrar_bienvenida_terminal()
@@ -205,11 +225,12 @@ def main():
     # ── Funciones auxiliares internas ───────────────────────────────────
 
     def preguntar_guiada():
-        nonlocal estado, indice_pregunta, pregunta_actual
+        nonlocal estado, indice_pregunta, pregunta_actual, reintentos_pregunta
         if indice_pregunta < len(preguntas):
-            pregunta_actual  = preguntas[indice_pregunta]
+            pregunta_actual = preguntas[indice_pregunta]
             indice_pregunta += 1
-            estado           = 'pregunta'
+            estado = 'pregunta'
+            reintentos_pregunta = 0
             texto = pregunta_actual.get('texto', '')
             if texto:
                 print(f'Vocabot: {texto}')
@@ -231,14 +252,16 @@ def main():
                 memoria[categoria] += factor * float(peso)
 
     def reiniciar_ciclo_vocacional():
-        nonlocal memoria, turnos, estado, indice_pregunta, pregunta_actual, ultima_area, preguntas
+        nonlocal memoria, turnos, estado, indice_pregunta, pregunta_actual, ultima_area, preguntas, reintentos_pregunta
         random.shuffle(preguntas)   # Nuevo orden para el nuevo ciclo
+        reiniciar_rotacion_respuestas()
         memoria         = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
         turnos          = 0
         estado          = 'charla'
         indice_pregunta = 0
         pregunta_actual = None
         ultima_area     = None
+        reintentos_pregunta = 0
 
     def mostrar_carreras(area):
         carreras = recomendar(area, carreras_data, max_por_uni=5)
@@ -459,16 +482,26 @@ def main():
         if estado == 'pregunta':
             valor = interpretar_respuesta_escala(texto_original)
             if valor is None:
-                # Antes de pedir que repita, verificar confusión
+                reintentos_pregunta += 1
                 if es_expresion_confusion(texto_original, intenciones):
                     print(f'Vocabot: {respuesta_confusion()}')
-                    repetir_pregunta_actual()
                 else:
                     print('Vocabot: No comprendí bien.')
-                    if not repetir_pregunta_actual():
-                        print('Vocabot: Puedes responder con mucho, poco, más o menos, bastante o nada.')
+
+                if reintentos_pregunta >= 2:
+                    print('Vocabot: No pasa nada, voy a pasar a otra pregunta para seguir con calma.')
+                    estado = 'charla'
+                    pregunta_actual = None
+                    reintentos_pregunta = 0
+                    if indice_pregunta < len(preguntas):
+                        preguntar_guiada()
+                    continue
+
+                if not repetir_pregunta_actual():
+                    print('Vocabot: Puedes responder con mucho, poco, más o menos, bastante o nada.')
                 continue
 
+            reintentos_pregunta = 0
             pregunta_id = (pregunta_actual or {}).get('id', '')
             aplicar_respuesta_pregunta(pregunta_id, valor)
 

@@ -71,6 +71,54 @@
     {
       "id": "servicio_social",
       "texto": "¿Te gusta apoyar, orientar o acompañar a otras personas?"
+    },
+    {
+      "id": "deportes",
+      "texto": "¿Te gustan los deportes, la actividad física o trabajar con disciplina y práctica?"
+    },
+    {
+      "id": "investigacion_cientifica",
+      "texto": "¿Te interesa hacer experimentos, descubrir cómo funcionan las cosas o investigar?"
+    },
+    {
+      "id": "lectura_profundidad",
+      "texto": "¿Disfrutas leer, analizar textos y reflexionar sobre ideas?"
+    },
+    {
+      "id": "liderazgo",
+      "texto": "¿Te llama la atención coordinar equipos o tomar decisiones?"
+    },
+    {
+      "id": "arte_visual",
+      "texto": "¿Te gusta dibujar, diseñar o crear cosas visuales?"
+    },
+    {
+      "id": "musica_creativa",
+      "texto": "¿Te interesa tocar, cantar o crear música?"
+    },
+    {
+      "id": "naturaleza_ecologia",
+      "texto": "¿Te interesa el medio ambiente, los ecosistemas o los animales?"
+    },
+    {
+      "id": "emprendimiento_propio",
+      "texto": "¿Te gustaría iniciar proyectos propios o emprender?"
+    },
+    {
+      "id": "tecnologia_videojuegos",
+      "texto": "¿Te interesan los videojuegos, la programación o crear aplicaciones?"
+    },
+    {
+      "id": "servicio_personas",
+      "texto": "¿Te gusta apoyar, orientar o acompañar a otras personas?"
+    },
+    {
+      "id": "viajes_culturas",
+      "texto": "¿Te llama la atención conocer otras culturas, viajar o estudiar la diversidad social?"
+    },
+    {
+      "id": "ciencia_aplicada",
+      "texto": "¿Te atrae la ciencia aplicada, resolver problemas reales o experimentar?"
     }
   ]
 }
