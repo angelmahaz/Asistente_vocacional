@@ -46,6 +46,7 @@ from core.chatbot import (
     respuesta_groseria,
     generar_resumen_memoria,
     pregunta_seguimiento,
+    reiniciar_rotacion_respuestas,
 )
 from core.perceptron import cargar_areas, evaluar, explicar_recomendacion, descripcion_arquitectura
 from core.recomendador import cargar_carreras, recomendar, obtener_enlaces_oficiales
@@ -126,6 +127,19 @@ class ChatGUI:
             "emprendimiento": {"humanidades": 0.75},
             "investigacion": {"matematicas": 0.35, "salud": 0.35, "humanidades": 0.35},
             "servicio_social": {"salud": 0.65, "humanidades": 0.35},
+
+            'deportes': {'salud': 0.90, 'humanidades': 0.10},
+            'investigacion_cientifica': {'matematicas': 0.45, 'salud': 0.45, 'humanidades': 0.10},
+            'lectura_profundidad': {'humanidades': 1.00},
+            'liderazgo': {'humanidades': 0.80, 'salud': 0.20},
+            'arte_visual': {'arte': 1.00},
+            'musica_creativa': {'arte': 1.00},
+            'naturaleza_ecologia': {'salud': 0.80, 'humanidades': 0.20},
+            'emprendimiento_propio': {'humanidades': 0.70, 'matematicas': 0.10},
+            'tecnologia_videojuegos': {'matematicas': 0.90, 'arte': 0.20},
+            'servicio_personas': {'salud': 0.80, 'humanidades': 0.30},
+            'viajes_culturas': {'humanidades': 0.80, 'arte': 0.10},
+            'ciencia_aplicada': {'matematicas': 0.55, 'salud': 0.25, 'humanidades': 0.10},
         }
         self.nombre = None
         self.ultima_area = None
@@ -191,6 +205,7 @@ class ChatGUI:
         self.indice_pregunta = 0
         self.pregunta_actual = None
         self.ultima_area = None
+        self.intentos_pregunta = 0
 
     # -------------------------------------------------------------------
     def reiniciar_ciclo_vocacional(self):
@@ -202,6 +217,7 @@ class ChatGUI:
         self._mensaje_epoch += 1
         self.bot_queue.clear()
         self.bot_activo = False
+        reiniciar_rotacion_respuestas()
         self.reset_estado()
         self.ultima_area = None
 
@@ -523,15 +539,18 @@ class ChatGUI:
         norm = normalizar_texto(texto)
         opcion = None
 
-        if "1" in norm or "como funciona" in norm or "funciona" in norm:
+        def tiene_numero(n):
+            return re.search(rf"\b{n}\b", norm) is not None
+
+        if tiene_numero("1") or "como funciona" in norm or "funciona" in norm:
             opcion = "1"
-        elif "2" in norm or "areas" in norm or "conocimiento" in norm:
+        elif tiene_numero("2") or "areas" in norm or "conocimiento" in norm:
             opcion = "2"
-        elif "3" in norm or "calcula" in norm or "neuronal" in norm:
+        elif tiene_numero("3") or "calcula" in norm or "neuronal" in norm:
             opcion = "3"
-        elif "4" in norm or "empezar de nuevo" in norm or "reiniciar" in norm or "nuevo" in norm:
+        elif tiene_numero("4") or "empezar de nuevo" in norm or "reiniciar" in norm or "nuevo" in norm:
             opcion = "4"
-        elif "5" in norm or "continuar" in norm or "seguir" in norm or "sigue" in norm:
+        elif tiene_numero("5") or "continuar" in norm or "seguir" in norm or "sigue" in norm:
             opcion = "5"
 
         if opcion == "1":
@@ -764,14 +783,23 @@ class ChatGUI:
             if self.estado == "pregunta":
                 valor = self._respuesta_escala(texto_original)
                 if valor is None:
+                    self.intentos_pregunta += 1
                     if es_expresion_confusion(texto_original, self.intenciones):
                         self.mensaje_bot(respuesta_confusion())
-                        self._repetir_pregunta_actual()
                     else:
                         self.mensaje_bot("Creo que no comprendí bien.")
-                        if not self._repetir_pregunta_actual():
-                            self.mensaje_bot("Puedes responder con mucho, poco, más o menos o nada.")
+                    if self.intentos_pregunta >= 2:
+                        self.mensaje_bot("No pasa nada, voy a pasar a otra pregunta para seguir con calma.")
+                        self.estado = "charla"
+                        self.pregunta_actual = None
+                        self.intentos_pregunta = 0
+                        if self.indice_pregunta < len(self.preguntas):
+                            self._pregunta_guiada()
+                        return
+                    if not self._repetir_pregunta_actual():
+                        self.mensaje_bot("Puedes responder con mucho, poco, más o menos o nada.")
                     return
+                self.intentos_pregunta = 0
                 pregunta_id = (self.pregunta_actual or {}).get("id", "")
                 self._aplicar_respuesta_pregunta(pregunta_id, valor)
                 if valor >= 4:

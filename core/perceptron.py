@@ -23,8 +23,15 @@ INPUT_ORDER = ("matematicas", "salud", "humanidades", "arte")
 #_______________________________________________________________________________________________________
 # Abre un archivo JSON y devuelve su contenido.
 def _abrir_json(ruta: str):
-    with open(ruta, "r", encoding="utf-8") as f:
-        return json.load(f)
+    """
+    Abre un archivo JSON y devuelve su contenido.
+    Si el archivo no existe o el JSON está corrupto, retorna un diccionario vacío.
+    """
+    try:
+        with open(ruta, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
 
 
 #_______________________________________________________________________________________________________

@@ -24,8 +24,15 @@ ENLACES_OFICIALES = {
 #_______________________________________________________________________________________________________
 # Abre un archivo en formato JSON desde una ruta específica
 def _abrir_json(ruta: str):
-    with open(ruta, "r", encoding="utf-8") as f:
-        return json.load(f)
+    """
+    Abre un archivo JSON y devuelve su contenido.
+    Si el archivo no existe o el JSON está corrupto, retorna un diccionario vacío.
+    """
+    try:
+        with open(ruta, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
 
 #_______________________________________________________________________________________________________
 # Inspecciona si un diccionario contiene una clave específica cuyo valor es otro diccionario,

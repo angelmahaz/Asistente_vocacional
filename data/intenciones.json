@@ -197,7 +197,17 @@
     "analizar",
     "modelo",
     "algoritmo",
-    "ingeniería de software"
+    "ingeniería de software",
+    "investigacion",
+    "investigación",
+    "investigar",
+    "ciencia",
+    "ciencias",
+    "experimentos",
+    "experimentar",
+    "desarrollo de aplicaciones",
+    "aplicaciones moviles",
+    "aplicaciones móviles"
   ],
   "salud": [
     "medicina",
@@ -313,7 +323,13 @@
     "cuidado de la salud",
     "ciencia",
     "analisis clinico",
-    "análisis clinico"
+    "análisis clinico",
+    "ecosistemas",
+    "deportes",
+    "actividad fisica",
+    "actividad física",
+    "bienestar",
+    "cuidado de personas"
   ],
   "humanidades": [
     "leer",
@@ -418,7 +434,17 @@
     "redacción",
     "argumentar",
     "analisis social",
-    "análisis social"
+    "análisis social",
+    "liderazgo",
+    "viajes",
+    "culturas",
+    "organizacion",
+    "organización",
+    "equipo",
+    "trabajo en equipo",
+    "escritura",
+    "lectura profunda",
+    "comunicacion oral"
   ],
   "arte": [
     "dibujar",
@@ -555,7 +581,9 @@
     "salsa",
     "electro",
     "electronica",
-    "electrónica"
+    "electrónica",
+    "dibujo",
+    "producción sonora"
   ],
   "ayuda": [
     "ayuda",
@@ -591,7 +619,8 @@
     "qué puedo escribir",
     "que puedo escribir",
     "orientame",
-    "orientame por favor"
+    "orientame por favor",
+    "oriéntame"
   ],
   "confusion": [
     "estoy confundido",
@@ -622,7 +651,8 @@
     "estoy perdida",
     "me pierdo",
     "me confunde",
-    "no se por donde empezar"
+    "no se por donde empezar",
+    "no sé qué hacer"
   ],
   "frustracion": [
     "no me gusta nada",
@@ -650,7 +680,10 @@
     "ya me aburrí",
     "ya me aburri",
     "no me interesa",
-    "no sirve"
+    "no sirve",
+    "no me sirve",
+    "estoy cansado",
+    "estoy cansada"
   ],
   "groseria": [
     "tonto",
