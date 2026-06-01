@@ -192,7 +192,12 @@
     "realidad aumentada",
     "devops",
     "cloud",
-    "nube"
+    "nube",
+    "resolver",
+    "analizar",
+    "modelo",
+    "algoritmo",
+    "ingeniería de software"
   ],
   "salud": [
     "medicina",
@@ -291,7 +296,24 @@
     "biofisica",
     "biofísica",
     "diagnostico clinico",
-    "ciencias de la salud"
+    "ciencias de la salud",
+    "animales",
+    "plantas",
+    "seres vivos",
+    "ecologia",
+    "ecología",
+    "botanica",
+    "botánica",
+    "zoologia",
+    "zoología",
+    "investigacion",
+    "investigación",
+    "ciencias naturales",
+    "naturaleza",
+    "cuidado de la salud",
+    "ciencia",
+    "analisis clinico",
+    "análisis clinico"
   ],
   "humanidades": [
     "leer",
@@ -391,7 +413,12 @@
     "investigación social",
     "economia internacional",
     "macroeconomia",
-    "microeconomia"
+    "microeconomia",
+    "redaccion",
+    "redacción",
+    "argumentar",
+    "analisis social",
+    "análisis social"
   ],
   "arte": [
     "dibujar",
@@ -513,7 +540,22 @@
     "blues",
     "soul",
     "urbano",
-    "corridos tumbados"
+    "corridos tumbados",
+    "cantar",
+    "bailar",
+    "componer",
+    "tocar instrumento",
+    "ilustrar",
+    "crear",
+    "diseñar",
+    "animar",
+    "escena",
+    "musical",
+    "artes visuales",
+    "salsa",
+    "electro",
+    "electronica",
+    "electrónica"
   ],
   "ayuda": [
     "ayuda",
@@ -544,7 +586,12 @@
     "dame una pista",
     "una pista",
     "que opciones tengo",
-    "qué opciones tengo"
+    "qué opciones tengo",
+    "me ayudas",
+    "qué puedo escribir",
+    "que puedo escribir",
+    "orientame",
+    "orientame por favor"
   ],
   "confusion": [
     "estoy confundido",
@@ -567,7 +614,15 @@
     "me cuesta decidir",
     "es difícil decidir",
     "no sé qué decir",
-    "no sé cómo responder"
+    "no sé cómo responder",
+    "no entiendo",
+    "no se que decir",
+    "no tengo idea",
+    "estoy perdido",
+    "estoy perdida",
+    "me pierdo",
+    "me confunde",
+    "no se por donde empezar"
   ],
   "frustracion": [
     "no me gusta nada",
@@ -589,7 +644,13 @@
     "es inútil",
     "qué flojera",
     "que flojera",
-    "me da pereza"
+    "me da pereza",
+    "me desespera",
+    "me frustra",
+    "ya me aburrí",
+    "ya me aburri",
+    "no me interesa",
+    "no sirve"
   ],
   "groseria": [
     "tonto",
@@ -608,6 +669,14 @@
     "pésimo",
     "te odio",
     "que asco",
-    "qué asco"
+    "qué asco",
+    "tonta",
+    "estupida",
+    "imbecil",
+    "imbécil",
+    "basta ya",
+    "vete",
+    "callate",
+    "cállate"
   ]
 }

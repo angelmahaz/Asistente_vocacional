@@ -12,6 +12,8 @@
 
 #=======================================================================================================
 
+import random
+
 from core.chatbot import (
     cargar_intenciones,
     detectar_intereses,
@@ -25,11 +27,10 @@ from core.chatbot import (
     respuesta_no_entendida,
     es_despedida,
     es_saludo,
+    normalizar_texto,
     interpretar_respuesta_escala,
     interpretar_respuesta_binaria,
     cargar_preguntas,
-    normalizar_texto,
-    # ── Nuevas funciones v4 ──────────────────────────────────────────
     es_peticion_ayuda,
     respuesta_ayuda_empatica,
     es_expresion_confusion,
@@ -39,6 +40,7 @@ from core.chatbot import (
     es_groseria,
     respuesta_groseria,
     generar_resumen_memoria,
+    pregunta_seguimiento,
 )
 
 from core.perceptron import cargar_areas, evaluar, explicar_recomendacion, descripcion_arquitectura
@@ -51,44 +53,47 @@ from core.recomendador import cargar_carreras, recomendar, obtener_enlaces_ofici
 
 def mostrar_bienvenida_terminal():
     banner = r"""
- VV     VV  OOOOO   CCCCC   AAAAA   BBBB    OOOOO   TTTTTTT
- VV     VV OO   OO CC      AA   AA  BB  BB OO   OO    TTT
-  VV    VV OO   OO CC      AAAAAAA  BBBB   OO   OO    TTT
-  VV   VV  OO   OO CC      AA   AA  BB  BB OO   OO    TTT
-   VVVVV    OOOOO   CCCCC  AA   AA  BBBB    OOOOO     TTT
-
-                 V O C A B O T
+    VV     VV  OOOOO   CCCCC   AAAAA   BBBB     OOOOO   TTTTTTTT
+    VV     VV OO   OO CC      AA   AA  BB  BB  OO   OO    TTT
+    VV    VV OO   OO CC      AAAAAAA  BBBB    OO   OO    TTT
+    VV   VV  OO   OO CC      AA   AA  BB  BB  OO   OO    TTT
+    VVVVV    OOOOO   CCCCC  AA   AA  BBBB     OOOOO     TTT
 """
     print(banner)
-    print("Vocabot: Asistente vocacional conversacional.")
-    print("Vocabot: Puedes escribir materias, hobbies, gustos, intereses o ideas sobre lo que te gustaría estudiar.")
-    print("Vocabot: También puedes responder con si, no, mucho, poco, más o menos, tal vez o no sé.")
-    print("Vocabot: Escribe 'salir' para terminar o 'ayuda' para ver estas instrucciones otra vez.")
-    print("Vocabot: Este bot es solo de apoyo y no sustituye la orientación vocacional profesional.")
-    print()
+    print("Vocabot: Hola, soy un asistente vocacional que usa inteligencia artificial para ayudarte a")
+    print("         identificar qué área de estudios universitarios va mejor con tu perfil académico.\n")
+    print("Vocabot: Solo cuéntame sobre tus gustos, hobbies e intereses y yo analizo la información.\n")
+    print("Vocabot: Responde con si, no, mucho, poco, más o menos, tal vez o no sé cuando te haga algunas preguntas.\n")
+    print("Vocabot: Si quieres una nueva recomendación, puedes decírmelo en cualquier momento.\n")
+    print("Vocabot: Escribe 'ayuda' para orientarte si no sabes por donde empezar")
+    print("Vocabot: Escribe 'salir' para terminar.\n")
+    print("Vocabot: *** Recuerda que soy una inteligencia artificial y la información proporcionada no reemplaza")
+    print("                                 la orientación vocacional profesional.                           ***")
 
 
 def mostrar_ayuda_terminal():
-    """Muestra instrucciones generales de uso (comando 'ayuda' en cualquier momento)."""
-    print("Vocabot: Puedes hablarme de materias, hobbies, gustos, música, tecnología, lectura o cualquier interés que tengas.")
-    print("Vocabot: Responde con si, no, mucho, poco, más o menos, tal vez o no sé cuando te haga preguntas.")
-    print("Vocabot: Si quieres una nueva recomendación, puedes decírmelo en cualquier momento.")
-    print("Vocabot: Escribe 'salir' para terminar.")
-    print("Vocabot: Recuerda que esto es solo un apoyo; no reemplaza la orientación vocacional profesional.")
-    print()
 
+    print("Vocabot: Hola, soy un asistente vocacional que usa inteligencia artificial para ayudarte a")
+    print("         identificar qué área de estudios universitarios va mejor con tu perfil académico.\n")
+    print("Vocabot: Solo cuéntame sobre tus gustos, hobbies e intereses y yo analizo la información.\n")
+    print("Vocabot: Responde con si, no, mucho, poco, más o menos, tal vez o no sé cuando te haga algunas preguntas.\n")
+    print("Vocabot: Si quieres una nueva recomendación, puedes decírmelo en cualquier momento.\n")
+    print("Vocabot: Escribe 'ayuda' para orientarte si no sabes por donde empezar")
+    print("Vocabot: Escribe 'salir' para terminar.\n")
+    print("Vocabot: *** Recuerda que soy una inteligencia artificial y la información proporcionada no reemplaza")
+    print("                                 la orientación vocacional profesional.                           ***")
 
 # Menú de ayuda interactiva
 MENU_AYUDA = [
+
     "1. ¿Cómo funciona Vocabot?",
     "2. ¿Qué áreas de conocimiento existen?",
     "3. ¿Cómo se calcula mi recomendación?",
-    "4. Quiero empezar de nuevo.",
-    "5. Continuar la conversación.",
+    "4. Continuar la conversación.",
 ]
 
 def mostrar_menu_ayuda():
-    print("Vocabot: ¿Sobre qué quieres saber? Elige una opción:")
+    print("\nVocabot: ¿Sobre qué quieres saber? Escribe el número con la opción que quieras saber:")
     for opcion in MENU_AYUDA:
         print(f"Vocabot:   {opcion}")
 
@@ -105,7 +110,7 @@ def manejar_opcion_menu_ayuda(opcion_texto: str) -> str:
         return "2"
     if "3" in norm or "calcula" in norm or "neuronal" in norm or "recomendacion" in norm:
         return "3"
-    if "4" in norm or "empezar de nuevo" in norm or "reiniciar" in norm or "nuevo" in norm:
+    if "4" in norm or "empezar desde el principio" in norm or "reiniciar" in norm or "nuevo" in norm:
         return "4"
     if "5" in norm or "continuar" in norm or "seguir" in norm or "sigue" in norm:
         return "5"
@@ -113,33 +118,44 @@ def manejar_opcion_menu_ayuda(opcion_texto: str) -> str:
 
 
 def responder_opcion_ayuda(opcion: str):
-    """Imprime la respuesta completa para cada opción del menú."""
+    """Imprime la respuesta completa para cada opción del menú.
+        Retorna:
+            'reiniciar' si se eligió la opción 4,
+            'salir_menu' si se eligió la opción 5,
+            None para las demás (permanecer en el menú).
+    """
     if opcion == "1":
         print("Vocabot: Vocabot es un asistente vocacional que usa inteligencia artificial para ayudarte")
         print("Vocabot: a identificar qué área de estudios universitarios va mejor con tu perfil.")
         print("Vocabot: Solo cuéntame sobre tus gustos, hobbies e intereses y yo analizo la información.")
         print("Vocabot: La red neuronal procesa todo y calcula las probabilidades de afinidad con cada área.")
+        return None
+    
     elif opcion == "2":
-        print("Vocabot: Existen 4 áreas de conocimiento en las que te puedo orientar:")
-        print("Vocabot:   Área 1 — Ciencias Físico-Matemáticas y de las Ingenierías")
-        print("Vocabot:             (matemáticas, física, programación, ingeniería, tecnología)")
+        print("Vocabot: Existen 4 áreas de conocimiento en las que te puedo orientar:\n")
+        print("Vocabot:   Área 1 — Ciencias Físico-Matemáticas y de las Ingenierías:")
+        print("Vocabot:            (matemáticas, física, programación, ingeniería, tecnología)\n")
+
         print("Vocabot:   Área 2 — Ciencias Biológicas, Químicas y de la Salud")
-        print("Vocabot:             (medicina, biología, química, enfermería, nutrición)")
+        print("Vocabot:            (medicina, biología, química, enfermería, nutrición)\n")
+
         print("Vocabot:   Área 3 — Ciencias Sociales")
-        print("Vocabot:             (derecho, economía, administración, comunicación, psicología)")
+        print("Vocabot:            (derecho, economía, administración, comunicación, psicología)\n")
+
         print("Vocabot:   Área 4 — Humanidades y de las Artes")
-        print("Vocabot:             (filosofía, historia, literatura, música, diseño, arte)")
-        print("Vocabot: Las carreras disponibles son de la UNAM, IPN y UAM.")
+        print("Vocabot:            (filosofía, historia, literatura, música, diseño, arte)\n")
+
+        print("Vocabot: Las carreras que puedo mostrarte son de la UNAM, IPN y UAM.")
+        return None
+    
     elif opcion == "3":
-        capas = descripcion_arquitectura()
-        print(f"Vocabot: La recomendación se calcula con una red neuronal de {len(capas)} capas:")
-        for i, capa in enumerate(capas, 1):
-            print(f"Vocabot:   Capa {i}: {capa}")
-        print("Vocabot: Mientras más información me des, más precisa es la recomendación.")
+        print("Vocabot: Uso una red neuronal con varias capas internas que procesan tus gustos y los comparan con las áreas de estudio.")
+        print("Vocabot: Cada capa refina la coincidencia, y entre más información me des, más precisa es la recomendación.")
+        return None
+        
+
     elif opcion == "4":
-        return "reiniciar"
-    elif opcion == "5":
-        print("Vocabot: Perfecto, sigamos donde estábamos. Cuéntame más sobre tus gustos.")
+        return "salir_menu"
     return None
 
 
@@ -151,7 +167,8 @@ def main():
     intenciones   = cargar_intenciones('data/intenciones.json')
     areas         = cargar_areas('data/areas.json')
     carreras_data = cargar_carreras('data/carreras.json')
-    preguntas     = cargar_preguntas('data/preguntas.json')
+    preguntas = cargar_preguntas('data/preguntas.json')
+    random.shuffle(preguntas)   # Esto reordena las preguntas aleatoriamente
 
     nombre          = None
     memoria         = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
@@ -171,6 +188,16 @@ def main():
         'naturaleza':  {'salud': 0.55, 'matematicas': 0.20},
         'negocios':    {'humanidades': 0.85},
         'manual':      {'arte': 0.25, 'matematicas': 0.20},
+        'biologia_animales': {'salud': 1.10},
+        'plantas_ecosistemas': {'salud': 1.05},
+        'laboratorio': {'salud': 1.00, 'matematicas': 0.25},
+        'equipo': {'humanidades': 0.45, 'salud': 0.25},
+        'comunicacion': {'humanidades': 1.00},
+        'creatividad_visual': {'arte': 1.10},
+        'musica': {'arte': 1.05},
+        'emprendimiento': {'humanidades': 0.75},
+        'investigacion': {'matematicas': 0.35, 'salud': 0.35, 'humanidades': 0.35},
+        'servicio_social': {'salud': 0.65, 'humanidades': 0.35},
     }
 
     mostrar_bienvenida_terminal()
@@ -204,7 +231,8 @@ def main():
                 memoria[categoria] += factor * float(peso)
 
     def reiniciar_ciclo_vocacional():
-        nonlocal memoria, turnos, estado, indice_pregunta, pregunta_actual, ultima_area
+        nonlocal memoria, turnos, estado, indice_pregunta, pregunta_actual, ultima_area, preguntas
+        random.shuffle(preguntas)   # Nuevo orden para el nuevo ciclo
         memoria         = {'matematicas': 0.0, 'salud': 0.0, 'humanidades': 0.0, 'arte': 0.0}
         turnos          = 0
         estado          = 'charla'
@@ -227,11 +255,13 @@ def main():
                     print('Vocabot:   ... y más opciones en la página oficial')
             else:
                 print('Vocabot:   * Sin carreras registradas por ahora.')
+            print()  # Salto de línea después de cada universidad
         enlaces = obtener_enlaces_oficiales()
         if enlaces:
             print('Vocabot: Puedes revisar la oferta educativa oficial en:')
             for uni, url in enlaces.items():
                 print(f'Vocabot:   {uni}: {url}')
+            print()  # Salto de línea después de los enlaces
 
     def resultado():
         nonlocal estado, pregunta_actual, ultima_area
@@ -243,29 +273,27 @@ def main():
                 print('Vocabot: Cuéntame un poco más sobre lo que te gusta.')
             return
 
-        capas = descripcion_arquitectura()
-        print(f'Vocabot: Analizando tus respuestas con la red neuronal ({len(capas)} capas)...')
-
         area, _, prob = evaluar(memoria, areas)
         ultima_area = area
 
-        print('Vocabot: Resultado del análisis de la red neuronal:')
+        print()  # Salto de línea antes de mostrar resultados
+        print('Vocabot: Analizando tus respuestas con IA...\n')
         for a, p in sorted(prob.items(), key=lambda x: x[1], reverse=True):
             barra = '|' * int(p * 20)
-            print(f'Vocabot:   {a}: {barra} {p:.0%}')
+            print(f'Vocabot: {a}: {barra} {p:.0%}')
+            print()  # Salto de línea entre áreas
 
         if area:
             if nombre:
-                print(f'Vocabot: {nombre}, la red neuronal identifica que tu perfil encaja mejor con el área de:')
+                print(f'Vocabot: {nombre}, he analizado tus respuestas y el área que mejor se ajusta a tu perfil es:')
             else:
-                print('Vocabot: La red neuronal identifica que tu perfil encaja mejor con el área de:')
-            print(f'Vocabot:   >> {area} <<')
+                print('Vocabot: He analizado tus respuestas y el área que mejor se ajusta a tu perfil es:')
+            print(f'Vocabot:   >> {area} <<\n')
 
             top = explicar_recomendacion(memoria, areas, area)
             if top:
-                print(f'Vocabot: Las características que más influyeron en la red neuronal fueron: {", ".join(top)}.')
+                print(f'Vocabot: Las características que más influyeron fueron: {", ".join(top)}.\n')
 
-            print()
             print('Vocabot: Tengo algunas opciones de carreras que te pueden interesar.')
             print('Vocabot: ¿Quieres que te las muestre?')
             estado = 'ofreciendo_carreras'
@@ -285,8 +313,7 @@ def main():
     # ── Inicio de la conversación ───────────────────────────────────────
 
     print('\nVocabot: Hola, soy Vocabot.')
-    print('Vocabot: Cuéntame cuáles son tus gustos o en qué eres bueno.')
-    print("Vocabot: Escribe 'salir' para terminar.\n")
+    print('Vocabot: Cuéntame cuáles son tus gustos, en qué eres bueno, o que materias te gustan para poder orientarte.\n')
 
     # ====================================================================
     # CICLO PRINCIPAL
@@ -294,6 +321,7 @@ def main():
 
     while True:
         try:
+            print()  # Salto de línea antes de la entrada del usuario
             texto = input('Tú: ').strip()
         except (EOFError, KeyboardInterrupt):
             print('\nVocabot: Fue un gusto ayudarte.')
@@ -350,6 +378,10 @@ def main():
         # ESTADO: ayuda_menu
         # El usuario eligió ver el menú de ayuda detallada.
         # ==============================================================
+        # ==============================================================
+        # ESTADO: ayuda_menu
+        # El usuario eligió ver el menú de ayuda detallada.
+        # ==============================================================
         if estado == 'ayuda_menu':
             opcion = manejar_opcion_menu_ayuda(texto_original)
             if opcion:
@@ -357,9 +389,12 @@ def main():
                 if accion == "reiniciar":
                     reiniciar_ciclo_vocacional()
                     print('Vocabot: Perfecto. Empecemos de nuevo. Cuéntame sobre tus intereses.')
-                else:
-                    # Restaurar el estado anterior a 'ayuda_menu'
                     estado = 'charla'
+                elif accion == "salir_menu":
+                    print('Vocabot: Perfecto, sigamos donde estábamos. Cuéntame más sobre tus gustos.')
+                    estado = 'charla'
+                else:
+                    mostrar_menu_ayuda()
             else:
                 print('Vocabot: No entendí la opción. Elige un número del 1 al 5.')
                 mostrar_menu_ayuda()
@@ -396,7 +431,7 @@ def main():
                 print('Vocabot: Cuéntame nuevamente sobre tus intereses.')
             elif respuesta is False:
                 print('Vocabot: Entendido.')
-                print('Vocabot: ¿Deseas finalizar el programa? (si / no)')
+                print('Vocabot: ¿Deseas finalizar nuestra conversación? (si / no)')
                 estado = 'confirmar'
             else:
                 print('Vocabot: Puedes responder con "si" para explorar otra área o "no" para terminar.')
@@ -447,8 +482,11 @@ def main():
             estado          = 'charla'
             pregunta_actual = None
 
-            if sum(memoria.values()) < 2 and indice_pregunta < len(preguntas):
+            # AVANZAR AUTOMÁTICAMENTE: siguiente pregunta o resultado
+            if indice_pregunta < len(preguntas):
                 preguntar_guiada()
+            else:
+                resultado()
             continue
 
         # ==============================================================
@@ -485,8 +523,14 @@ def main():
 
             print(f'Vocabot: {respuesta_humana(categoria, texto_limpio)}')
 
-            if sum(memoria.values()) < 2 and indice_pregunta < len(preguntas):
-                preguntar_guiada()
+            if sum(memoria.values()) < 2:
+                seguimiento = pregunta_seguimiento(categoria, texto_limpio)
+                if seguimiento:
+                    print(f'Vocabot: {seguimiento}')
+                elif indice_pregunta < len(preguntas):
+                    preguntar_guiada()
+                elif nombre and turnos % 2 == 0:
+                    print(f'Vocabot: {nombre}, cuéntame un poco más de eso.')
             elif nombre and turnos % 2 == 0:
                 print(f'Vocabot: {nombre}, cuéntame un poco más de eso.')
         else:
