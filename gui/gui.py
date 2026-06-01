@@ -45,6 +45,7 @@ from core.chatbot import (
     es_groseria,
     respuesta_groseria,
     generar_resumen_memoria,
+    pregunta_seguimiento,
 )
 from core.perceptron import cargar_areas, evaluar, explicar_recomendacion, descripcion_arquitectura
 from core.recomendador import cargar_carreras, recomendar, obtener_enlaces_oficiales
@@ -111,11 +112,20 @@ class ChatGUI:
             "manual":      {"arte": 0.25, "matematicas": 0.20},
             "social":      {"salud": 0.35, "humanidades": 0.15},
             "tecnologia":  {"matematicas": 1.25},
-            # Claves añadidas para cubrir el nuevo preguntas.json
             "salud":       {"salud": 1.20},
             "arte":        {"arte": 1.20},
             "naturaleza":  {"salud": 0.55, "matematicas": 0.20},
             "negocios":    {"humanidades": 0.85},
+            "biologia_animales": {"salud": 1.10},
+            "plantas_ecosistemas": {"salud": 1.05},
+            "laboratorio": {"salud": 1.00, "matematicas": 0.25},
+            "equipo": {"humanidades": 0.45, "salud": 0.25},
+            "comunicacion": {"humanidades": 1.00},
+            "creatividad_visual": {"arte": 1.10},
+            "musica": {"arte": 1.05},
+            "emprendimiento": {"humanidades": 0.75},
+            "investigacion": {"matematicas": 0.35, "salud": 0.35, "humanidades": 0.35},
+            "servicio_social": {"salud": 0.65, "humanidades": 0.35},
         }
         self.nombre = None
         self.ultima_area = None
@@ -803,7 +813,15 @@ class ChatGUI:
                     if area in self.memoria:
                         self.memoria[area] += float(peso)
                 self.mensaje_bot(respuesta_humana(categoria, texto_limpio))
-                if self.nombre and self.turnos % 2 == 0:
+                if sum(self.memoria.values()) < 2:
+                    seguimiento = pregunta_seguimiento(categoria, texto_limpio)
+                    if seguimiento:
+                        self.mensaje_bot(seguimiento)
+                    elif self.indice_pregunta < len(self.preguntas):
+                        self._pregunta_guiada()
+                    elif self.nombre and self.turnos % 2 == 0:
+                        self.mensaje_bot(f"{self.nombre}, cuéntame un poco más de eso.")
+                elif self.nombre and self.turnos % 2 == 0:
                     self.mensaje_bot(f"{self.nombre}, cuéntame un poco más de eso.")
             else:
                 self.mensaje_bot(respuesta_no_entendida())

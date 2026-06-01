@@ -31,6 +31,46 @@
     {
       "id": "negocios",
       "texto": "¿Te llaman la atención los negocios, la economía, la administración o el emprendimiento?"
+    },
+    {
+      "id": "biologia_animales",
+      "texto": "¿Te llama la atención la biología, los animales o aprender cómo funcionan los seres vivos?"
+    },
+    {
+      "id": "plantas_ecosistemas",
+      "texto": "¿Te interesa la naturaleza, las plantas o los ecosistemas?"
+    },
+    {
+      "id": "laboratorio",
+      "texto": "¿Te gustaría trabajar en laboratorio, hacer observaciones o experimentar?"
+    },
+    {
+      "id": "equipo",
+      "texto": "¿Prefieres trabajar en equipo, coordinar personas o colaborar con otros?"
+    },
+    {
+      "id": "comunicacion",
+      "texto": "¿Disfrutas explicar ideas, debatir o escribir sobre temas que te interesan?"
+    },
+    {
+      "id": "creatividad_visual",
+      "texto": "¿Te atrae más dibujar, diseñar o crear cosas visuales?"
+    },
+    {
+      "id": "musica",
+      "texto": "¿Te interesa más tocar, cantar o escuchar distintos estilos de música?"
+    },
+    {
+      "id": "emprendimiento",
+      "texto": "¿Te gustaría crear proyectos propios o buscar ideas de negocio?"
+    },
+    {
+      "id": "investigacion",
+      "texto": "¿Te gusta investigar cómo funcionan las cosas y descubrir respuestas?"
+    },
+    {
+      "id": "servicio_social",
+      "texto": "¿Te gusta apoyar, orientar o acompañar a otras personas?"
     }
   ]
 }

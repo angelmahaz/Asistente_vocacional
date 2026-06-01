@@ -91,6 +91,83 @@ _RESPUESTAS_ARTE_URBANA = [
 ]
 
 
+# Diccionario para evitar repetir exactamente la misma respuesta en mensajes consecutivos.
+_ULTIMAS_RESPUESTAS = {}
+
+
+def _seleccionar_respuesta_variante(clave: str, opciones):
+    """
+    Elige una respuesta distinta a la última usada para esa misma clave,
+    cuando existen suficientes alternativas.
+    """
+    if not opciones:
+        return ""
+
+    opciones = list(opciones)
+    ultima = _ULTIMAS_RESPUESTAS.get(clave)
+
+    if len(opciones) > 1 and ultima in opciones:
+        candidatas = [o for o in opciones if o != ultima]
+    else:
+        candidatas = opciones
+
+    elegida = random.choice(candidatas)
+    _ULTIMAS_RESPUESTAS[clave] = elegida
+    return elegida
+
+
+def pregunta_seguimiento(tipo: str, contexto: str = "") -> str:
+    """
+    Genera una pregunta breve y natural para profundizar en el interés
+    detectado sin sonar repetitivo.
+    """
+    contexto_norm = normalizar_texto(contexto)
+
+    if tipo == "matematicas":
+        opciones = [
+            "Me parece una buena idea, ¿te llama más la programación, la lógica o resolver problemas?",
+            "Eso suena interesante, ¿prefieres trabajar con computadoras, datos o con problemas matemáticos?",
+            "¿Te atrae más construir software, analizar datos o resolver retos lógicos?",
+        ]
+        if coincide_frases(contexto_norm, ["comput", "program", "codigo", "software", "datos", "algorit", "tecnolog"]):
+            opciones.insert(0, "Me parece una buena idea, ¿te gusta más programar, usar computadoras o resolver problemas?")
+        return _seleccionar_respuesta_variante("seguimiento_matematicas", opciones)
+
+    if tipo == "salud":
+        opciones = [
+            "Me parece una buena idea, ¿te llama la atención la biología, los animales o las plantas?",
+            "Eso suena interesante, ¿te gustaría trabajar en laboratorio o en el cuidado de personas?",
+            "¿Te interesa más el cuerpo humano, la investigación o ayudar a otras personas?",
+        ]
+        if coincide_frases(contexto_norm, ["biolog", "anim", "plant", "naturalez", "ecolog", "seres vivos", "laboratorio"]):
+            opciones.insert(0, "Me parece una buena idea, ¿te llama la atención la biología, los animales y las plantas?")
+        return _seleccionar_respuesta_variante("seguimiento_salud", opciones)
+
+    if tipo == "humanidades":
+        opciones = [
+            "Me parece una buena idea, ¿te interesa más leer, debatir o entender la sociedad?",
+            "Eso suena interesante, ¿prefieres escribir, analizar o hablar sobre temas sociales?",
+            "¿Te llama más la atención la historia, la filosofía o el derecho?",
+        ]
+        return _seleccionar_respuesta_variante("seguimiento_humanidades", opciones)
+
+    if tipo == "arte":
+        opciones = [
+            "Me parece una buena idea, ¿te llama más el dibujo, el diseño o la música?",
+            "Eso suena interesante, ¿te gustaría crear algo visual, sonoro o escénico?",
+            "¿Te atrae más el cine, la ilustración o el diseño?",
+        ]
+        if coincide_frases(contexto_norm, ["rock", "metal", "mus", "guit", "bater", "cancion", "canciones"]):
+            opciones.insert(0, "Me parece una buena idea, ¿te gusta más la música, el diseño o la expresión artística?")
+        return _seleccionar_respuesta_variante("seguimiento_arte", opciones)
+
+    return _seleccionar_respuesta_variante("seguimiento_general", [
+        "Me parece buena idea, cuéntame un poco más de eso.",
+        "Eso suena interesante, ¿puedes darme un poco más de contexto?",
+        "Perfecto, cuéntame un poco más para conocerte mejor.",
+    ])
+
+
 def tiene_contenido_relevante(texto: str) -> bool:
 
     texto_norm = normalizar_texto(texto)
@@ -418,87 +495,179 @@ def limpiar_mensaje_nombre(texto: str) -> str:
 
 #_______________________________________________________________________________________________________
 
+
 def respuesta_humana(tipo: str, contexto: str = "") -> str:
+    """
+    Genera una respuesta natural según el área detectada. También ajusta
+    el tono usando palabras del contexto para evitar respuestas repetitivas.
+    """
     contexto_norm = normalizar_texto(contexto)
 
     if tipo == "arte" and contexto_norm:
         if coincide_frases(contexto_norm, list(_GUSTOS_MUSICA_ROCK_METAL)):
-            return random.choice(_RESPUESTAS_ARTE_ROCK_METAL)
+            return _seleccionar_respuesta_variante(
+                "arte_rock_metal",
+                _RESPUESTAS_ARTE_ROCK_METAL,
+            )
         if coincide_frases(contexto_norm, list(_GUSTOS_MUSICA_URBANA)):
-            return random.choice(_RESPUESTAS_ARTE_URBANA)
+            return _seleccionar_respuesta_variante(
+                "arte_urbana",
+                _RESPUESTAS_ARTE_URBANA,
+            )
 
-    respuestas = {
-        "matematicas": [
-            "Eso suena muy lógico y analítico.",
-            "Tienes perfil para resolver problemas complejos.",
-            "Veo afinidad con áreas técnicas y de razonamiento.",
-            "Ese tipo de pensamiento es muy valioso en ingeniería y ciencias exactas.",
-            "La tecnología y las matemáticas son campos con un enorme futuro.",
-            "Interesante, ese perfil encaja muy bien con las ingenierías.",
-            "Los sistemas, los datos y la lógica son tu mundo, se nota.",
-            "Esa inclinación hacia lo técnico abre muchas puertas profesionales.",
-        ],
-        "salud": [
-            "Se nota que te importa ayudar a otros.",
-            "Tienes vocación de servicio.",
-            "Eso encaja muy bien con profesiones de cuidado y apoyo.",
-            "El área de salud necesita personas con esa sensibilidad.",
-            "Quienes se orientan a la salud suelen tener un gran compromiso humano.",
-            "La biología y las ciencias de la salud son apasionantes.",
-            "Ese interés por el cuerpo humano y la vida es muy valioso.",
-            "Cuidar a los demás es una de las vocaciones más significativas.",
-        ],
-        "humanidades": [
-            "Eso refleja pensamiento crítico.",
-            "Te interesa entender la sociedad.",
-            "Veo interés por la comunicación y el análisis social.",
-            "Las humanidades forman personas capaces de interpretar el mundo.",
-            "Ese perfil analítico y social tiene mucho campo de acción.",
-            "Las ciencias sociales ofrecen una visión muy completa de la realidad.",
-            "Entender cómo funciona la sociedad es fundamental hoy en día.",
-            "Ese interés por la cultura, las ideas y las personas dice mucho de ti.",
-        ],
-        "arte": [
-            "Tienes creatividad.",
-            "Eso es muy valioso en el arte.",
-            "Se nota un perfil creativo y expresivo.",
-            "La expresión artística es una habilidad que pocas personas desarrollan bien.",
-            "El diseño, el arte y la cultura necesitan personas como tú.",
-            "Esa sensibilidad creativa es un rasgo muy particular y valioso.",
-            "El arte y el diseño tienen cada vez más presencia en el mundo profesional.",
-            "Crear, diseñar y expresar son habilidades que abren muchas puertas.",
-        ],
-    }
-    opciones = respuestas.get(tipo, ["Interesante, cuéntame un poco más."])
-    return random.choice(opciones)
+    if tipo == "matematicas":
+        if coincide_frases(contexto_norm, [
+            "comput", "program", "codigo", "software", "datos", "algorit",
+            "tecnolog", "informat", "computacion", "ciencia de datos",
+        ]):
+            respuestas = [
+                "Eso suena muy lógico y técnico.",
+                "Tienes un perfil muy orientado a computación y razonamiento.",
+                "Veo afinidad con programación, datos y resolución de problemas.",
+                "Ese interés encaja muy bien con las ingenierías y la tecnología.",
+                "Parece que te atrae el mundo de la lógica y las computadoras.",
+                "Eso abre muy buenas posibilidades en áreas de ingeniería.",
+                "Tu perfil apunta a pensamiento estructurado y análisis.",
+                "Se nota una inclinación clara hacia lo técnico y lo computacional.",
+            ]
+        else:
+            respuestas = [
+                "Eso suena muy lógico y analítico.",
+                "Tienes perfil para resolver problemas complejos.",
+                "Veo afinidad con áreas técnicas y de razonamiento.",
+                "Ese tipo de pensamiento es muy valioso en ingeniería y ciencias exactas.",
+                "La tecnología y las matemáticas son campos con un enorme futuro.",
+                "Interesante, ese perfil encaja muy bien con las ingenierías.",
+                "Los sistemas, los datos y la lógica son tu mundo, se nota.",
+                "Esa inclinación hacia lo técnico abre muchas puertas profesionales.",
+            ]
+        return _seleccionar_respuesta_variante("respuesta_matematicas", respuestas)
+
+    if tipo == "salud":
+        if coincide_frases(contexto_norm, [
+            "biolog", "anim", "plant", "ecosistem", "naturalez", "laboratorio",
+            "investig", "cuerpo humano", "seres vivos", "ecolog",
+        ]):
+            respuestas = [
+                "Me parece una buena idea, ¿te llama la atención la biología, los animales o las plantas?",
+                "Eso suena muy bien, ¿te gustaría trabajar en laboratorio o estudiar seres vivos?",
+                "Se nota interés por la vida y la naturaleza; ¿te atrae la investigación biomédica?",
+                "La biología y el cuidado de la salud suelen ir muy de la mano, ¿qué parte te interesa más?",
+                "¿Te llama más la atención observar, investigar o ayudar a las personas?",
+                "Suena a que podrías disfrutar un área muy vinculada con ciencias biológicas.",
+            ]
+        else:
+            respuestas = [
+                "Se nota que te importa ayudar a otros.",
+                "Tienes vocación de servicio.",
+                "Eso encaja muy bien con profesiones de cuidado y apoyo.",
+                "El área de salud necesita personas con esa sensibilidad.",
+                "Quienes se orientan a la salud suelen tener un gran compromiso humano.",
+                "La biología y las ciencias de la salud son apasionantes.",
+                "Ese interés por el cuerpo humano y la vida es muy valioso.",
+                "Cuidar a los demás es una de las vocaciones más significativas.",
+            ]
+        return _seleccionar_respuesta_variante("respuesta_salud", respuestas)
+
+    if tipo == "humanidades":
+        if coincide_frases(contexto_norm, [
+            "leer", "escribir", "debate", "historia", "filosofia", "sociedad",
+            "comunicacion", "argumentar", "analisis", "cultura", "derecho",
+        ]):
+            respuestas = [
+                "Eso refleja pensamiento crítico y gusto por el análisis social.",
+                "Se nota afinidad con la lectura, el debate y la comprensión de la sociedad.",
+                "Tienes interés por ideas, cultura y comunicación.",
+                "Me parece que te llama mucho entender a las personas y su contexto.",
+                "¿Te interesa más escribir, debatir o analizar temas sociales?",
+            ]
+        else:
+            respuestas = [
+                "Eso refleja pensamiento crítico.",
+                "Te interesa entender la sociedad.",
+                "Veo interés por la comunicación y el análisis social.",
+                "Las humanidades forman personas capaces de interpretar el mundo.",
+                "Ese perfil analítico y social tiene mucho campo de acción.",
+                "Las ciencias sociales ofrecen una visión muy completa de la realidad.",
+                "Entender cómo funciona la sociedad es fundamental hoy en día.",
+                "Ese interés por la cultura, las ideas y las personas dice mucho de ti.",
+            ]
+        return _seleccionar_respuesta_variante("respuesta_humanidades", respuestas)
+
+    if tipo == "arte":
+        if coincide_frases(contexto_norm, [
+            "rock", "metal", "musica", "guitarra", "piano", "canto",
+            "dibuj", "disen", "ilustr", "cine", "teatro", "fotograf",
+        ]):
+            respuestas = [
+                "Se nota una mente abierta y un pensamiento crítico muy sólido.",
+                "Ese gusto creativo suele ir con personas muy expresivas y con criterio propio.",
+                "Tienes una vibra muy artística y bien definida.",
+                "Eso encaja muy bien con personas creativas, analíticas y con personalidad fuerte.",
+                "Parece que tienes un perfil muy auténtico y con mucha expresión personal.",
+            ]
+        else:
+            respuestas = [
+                "Tienes creatividad.",
+                "Eso es muy valioso en el arte.",
+                "Se nota un perfil creativo y expresivo.",
+                "La expresión artística es una habilidad que pocas personas desarrollan bien.",
+                "El diseño, el arte y la cultura necesitan personas como tú.",
+                "Esa sensibilidad creativa es un rasgo muy particular y valioso.",
+                "El arte y el diseño tienen cada vez más presencia en el mundo profesional.",
+                "Crear, diseñar y expresar son habilidades que abren muchas puertas.",
+            ]
+        return _seleccionar_respuesta_variante("respuesta_arte", respuestas)
+
+    return _seleccionar_respuesta_variante("respuesta_general_tipo", [
+        "Interesante, cuéntame un poco más.",
+        "Veo algo de interés ahí, sigue contándome.",
+        "Eso me ayuda a conocerte mejor.",
+    ])
 
 #_______________________________________________________________________________________________________
 
 # Respuesta del bot cuando quiere seguir animando la conversación.
 
 def respuesta_general() -> str:
-    return random.choice([
-        "Cuéntame más.",
-        "Interesante...",
-        "Sigue, te escucho.",
-        "Eso me ayuda a conocerte mejor.",
-        "Voy entendiendo tus gustos.",
-    ])
+    """
+    Devuelve una frase breve para continuar la conversación sin sonar mecánico.
+    """
+    return _seleccionar_respuesta_variante(
+        "respuesta_general",
+        [
+            "Cuéntame más.",
+            "Interesante...",
+            "Sigue, te escucho.",
+            "Eso me ayuda a conocerte mejor.",
+            "Voy entendiendo tus gustos.",
+            "Dime un poco más de eso.",
+            "Eso suena útil para tu perfil.",
+            "Me interesa saber más de lo que te gusta.",
+        ],
+    )
 
 #_______________________________________________________________________________________________________
 
 # Respuesta cuando el bot no logra entender el mensaje del usuario.
 
 def respuesta_no_entendida() -> str:
-    return random.choice([
-        "No estoy seguro de entender. ¿Puedes explicarlo de otra forma?",
-        "Tal vez hubo un pequeño error al escribir. ¿Puedes repetirlo?",
-        "No lo capté del todo, pero sigo contigo. ¿Me lo cuentas diferente?",
-        "No entendí esa parte. ¿Puedes decirlo con otras palabras?",
-        "Creo que no comprendí bien. Puedes hablarme de materias, hobbies o actividades que disfrutes.",
-        "No logré identificar tus intereses en eso. ¿Puedes ser un poco más específico?",
-        "Creo que no comprendí bien. ¿Qué materias o actividades te llaman la atención?",
-    ])
+    """
+    Genera una respuesta de manejo de error suave para cuando el texto no se clasifica.
+    """
+    return _seleccionar_respuesta_variante(
+        "respuesta_no_entendida",
+        [
+            "No estoy seguro de entender. ¿Puedes explicarlo de otra forma?",
+            "Tal vez hubo un pequeño error al escribir. ¿Puedes repetirlo?",
+            "No lo capté del todo, pero sigo contigo. ¿Me lo cuentas diferente?",
+            "No entendí esa parte. ¿Puedes decirlo con otras palabras?",
+            "Creo que no comprendí bien. Puedes hablarme de materias, hobbies o actividades que disfrutes.",
+            "No logré identificar tus intereses en eso. ¿Puedes ser un poco más específico?",
+            "Creo que no comprendí bien. ¿Qué materias o actividades te llaman la atención?",
+            "No estoy seguro de entender, pero seguimos paso a paso.",
+        ],
+    )
 
 #_______________________________________________________________________________________________________
 
@@ -799,8 +968,10 @@ def respuesta_ayuda_empatica(nombre: str = None) -> str:
         "Tranquilo, juntos encontramos la opción que mejor te va.",
         "Por supuesto, cuéntame qué necesitas y lo resolvemos.",
         "Aquí estoy, dime en qué te puedo apoyar.",
+        "Voy contigo, paso a paso.",
+        "No pasa nada, vamos a resolverlo juntos.",
     ]
-    base = random.choice(frases)
+    base = _seleccionar_respuesta_variante("respuesta_ayuda_empatica", frases)
     if nombre:
         return f"{nombre}, {base}"
     return base
@@ -822,14 +993,21 @@ def es_expresion_confusion(texto: str, intenciones: dict) -> bool:
 # -----------------------------------------------------------------------
 
 def respuesta_confusion() -> str:
-    return random.choice([
-        "Es completamente normal no tener todo claro, para eso estoy aquí.",
-        "No te preocupes, vamos paso a paso y lo vamos a resolver.",
-        "La orientación vocacional puede ser confusa, pero con calma llegamos a algo.",
-        "Es normal tener dudas; eso no significa que no tengas un perfil claro.",
-        "Muchas personas sienten lo mismo y aun así encontramos una buena dirección.",
-        "Tómatelo con calma. Dime algo que hayas disfrutado hacer alguna vez, por pequeño que sea.",
-    ])
+    """
+    Responde con empatía cuando el usuario expresa duda o bloqueo.
+    """
+    return _seleccionar_respuesta_variante(
+        "respuesta_confusion",
+        [
+            "Es completamente normal no tener todo claro, para eso estoy aquí.",
+            "No te preocupes, vamos paso a paso y lo vamos a resolver.",
+            "La orientación vocacional puede ser confusa, pero con calma llegamos a algo.",
+            "Es normal tener dudas; eso no significa que no tengas un perfil claro.",
+            "Muchas personas sienten lo mismo y aun así encontramos una buena dirección.",
+            "Tómatelo con calma. Dime algo que hayas disfrutado hacer alguna vez, por pequeño que sea.",
+            "Podemos afinar tu perfil con más preguntas, sin prisa.",
+        ],
+    )
 
 
 # -----------------------------------------------------------------------
@@ -848,14 +1026,21 @@ def es_expresion_frustracion(texto: str, intenciones: dict) -> bool:
 # -----------------------------------------------------------------------
 
 def respuesta_frustracion() -> str:
-    return random.choice([
-        "Entiendo que puede ser frustrante, tomémoslo con calma.",
-        "No pasa nada, vamos a tu ritmo, sin prisa.",
-        "Te entiendo; a veces estas decisiones son complicadas. Sigamos juntos.",
-        "Está bien sentir eso; lo importante es que aquí puedo apoyarte.",
-        "La elección de carrera es una decisión importante, es normal que genere tensión.",
-        "No te rindas, muchas personas pasan por esto y terminan encontrando su camino.",
-    ])
+    """
+    Responde con calma ante frustración o rechazo.
+    """
+    return _seleccionar_respuesta_variante(
+        "respuesta_frustracion",
+        [
+            "Entiendo que puede ser frustrante, tomémoslo con calma.",
+            "No pasa nada, vamos a tu ritmo, sin prisa.",
+            "Te entiendo; a veces estas decisiones son complicadas. Sigamos juntos.",
+            "Está bien sentir eso; lo importante es que aquí puedo apoyarte.",
+            "La elección de carrera es una decisión importante, es normal que genere tensión.",
+            "No te rindas, muchas personas pasan por esto y terminan encontrando su camino.",
+            "Si te parece, podemos seguir con preguntas más concretas.",
+        ],
+    )
 
 
 # -----------------------------------------------------------------------
@@ -874,12 +1059,19 @@ def es_groseria(texto: str, intenciones: dict) -> bool:
 # -----------------------------------------------------------------------
 
 def respuesta_groseria() -> str:
-    return random.choice([
-        "Entiendo que puede haber algo de frustración. Sigamos con calma cuando quieras.",
-        "No hay problema, aquí sigo cuando estés listo para continuar.",
-        "No te preocupes, estoy aquí para ayudarte cuando lo necesites.",
-        "Sigamos adelante; cuéntame sobre tus intereses cuando quieras.",
-    ])
+    """
+    Responde de forma tranquila ante groserías o expresiones ofensivas.
+    """
+    return _seleccionar_respuesta_variante(
+        "respuesta_groseria",
+        [
+            "Entiendo que puede haber algo de frustración. Sigamos con calma cuando quieras.",
+            "No hay problema, aquí sigo cuando estés listo para continuar.",
+            "No te preocupes, estoy aquí para ayudarte cuando lo necesites.",
+            "Sigamos adelante; cuéntame sobre tus intereses cuando quieras.",
+            "Si lo prefieres, retomamos desde cero y seguimos con calma.",
+        ],
+    )
 
 
 # -----------------------------------------------------------------------
